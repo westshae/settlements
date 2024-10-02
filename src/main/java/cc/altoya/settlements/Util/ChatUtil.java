@@ -9,6 +9,7 @@ public class ChatUtil {
   private static ChatColor pluginSecondaryColour = ChatColor.AQUA;
   private static ChatColor errorColour = ChatColor.DARK_RED;
   private static ChatColor successColour = ChatColor.DARK_GREEN;
+  private static ChatColor allianceColour = ChatColor.BLUE;
 
   public static void sendErrorMessage(Player player, String message){
     String formattedMessage = "" + errorColour + "[!] " + message;
@@ -17,6 +18,11 @@ public class ChatUtil {
 
   public static void sendSuccessMessage(Player player, String message){
     String formattedMessage = "" + successColour + "[+] " + message;
+    player.sendMessage(formattedMessage);
+  }
+
+  public static void sendAllianceMessage(Player player, String allianceName, String message){
+    String formattedMessage = "" + allianceColour + "[" + allianceName + "] " + message;
     player.sendMessage(formattedMessage);
   }
 

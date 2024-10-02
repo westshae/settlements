@@ -187,4 +187,25 @@ public class AllianceUtil {
         });
     }
 
+    public static void toggleAllianceChat(Player player){
+        FileConfiguration domainConfig = DomainUtil.getDomainConfig();
+        if(!isPlayerInAlliance(player)){
+            ChatUtil.sendErrorMessage(player, "You must be in an alliance to run this command");
+            return;
+        }
+        if(!domainConfig.contains("domains." + player.getUniqueId().toString() + ".allianceChat")){
+            domainConfig.set("domains." + player.getUniqueId().toString() + ".allianceChat", true);
+            ChatUtil.sendSuccessMessage(player, "Alliance chat has now been enabled.");
+        } else {
+            boolean allianceChatEnabled = domainConfig.getBoolean("domains." + player.getUniqueId().toString() + ".allianceChat");
+            domainConfig.set("domains." + player.getUniqueId().toString() + ".allianceChat", !allianceChatEnabled);
+            if(allianceChatEnabled){
+                ChatUtil.sendSuccessMessage(player, "Alliance chat has now been disabled");
+            } else {
+                ChatUtil.sendSuccessMessage(player, "Alliance chat has now been enabled.");
+            }
+        }
+
+        DomainUtil.saveDomainConfig(domainConfig);
+    }
 }

@@ -91,4 +91,8 @@ public class DomainUtil {
     return GeneralUtil.createListFromString((String) config.get("domains." + player.getUniqueId().toString() + ".claims"));
   }
 
+  public static boolean isAllianceChatMode(Player player){
+    FileConfiguration config = getDomainConfig();
+    return config.getBoolean("domains." + player.getUniqueId().toString() + ".allianceChat");
+  }
 }
