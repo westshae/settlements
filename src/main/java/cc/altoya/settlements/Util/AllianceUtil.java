@@ -54,6 +54,12 @@ public class AllianceUtil {
         return invites.contains(player.getUniqueId().toString());
     }
 
+    public static List<String> getAlliancePlayers(String allianceName) {
+        FileConfiguration allianceConfig = getAllianceConfig();
+
+        return GeneralUtil.createListFromString((String) allianceConfig.get("alliances." + allianceName + ".players"));
+    }
+
     public static void createAlliance(Player player, String allianceName) {
         FileConfiguration allianceConfig = getAllianceConfig();
         FileConfiguration domainConfig = DomainUtil.getDomainConfig();
@@ -113,7 +119,7 @@ public class AllianceUtil {
             ChatUtil.sendErrorMessage(allianceLeader, "This player doesn't exist.");
             return;
         }
-        if(invitee.getUniqueId().equals(allianceLeader.getUniqueId())){
+        if (invitee.getUniqueId().equals(allianceLeader.getUniqueId())) {
             ChatUtil.sendErrorMessage(allianceLeader, "You can't invite yourself.");
             return;
         }
@@ -164,6 +170,21 @@ public class AllianceUtil {
 
         saveAllianceConfig(allianceConfig);
         DomainUtil.saveDomainConfig(domainConfig);
+    }
+
+    public static void printAllianceInfo(Player player) {
+        if (!isPlayerInAlliance(player)) {
+            ChatUtil.sendErrorMessage(player, "You must be in an alliance to run this command.");
+            return;
+        }
+        String allianceName = getPlayerAlliance(player);
+        ChatUtil.sendSuccessMessage(player, allianceName + " info.");
+        List<String> alliancePlayers = getAlliancePlayers(allianceName);
+        alliancePlayers.forEach((playerUuid) -> {
+            UUID uuid = UUID.fromString(playerUuid);
+            Player currentPlayer = Bukkit.getPlayer(uuid);
+            ChatUtil.sendSuccessMessage(player, currentPlayer.getDisplayName());
+        });
     }
 
 }

@@ -29,6 +29,8 @@ public class MainAlliance implements CommandExecutor{
                 return CommandInvite.handle((Player) sender, args);
             case "join":
                 return CommandJoin.handle((Player) sender, args);
+            case "info":
+                return CommandInfo.handle((Player) sender, args);
         }
 
         return true;
