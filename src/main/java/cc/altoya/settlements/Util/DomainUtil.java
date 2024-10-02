@@ -2,30 +2,21 @@ package cc.altoya.settlements.Util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class DomainUtil {
-  // addClaimToPlayer
-  // removeClaimFromPlayer
-  // addTrustToClaim
-  // removeTrustFromClaim
-  // returnAllClaims
-  // returnAllTrustedInClaim
 
-  private static FileConfiguration getDomainConfig() {
+  public static FileConfiguration getDomainConfig() {
     return GeneralUtil.getPluginConfig("settlements", "domains.yml");
   }
 
-  private static void saveDomainConfig(FileConfiguration config) {
+  public static void saveDomainConfig(FileConfiguration config) {
     File file = new File(Bukkit.getServer().getPluginManager().getPlugin("settlements").getDataFolder(), "domains.yml");
     try {
       config.save(file);

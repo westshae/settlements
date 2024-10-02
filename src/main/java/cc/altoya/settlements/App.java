@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import cc.altoya.settlements.Commands.Alliance.MainAlliance;
 import cc.altoya.settlements.Commands.Domain.MainDomain;
 
 public class App extends JavaPlugin {
@@ -13,6 +14,7 @@ public class App extends JavaPlugin {
 
         // Register commands
         this.getCommand("domain").setExecutor(new MainDomain());
+        this.getCommand("alliance").setExecutor(new MainAlliance());
     }
 
     private void initializeConfig() {

@@ -8,3 +8,6 @@ commands:
   domain:
     description: Domains
     usage: /domain {var} {var}
+  alliance:
+    description: Alliances
+    usage: /alliance {var} {var}

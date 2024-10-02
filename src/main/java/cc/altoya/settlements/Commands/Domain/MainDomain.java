@@ -16,7 +16,7 @@ public class MainDomain implements CommandExecutor{
         }
 
         if (args.length == 0) {
-            sender.sendMessage("Usage: /domain <claim|unclaim|trust|untrust|list>");
+            sender.sendMessage("Usage: /domain <claim|unclaim|list>");
             return true;
         }
 
