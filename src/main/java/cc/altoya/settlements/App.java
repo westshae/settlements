@@ -6,6 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import cc.altoya.settlements.Commands.Alliance.MainAlliance;
 import cc.altoya.settlements.Commands.Domain.MainDomain;
+import cc.altoya.settlements.Events.EventProtectBlocks;
+import cc.altoya.settlements.Events.EventProtectEntities;
 
 public class App extends JavaPlugin {
     @Override
@@ -15,6 +17,10 @@ public class App extends JavaPlugin {
         // Register commands
         this.getCommand("domain").setExecutor(new MainDomain());
         this.getCommand("alliance").setExecutor(new MainAlliance());
+
+        // How to register eventListeners
+        this.getServer().getPluginManager().registerEvents(new EventProtectBlocks(), this);
+        this.getServer().getPluginManager().registerEvents(new EventProtectEntities(), this);
     }
 
     private void initializeConfig() {
