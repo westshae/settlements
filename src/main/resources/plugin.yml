@@ -1,14 +1,10 @@
 main: cc.altoya.settlements.App
 name: settlements
 version: 1
-folia-supported: true
-api-version: 1.20
+api-version: 1.21.1
 description: Settlements plugin
 
 commands:
-  chunk:
-    description: Claiming chunks
-    usage: /chunk {var} {var}
-  settlement:
-    description: Settlements
-    usage: /settlement {var} {var}
+  domain:
+    description: Domains
+    usage: /domain {var} {var}

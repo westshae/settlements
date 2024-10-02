@@ -1,6 +1,9 @@
 package cc.altoya.settlements.Util;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,8 +25,35 @@ public class GeneralUtil {
     return true;
   }
 
-  public static FileConfiguration getPluginConfig(String pluginName, String configFilename){
+  public static FileConfiguration getPluginConfig(String pluginName, String configFilename) {
     File file = new File(Bukkit.getServer().getPluginManager().getPlugin(pluginName).getDataFolder(), configFilename);
     return YamlConfiguration.loadConfiguration(file);
+  }
+
+  public static void savePluginConfig(FileConfiguration config, String pluginName, String configFilename) {
+    File file = new File(Bukkit.getServer().getPluginManager().getPlugin(pluginName).getDataFolder(), configFilename);
+    try {
+      config.save(file);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static List<String> createListFromString(String input) {
+    if (input == null){
+      return new ArrayList<>();
+    }
+    String[] items = input.split(",");
+
+    List<String> list = new ArrayList<>();
+
+    for (String item : items) {
+      list.add(item.trim());
+    }
+    return list;
+  }
+
+  public static String createStringFromList(List<String> list) {
+    return String.join(", ", list.stream().toArray(String[]::new));
   }
 }
