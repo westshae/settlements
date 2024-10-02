@@ -113,6 +113,10 @@ public class AllianceUtil {
             ChatUtil.sendErrorMessage(allianceLeader, "This player doesn't exist.");
             return;
         }
+        if(invitee.getUniqueId().equals(allianceLeader.getUniqueId())){
+            ChatUtil.sendErrorMessage(allianceLeader, "You can't invite yourself.");
+            return;
+        }
         String allianceName = getPlayerAlliance(allianceLeader);
         List<String> allianceInvites = GeneralUtil
                 .createListFromString((String) allianceConfig.get("alliances." + allianceName + ".invites"));
