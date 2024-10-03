@@ -2,7 +2,6 @@ package cc.altoya.settlements.Util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -23,14 +22,6 @@ public class DomainUtil {
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }
-
-  private static Chunk getChunkFromKey(World world, String key) {
-    String[] parts = key.split("y");
-    int chunkX = Integer.parseInt(parts[0].substring(1));
-    int chunkZ = Integer.parseInt(parts[1]);
-
-    return world.getChunkAt(chunkX, chunkZ);
   }
 
   private static String getKeyFromChunk(Chunk chunk) {

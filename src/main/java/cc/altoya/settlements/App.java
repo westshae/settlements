@@ -10,6 +10,7 @@ import cc.altoya.settlements.Commands.Structure.MainStructure;
 import cc.altoya.settlements.Events.EventAllianceChat;
 import cc.altoya.settlements.Events.EventProtectBlocks;
 import cc.altoya.settlements.Events.EventProtectEntities;
+import cc.altoya.settlements.Events.EventStructureInteract;
 
 public class App extends JavaPlugin {
     @Override
@@ -25,6 +26,7 @@ public class App extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EventProtectBlocks(), this);
         this.getServer().getPluginManager().registerEvents(new EventProtectEntities(), this);
         this.getServer().getPluginManager().registerEvents(new EventAllianceChat(), this);
+        this.getServer().getPluginManager().registerEvents(new EventStructureInteract(), this);
     }
 
     private void initializeConfig() {

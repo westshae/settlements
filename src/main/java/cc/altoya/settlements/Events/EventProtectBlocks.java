@@ -43,6 +43,9 @@ public class EventProtectBlocks implements Listener {
 
     @EventHandler
     public void playerInteractEvent(PlayerInteractEvent event) {
+        if(event.getClickedBlock() == null){
+            return;
+        }
         Chunk chunk = event.getClickedBlock().getChunk();
         Player player = event.getPlayer();
         if(chunk == null){

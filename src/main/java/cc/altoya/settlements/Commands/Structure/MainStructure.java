@@ -21,7 +21,7 @@ public class MainStructure implements CommandExecutor{
         }
 
         switch (args[0].toLowerCase()) {
-            case "claim":
+            case "generate":
                 return CommandGenerate.handle((Player) sender, args);
         }
 
