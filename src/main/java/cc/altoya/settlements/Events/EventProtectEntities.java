@@ -33,14 +33,14 @@ public class EventProtectEntities implements Listener {
             return;
         }
 
+
+        if (!DomainUtil.isChunkClaimed(chunk)) {
+            return;
+        }
         Player player = (Player) event.getDamager();
         if (event.getDamager().getType() == EntityType.PLAYER) {
             ChatUtil.sendErrorMessage(player, "No pvp is enabled within claimed chunks.");
             event.setCancelled(true);
-            return;
-        }
-
-        if (!DomainUtil.isChunkClaimed(chunk)) {
             return;
         }
         if (!DomainUtil.doesPlayerOwnChunk(player, chunk)) {
