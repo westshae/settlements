@@ -27,7 +27,7 @@ public class AllianceUtil {
 
     public static boolean isPlayerInAlliance(Player player) {
         FileConfiguration domainConfig = DomainUtil.getDomainConfig();
-        return domainConfig.contains("domains." + player.getUniqueId().toString() + ".alliance");
+        return domainConfig.contains("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance");
     }
 
     public static boolean doesAllianceExist(String name) {
@@ -37,21 +37,21 @@ public class AllianceUtil {
 
     public static String getPlayerAlliance(Player player) {
         FileConfiguration domainConfig = DomainUtil.getDomainConfig();
-        return domainConfig.getString("domains." + player.getUniqueId().toString() + ".alliance");
+        return domainConfig.getString("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance");
     }
 
     public static boolean isPlayerOwner(Player player) {
         FileConfiguration allianceConfig = getAllianceConfig();
         String allianceName = getPlayerAlliance(player);
         String allianceOwnerUuid = allianceConfig.getString("alliances." + allianceName + ".owner");
-        return player.getUniqueId().toString().equals(allianceOwnerUuid);
+        return GeneralUtil.getKeyFromPlayer(player).equals(allianceOwnerUuid);
     }
 
     public static boolean doesPlayerHaveInvite(Player player, String allianceName) {
         FileConfiguration allianceConfig = getAllianceConfig();
         List<String> invites = GeneralUtil
                 .createListFromString((String) allianceConfig.get("alliances." + allianceName + ".invites"));
-        return invites.contains(player.getUniqueId().toString());
+        return invites.contains(GeneralUtil.getKeyFromPlayer(player));
     }
 
     public static List<String> getAlliancePlayers(String allianceName) {
@@ -71,10 +71,10 @@ public class AllianceUtil {
             ChatUtil.sendErrorMessage(player, "This alliance already exists.");
             return;
         }
-        domainConfig.set("domains." + player.getUniqueId().toString() + ".alliance", allianceName);
-        allianceConfig.set("alliances." + allianceName + ".owner", player.getUniqueId().toString());
+        domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance", allianceName);
+        allianceConfig.set("alliances." + allianceName + ".owner", GeneralUtil.getKeyFromPlayer(player));
         List<String> alliancePlayers = new ArrayList<>();
-        alliancePlayers.add(player.getUniqueId().toString());
+        alliancePlayers.add(GeneralUtil.getKeyFromPlayer(player));
         allianceConfig.set("alliances." + allianceName + ".players", GeneralUtil.createStringFromList(alliancePlayers));
 
         DomainUtil.saveDomainConfig(domainConfig);
@@ -96,7 +96,7 @@ public class AllianceUtil {
         }
         String allianceName = getPlayerAlliance(player);
         allianceConfig.set("alliances." + allianceName, null);
-        domainConfig.set("domains." + player.getUniqueId().toString() + ".alliance", null);
+        domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance", null);
         saveAllianceConfig(allianceConfig);
         DomainUtil.saveDomainConfig(domainConfig);
         ChatUtil.sendSuccessMessage(player, "Alliance has been deleted.");
@@ -119,14 +119,14 @@ public class AllianceUtil {
             ChatUtil.sendErrorMessage(allianceLeader, "This player doesn't exist.");
             return;
         }
-        if (invitee.getUniqueId().equals(allianceLeader.getUniqueId())) {
+        if (GeneralUtil.getKeyFromPlayer(invitee).equals(GeneralUtil.getKeyFromPlayer(allianceLeader))) {
             ChatUtil.sendErrorMessage(allianceLeader, "You can't invite yourself.");
             return;
         }
         String allianceName = getPlayerAlliance(allianceLeader);
         List<String> allianceInvites = GeneralUtil
                 .createListFromString((String) allianceConfig.get("alliances." + allianceName + ".invites"));
-        allianceInvites.add(invitee.getUniqueId().toString());
+        allianceInvites.add(GeneralUtil.getKeyFromPlayer(invitee));
         allianceConfig.set("alliances." + allianceName + ".invites", GeneralUtil.createStringFromList(allianceInvites));
         saveAllianceConfig(allianceConfig);
         ChatUtil.sendSuccessMessage(allianceLeader, "Invite successfully sent.");
@@ -151,7 +151,7 @@ public class AllianceUtil {
         }
         List<String> allianceInvites = GeneralUtil
                 .createListFromString((String) allianceConfig.get("alliances." + allianceName + ".invites"));
-        allianceInvites.removeIf((playerUuid) -> playerUuid.equals(player.getUniqueId().toString()));
+        allianceInvites.removeIf((playerUuid) -> playerUuid.equals(GeneralUtil.getKeyFromPlayer(player)));
         allianceConfig.set("alliances." + allianceName + ".invites", GeneralUtil.createStringFromList(allianceInvites));
 
         List<String> alliancePlayers = GeneralUtil
@@ -163,10 +163,10 @@ public class AllianceUtil {
                     player.getDisplayName() + " has joined the alliance.");
         });
 
-        alliancePlayers.add(player.getUniqueId().toString());
+        alliancePlayers.add(GeneralUtil.getKeyFromPlayer(player));
         allianceConfig.set("alliances." + allianceName + ".players", GeneralUtil.createStringFromList(alliancePlayers));
 
-        domainConfig.set("domains." + player.getUniqueId().toString() + ".alliance", allianceName);
+        domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance", allianceName);
 
         saveAllianceConfig(allianceConfig);
         DomainUtil.saveDomainConfig(domainConfig);
@@ -193,12 +193,12 @@ public class AllianceUtil {
             ChatUtil.sendErrorMessage(player, "You must be in an alliance to run this command");
             return;
         }
-        if(!domainConfig.contains("domains." + player.getUniqueId().toString() + ".allianceChat")){
-            domainConfig.set("domains." + player.getUniqueId().toString() + ".allianceChat", true);
+        if(!domainConfig.contains("domains." + GeneralUtil.getKeyFromPlayer(player) + ".allianceChat")){
+            domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".allianceChat", true);
             ChatUtil.sendSuccessMessage(player, "Alliance chat has now been enabled.");
         } else {
             boolean allianceChatEnabled = domainConfig.getBoolean("domains." + player.getUniqueId().toString() + ".allianceChat");
-            domainConfig.set("domains." + player.getUniqueId().toString() + ".allianceChat", !allianceChatEnabled);
+            domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".allianceChat", !allianceChatEnabled);
             if(allianceChatEnabled){
                 ChatUtil.sendSuccessMessage(player, "Alliance chat has now been disabled");
             } else {

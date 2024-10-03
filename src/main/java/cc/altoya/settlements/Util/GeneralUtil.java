@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -40,7 +42,7 @@ public class GeneralUtil {
   }
 
   public static List<String> createListFromString(String input) {
-    if (input == null){
+    if (input == null) {
       return new ArrayList<>();
     }
     String[] items = input.split(",");
@@ -56,4 +58,24 @@ public class GeneralUtil {
   public static String createStringFromList(List<String> list) {
     return String.join(", ", list.stream().toArray(String[]::new));
   }
+
+  public static String getKeyFromChunk(Chunk chunk) {
+    int chunkX = chunk.getX();
+    int chunkZ = chunk.getZ();
+
+    return "x" + chunkX + "y" + chunkZ;
+  }
+
+  public static String getKeyFromBlock(Block block) {
+    int blockX = block.getX();
+    int blockY = block.getY();
+    int blockZ = block.getZ();
+
+    return "x" + blockX + "y" + blockY + "z" + blockZ;
+  }
+
+  public static String getKeyFromPlayer(Player player){
+    return player.getUniqueId().toString();
+  }
+
 }

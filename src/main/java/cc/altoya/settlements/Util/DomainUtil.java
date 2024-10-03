@@ -24,22 +24,16 @@ public class DomainUtil {
     }
   }
 
-  private static String getKeyFromChunk(Chunk chunk) {
-    int chunkX = chunk.getX();
-    int chunkZ = chunk.getZ();
-
-    return "x" + chunkX + "y" + chunkZ;
-  }
 
   public static boolean isChunkClaimed(Chunk chunk) {
     FileConfiguration config = getDomainConfig();
-    return config.contains("domains.claimed_tiles." + getKeyFromChunk(chunk));
+    return config.contains("domains.claimed_tiles." + GeneralUtil.getKeyFromChunk(chunk));
   }
 
   public static boolean doesPlayerOwnChunk(Player player, Chunk chunk) {
     FileConfiguration config = getDomainConfig();
-    String claim_owner_uuid = config.getString("domains.claimed_tiles." + getKeyFromChunk(chunk));
-    return player.getUniqueId().toString().equals(claim_owner_uuid);
+    String claim_owner_uuid = config.getString("domains.claimed_tiles." + GeneralUtil.getKeyFromChunk(chunk));
+    return GeneralUtil.getKeyFromPlayer(player).equals(claim_owner_uuid);
   }
 
   public static void addPlayerChunk(Player player, Chunk chunk) {
@@ -48,10 +42,10 @@ public class DomainUtil {
       ChatUtil.sendErrorMessage(player, "This chunk is already claimed.");
       return;
     }
-    config.set("domains.claimed_tiles." + getKeyFromChunk(chunk), player.getUniqueId().toString());
-    String playerPath = "domains." + player.getUniqueId().toString() + ".claims";
+    config.set("domains.claimed_tiles." + GeneralUtil.getKeyFromChunk(chunk), GeneralUtil.getKeyFromPlayer(player));
+    String playerPath = "domains." + GeneralUtil.getKeyFromPlayer(player) + ".claims";
     List<String> claims = GeneralUtil.createListFromString(config.getString(playerPath));
-    claims.add(getKeyFromChunk(chunk));
+    claims.add(GeneralUtil.getKeyFromChunk(chunk));
     config.set(playerPath, GeneralUtil.createStringFromList(claims));
     saveDomainConfig(config);
     ChatUtil.sendSuccessMessage(player, "Chunk claimed");
@@ -67,10 +61,10 @@ public class DomainUtil {
       ChatUtil.sendErrorMessage(player, "You aren't the owner of this claim.");
       return;
     }
-    config.set("domains.claimed_tiles." + getKeyFromChunk(chunk), null);
-    String playerPath = "domains." + player.getUniqueId().toString() + ".claims";
+    config.set("domains.claimed_tiles." + GeneralUtil.getKeyFromChunk(chunk), null);
+    String playerPath = "domains." + GeneralUtil.getKeyFromPlayer(player) + ".claims";
     List<String> claims = GeneralUtil.createListFromString((String) config.get(playerPath));
-    claims.removeIf(claim -> claim.equals(getKeyFromChunk(chunk)));
+    claims.removeIf(claim -> claim.equals(GeneralUtil.getKeyFromChunk(chunk)));
     config.set(playerPath, GeneralUtil.createStringFromList(claims));
 
     saveDomainConfig(config);
@@ -79,11 +73,11 @@ public class DomainUtil {
 
   public static List<String> getPlayersChunks(Player player){
     FileConfiguration config = getDomainConfig();
-    return GeneralUtil.createListFromString((String) config.get("domains." + player.getUniqueId().toString() + ".claims"));
+    return GeneralUtil.createListFromString((String) config.get("domains." + GeneralUtil.getKeyFromPlayer(player) + ".claims"));
   }
 
   public static boolean isAllianceChatMode(Player player){
     FileConfiguration config = getDomainConfig();
-    return config.getBoolean("domains." + player.getUniqueId().toString() + ".allianceChat");
+    return config.getBoolean("domains." + GeneralUtil.getKeyFromPlayer(player) + ".allianceChat");
   }
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,23 +26,23 @@ public class StructureUtil {
         }
     }
 
-    private static String getKeyFromBlock(Block block) {
-        int blockX = block.getX();
-        int blockY = block.getY();
-        int blockZ = block.getZ();
-
-        return "x" + blockX + "y" + blockY + "z" + blockZ;
-    }
-
-    public static void saveBlockAsStructureBlock(Block block){
+    public static void createNewStructure(Player player) {
         FileConfiguration config = getStructureConfig();
-        config.set("structures.blocks." + getKeyFromBlock(block), true);
+        Chunk chunk = player.getLocation().getChunk();
+
+        config.set("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".owner", GeneralUtil.getKeyFromPlayer(player));
         saveStructureConfig(config);
     }
 
-    public static boolean isBlockStructureBlock(Block block){
+    public static void saveBlockAsStructureBlock(Block block) {
         FileConfiguration config = getStructureConfig();
-        return config.contains("structures.blocks." + getKeyFromBlock(block));
+        config.set("structures.all_blocks." + GeneralUtil.getKeyFromBlock(block), true);
+        saveStructureConfig(config);
+    }
+
+    public static boolean isBlockStructureBlock(Block block) {
+        FileConfiguration config = getStructureConfig();
+        return config.contains("structures.all_blocks." + GeneralUtil.getKeyFromBlock(block));
     }
 
     public static void placeBlock(Player player) {
