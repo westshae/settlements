@@ -1,6 +1,5 @@
 package cc.altoya.settlements.Commands.Structure;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Util.GeneralUtil;
@@ -8,10 +7,14 @@ import cc.altoya.settlements.Util.StructureUtil;
 
 public class CommandGenerate {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/structure generate")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2, "/structure generate")) {
             return true;
         }
-        StructureUtil.placeStructureBlock(sender, sender.getLocation().add(0, 1, 0), Material.ACACIA_BUTTON);
+        switch (args[1]) {
+            case "mine":
+                StructureUtil.generateMineBuilding(sender, sender.getLocation().getChunk());
+                break;
+        }
         return true;
     }
 }

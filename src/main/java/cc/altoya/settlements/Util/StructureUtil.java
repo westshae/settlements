@@ -2,6 +2,8 @@ package cc.altoya.settlements.Util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -11,8 +13,6 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import net.md_5.bungee.api.chat.hover.content.Item;
 
 public class StructureUtil {
     public static FileConfiguration getStructureConfig() {
@@ -29,18 +29,27 @@ public class StructureUtil {
         }
     }
 
-    public static void createNewStructure(Player player) {
+    public static void createNewStructure(Player player, String type) {
         FileConfiguration config = getStructureConfig();
         Chunk chunk = player.getLocation().getChunk();
 
         config.set("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".owner", GeneralUtil.getKeyFromPlayer(player));
+        config.set("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".type", type);
         saveStructureConfig(config);
     }
 
-    public static void saveBlockAsStructureBlock(Block block) {
+    public static void saveBlockAsStructureBlock(Block block, boolean isInteractive) {
         FileConfiguration config = getStructureConfig();
-        config.set("structures.all_blocks." + GeneralUtil.getKeyFromBlock(block), true);
-        config.set("structures." + GeneralUtil.getKeyFromChunk(block.getChunk()) + ".blocks", GeneralUtil.getKeyFromBlock(block));
+        config.set("structures.all_blocks." + GeneralUtil.getKeyFromBlock(block) + ".interactive", isInteractive);
+
+        String blockPath = (isInteractive) ? ".interactiveBlocks" : ".blocks";
+
+        List<String> structureBlocks = GeneralUtil.createListFromString(
+                (String) config.get("structures." + GeneralUtil.getKeyFromChunk(block.getChunk()) + blockPath));
+        structureBlocks.add(GeneralUtil.getKeyFromBlock(block));
+
+        config.set("structures." + GeneralUtil.getKeyFromChunk(block.getChunk()) + blockPath,
+                GeneralUtil.createStringFromList(structureBlocks));
         saveStructureConfig(config);
     }
 
@@ -49,45 +58,57 @@ public class StructureUtil {
         return config.contains("structures.all_blocks." + GeneralUtil.getKeyFromBlock(block));
     }
 
-    public static void placeStructureBlock(Player player, Location location, Material material){
-        Block currentBlockAtLocation = location.getBlock();
-        currentBlockAtLocation.setType(material);
-        saveBlockAsStructureBlock(currentBlockAtLocation);
+    public static boolean isBlockInteractiveBlock(Block block) {
+        FileConfiguration config = getStructureConfig();
+        return config.getBoolean("structures.all_blocks." + GeneralUtil.getKeyFromBlock(block) + ".interactive");
     }
 
-    public static boolean isChunkStructure(Chunk chunk){
+    public static void placeStructureBlock(Player player, Location location, Material material) {
+        Block currentBlockAtLocation = location.getBlock();
+        currentBlockAtLocation.setType(material);
+        saveBlockAsStructureBlock(currentBlockAtLocation, false);
+    }
+
+    public static void placeInteractiveBlock(Player player, Location location, Material material) {
+        Block currentBlockAtLocation = location.getBlock();
+        currentBlockAtLocation.setType(material);
+        saveBlockAsStructureBlock(currentBlockAtLocation, true);
+    }
+
+    public static boolean isChunkStructure(Chunk chunk) {
         FileConfiguration config = getStructureConfig();
         return config.contains("structures." + GeneralUtil.getKeyFromChunk(chunk));
     }
 
-    public static Integer getResourcesFromStructure(Chunk chunk){
+    public static Integer getResourcesFromStructure(Chunk chunk) {
         FileConfiguration config = getStructureConfig();
-        if(!isChunkStructure(chunk)){
+        if (!isChunkStructure(chunk)) {
             return null;
         }
         return config.getInt("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".resources");
     }
 
-    public static void editResources(Player player, Chunk chunk, int amount){
+    public static void editResources(Player player, Chunk chunk, int amount) {
         FileConfiguration config = getStructureConfig();
-        if(!isChunkStructure(chunk)){
+        if (!isChunkStructure(chunk)) {
             return;
         }
-        config.set("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".resources", getResourcesFromStructure(chunk) + amount);
+        config.set("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".resources",
+                getResourcesFromStructure(chunk) + amount);
         saveStructureConfig(config);
         ChatUtil.sendSuccessMessage(player, "Resources now at " + getResourcesFromStructure(chunk));
         onResourceAmountGivePlayerItem(player, chunk);
     }
 
-    public static void onResourceAmountGivePlayerItem(Player player, Chunk chunk){
-        if(!isChunkStructure(chunk)){
+    public static void onResourceAmountGivePlayerItem(Player player, Chunk chunk) {
+        if (!isChunkStructure(chunk)) {
             return;
         }
         Integer resources = getResourcesFromStructure(chunk);
-        if(resources == null){
+        if (resources == null) {
             return;
         }
-        if(resources < 50){
+        if (resources < 50) {
             return;
         }
         player.getInventory().addItem(new ItemStack(Material.DIAMOND, 1));
@@ -95,4 +116,48 @@ public class StructureUtil {
         editResources(player, chunk, -50);
     }
 
+    public static void deleteStructure(Player player, Chunk chunk) {
+        FileConfiguration config = getStructureConfig();
+        if (!DomainUtil.doesPlayerOwnChunk(player, chunk)) {
+            ChatUtil.sendErrorMessage(player, "You don't own this structure");
+            return;
+        }
+        List<String> allBlocks = new ArrayList<>();
+        allBlocks.addAll(GeneralUtil.createListFromString(
+                (String) config.get("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".interactiveBlocks")));
+        allBlocks.addAll(GeneralUtil.createListFromString(
+                (String) config.get("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".blocks")));
+
+        for (String blockKey : allBlocks) {
+            String allBlockPath = "structures.all_blocks." + blockKey;
+            if (config.contains(allBlockPath)) {
+                Block block = GeneralUtil.getBlockFromKey(blockKey);
+                block.setType(Material.AIR);
+                config.set(allBlockPath, null);
+            }
+        }
+
+        config.set("structures." + GeneralUtil.getKeyFromChunk(chunk), null);
+
+        saveStructureConfig(config);
+
+        ChatUtil.sendSuccessMessage(player, "Structure successfully deleted.");
+    }
+
+    public static void generateMineBuilding(Player player, Chunk chunk) {
+        if (isChunkStructure(chunk)) {
+            ChatUtil.sendErrorMessage(player, "There is already a structure in this chunk");
+            return;
+        }
+        createNewStructure(player, "mine");
+        Location centerLocation = player.getLocation();
+        for (int i = -2; i <= 2; i++) {
+            for (int j = -2; j <= 2; j++) {
+                Location adjustedLocation = centerLocation.clone().add(i, 0, j);
+                placeInteractiveBlock(player, adjustedLocation, Material.COAL_ORE);
+            }
+        }
+
+        ChatUtil.sendSuccessMessage(player, "Mine successfully generated");
+    }
 }

@@ -3,28 +3,27 @@ package cc.altoya.settlements.Events;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.block.BlockBreakEvent;
 
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.StructureUtil;
 
 public class EventStructureInteract implements Listener {
     @EventHandler
-    public void onButtonPress(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+    public void onInteractWithStructureChunk(BlockBreakEvent event) {
+        Block block = event.getBlock();
+
+        if(!StructureUtil.isChunkStructure(block.getChunk())){
             return;
         }
 
-        Block block = event.getClickedBlock();
-
-        if(block == null){
+        if(!StructureUtil.isBlockInteractiveBlock(block)){
+            ChatUtil.sendErrorMessage(event.getPlayer(), "Cannot break blocks within a structure chunk.");
+            event.setCancelled(true);
             return;
-        }
-
-        if(StructureUtil.isBlockStructureBlock(block)){
-            ChatUtil.sendSuccessMessage(event.getPlayer(), "You clicked the button");
-            StructureUtil.editResources(event.getPlayer(), block.getChunk(), 10);
+        } else {
+            event.setCancelled(true);
+            StructureUtil.editResources(event.getPlayer(), block.getChunk(), 1);
         }
     }
 }

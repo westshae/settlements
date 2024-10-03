@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -66,6 +67,27 @@ public class GeneralUtil {
     return "x" + chunkX + "y" + chunkZ;
   }
 
+  public static Block getBlockFromKey(String key){
+        String[] parts = key.split("[xyz]");
+    
+    if (parts.length != 4) {
+        return null;
+    }
+
+    try {
+        int blockX = Integer.parseInt(parts[1]);
+        int blockY = Integer.parseInt(parts[2]);
+        int blockZ = Integer.parseInt(parts[3]);
+        
+        World world = Bukkit.getServer().getWorlds().get(0);
+        
+        return world.getBlockAt(blockX, blockY, blockZ);
+    } catch (NumberFormatException e) {
+        return null;
+    }
+
+  }
+
   public static String getKeyFromBlock(Block block) {
     int blockX = block.getX();
     int blockY = block.getY();
@@ -74,7 +96,7 @@ public class GeneralUtil {
     return "x" + blockX + "y" + blockY + "z" + blockZ;
   }
 
-  public static String getKeyFromPlayer(Player player){
+  public static String getKeyFromPlayer(Player player) {
     return player.getUniqueId().toString();
   }
 

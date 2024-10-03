@@ -16,13 +16,15 @@ public class MainStructure implements CommandExecutor{
         }
 
         if (args.length == 0) {
-            sender.sendMessage("Usage: /structure <generate>");
+            sender.sendMessage("Usage: /structure <generate|delete>");
             return true;
         }
 
         switch (args[0].toLowerCase()) {
             case "generate":
                 return CommandGenerate.handle((Player) sender, args);
+            case "delete":
+                return CommandDelete.handle((Player) sender, args);
         }
 
         return true;
