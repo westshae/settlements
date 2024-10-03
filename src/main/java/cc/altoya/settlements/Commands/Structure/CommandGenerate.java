@@ -1,5 +1,6 @@
 package cc.altoya.settlements.Commands.Structure;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Util.GeneralUtil;
@@ -10,7 +11,7 @@ public class CommandGenerate {
         if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/structure generate")) {
             return true;
         }
-        StructureUtil.placeBlock(sender);
+        StructureUtil.placeStructureBlock(sender, sender.getLocation().add(0, 1, 0), Material.ACACIA_BUTTON);
         return true;
     }
 }

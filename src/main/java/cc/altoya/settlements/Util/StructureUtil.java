@@ -37,6 +37,7 @@ public class StructureUtil {
     public static void saveBlockAsStructureBlock(Block block) {
         FileConfiguration config = getStructureConfig();
         config.set("structures.all_blocks." + GeneralUtil.getKeyFromBlock(block), true);
+        config.set("structures." + GeneralUtil.getKeyFromChunk(block.getChunk()) + ".blocks", GeneralUtil.getKeyFromBlock(block));
         saveStructureConfig(config);
     }
 
@@ -45,13 +46,33 @@ public class StructureUtil {
         return config.contains("structures.all_blocks." + GeneralUtil.getKeyFromBlock(block));
     }
 
-    public static void placeBlock(Player player) {
-        Location location = player.getLocation();
-        location.add(0, 3, 0);
-        Block block = location.getBlock();
+    public static void placeStructureBlock(Player player, Location location, Material material){
+        Block currentBlockAtLocation = location.getBlock();
+        currentBlockAtLocation.setType(material);
+        saveBlockAsStructureBlock(currentBlockAtLocation);
+    }
 
-        block.setType(Material.ACACIA_BUTTON);
-        saveBlockAsStructureBlock(block);
+    public static boolean isChunkStructure(Chunk chunk){
+        FileConfiguration config = getStructureConfig();
+        return config.contains("structures." + GeneralUtil.getKeyFromChunk(chunk));
+    }
+
+    public static Integer getResourcesFromStructure(Chunk chunk){
+        FileConfiguration config = getStructureConfig();
+        if(!isChunkStructure(chunk)){
+            return null;
+        }
+        return config.getInt("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".resources");
+    }
+
+    public static void editResources(Player player, Chunk chunk, int amount){
+        FileConfiguration config = getStructureConfig();
+        if(!isChunkStructure(chunk)){
+            return;
+        }
+        config.set("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".resources", getResourcesFromStructure(chunk) + amount);
+        saveStructureConfig(config);
+        ChatUtil.sendSuccessMessage(player, "Resources now at " + getResourcesFromStructure(chunk));
     }
 
 }
