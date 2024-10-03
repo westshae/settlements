@@ -23,8 +23,8 @@ public class EventStructureInteract implements Listener {
         }
 
         if(StructureUtil.isBlockStructureBlock(block)){
-            StructureUtil.editResources(event.getPlayer(), block.getChunk(), 10);
             ChatUtil.sendSuccessMessage(event.getPlayer(), "You clicked the button");
+            StructureUtil.editResources(event.getPlayer(), block.getChunk(), 10);
         }
     }
 }

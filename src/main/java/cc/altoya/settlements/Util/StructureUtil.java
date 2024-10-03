@@ -10,6 +10,9 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import net.md_5.bungee.api.chat.hover.content.Item;
 
 public class StructureUtil {
     public static FileConfiguration getStructureConfig() {
@@ -73,6 +76,23 @@ public class StructureUtil {
         config.set("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".resources", getResourcesFromStructure(chunk) + amount);
         saveStructureConfig(config);
         ChatUtil.sendSuccessMessage(player, "Resources now at " + getResourcesFromStructure(chunk));
+        onResourceAmountGivePlayerItem(player, chunk);
+    }
+
+    public static void onResourceAmountGivePlayerItem(Player player, Chunk chunk){
+        if(!isChunkStructure(chunk)){
+            return;
+        }
+        Integer resources = getResourcesFromStructure(chunk);
+        if(resources == null){
+            return;
+        }
+        if(resources < 50){
+            return;
+        }
+        player.getInventory().addItem(new ItemStack(Material.DIAMOND, 1));
+        ChatUtil.sendSuccessMessage(player, "You reached 50 resources, here's a diamond.");
+        editResources(player, chunk, -50);
     }
 
 }
