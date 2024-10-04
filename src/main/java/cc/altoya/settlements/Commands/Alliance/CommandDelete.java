@@ -18,7 +18,7 @@ public class CommandDelete {
         return true;
     }
 
-    public static void deleteAlliance(Player player) {
+    private static void deleteAlliance(Player player) {
         FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
         FileConfiguration domainConfig = DomainUtil.getDomainConfig();
         if (!AllianceUtil.isPlayerInAlliance(player)) {

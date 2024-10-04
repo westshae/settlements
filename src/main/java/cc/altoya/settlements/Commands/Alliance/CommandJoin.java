@@ -14,13 +14,15 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandJoin {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2, "/alliance join {alliance}")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2,
+                "/alliance join {alliance}")) {
             return true;
         }
         joinAlliance(sender, args[1]);
         return true;
     }
-        public static void joinAlliance(Player player, String allianceName) {
+
+    private static void joinAlliance(Player player, String allianceName) {
         FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
         FileConfiguration domainConfig = DomainUtil.getDomainConfig();
 

@@ -13,13 +13,17 @@ public class CommandList {
         if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/domain list")) {
             return true;
         }
-        List<String> chunks = DomainUtil.getPlayersChunks(sender);
-        if(chunks.size() == 0){
-            ChatUtil.sendErrorMessage(sender, "No claimed chunks. Try using /domain claim");
-            return true;
-        }
-        ChatUtil.sendSuccessMessage(sender, "Claimed Chunks:");
-        chunks.forEach((chunk) -> ChatUtil.sendSuccessMessage(sender, " - " + chunk));
+        sendPlayerOwnedChunks(sender);
         return true;
+    }
+
+    private static void sendPlayerOwnedChunks(Player player){
+        List<String> chunks = DomainUtil.getPlayersChunks(player);
+        if(chunks.size() == 0){
+            ChatUtil.sendErrorMessage(player, "No claimed chunks. Try using /domain claim");
+            return;
+        }
+        ChatUtil.sendSuccessMessage(player, "Claimed Chunks:");
+        chunks.forEach((chunk) -> ChatUtil.sendSuccessMessage(player, " - " + chunk));
     }
 }
