@@ -21,7 +21,7 @@ public class GeneralUtil {
       ChatUtil.sendErrorMessage(player, "You don't have permission to run this command.");
       return false;
     }
-    if (args.length <= argsMinimum) {
+    if (args.length < argsMinimum) {
       ChatUtil.sendErrorMessage(player, "This command requires at least " + argsMinimum + " arguments. " + commandString);
       return false;
     }

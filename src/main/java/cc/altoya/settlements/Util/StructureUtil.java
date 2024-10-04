@@ -116,15 +116,8 @@ public class StructureUtil {
         editResources(player, chunk, -50);
     }
 
-    public static boolean doesStructureNameExist(String type){
+    public static boolean doesStructureNameExist(String name){
         FileConfiguration config = getStructureConfig();
-        return (config.contains("structures.types." + type));
+        return (config.contains("structures.blueprints." + name));
     }
-
-    public static String getStructureType(String type){
-        FileConfiguration config = getStructureConfig();
-        return (String) config.get("structures.types." + type);
-    }
-
-
 }

@@ -16,7 +16,7 @@ public class MainStructure implements CommandExecutor{
         }
 
         if (args.length == 0) {
-            sender.sendMessage("Usage: /structure <generate|delete>");
+            sender.sendMessage("Usage: /structure <generate|delete|load>");
             return true;
         }
 
@@ -25,6 +25,8 @@ public class MainStructure implements CommandExecutor{
                 return CommandGenerate.handle((Player) sender, args);
             case "delete":
                 return CommandDelete.handle((Player) sender, args);
+            case "load":
+                return CommandLoad.handle((Player) sender, args);
         }
 
         return true;
