@@ -60,6 +60,10 @@ public class CommandLoad {
             return;
         }
         Block targettedBlock = player.getTargetBlock(null, 10);
+        if(!(targettedBlock.getX() % 16 == 0 && targettedBlock.getZ() % 16 == 0)){
+            ChatUtil.sendErrorMessage(player, "FirstBlock of a blueprint must be placed at a chunk's [0, ~, 0]");
+            return;
+        }
         String blockKey = GeneralUtil.getKeyFromBlock(targettedBlock);
         config.set("structures.blueprints." + name + ".firstpoint", blockKey);
         ChatUtil.sendSuccessMessage(player, "Successfully added first point to blueprint.");
@@ -73,6 +77,16 @@ public class CommandLoad {
             return;
         }
         Block targettedBlock = player.getTargetBlock(null, 10);
+        if(!(targettedBlock.getX() % 16 == -1 && targettedBlock.getZ() % 16 == -1)){//-1 is 15 from this setup
+            ChatUtil.sendErrorMessage(player, "SecondBlock of a blueprint must be placed at a chunk's [15, ~, 15]");
+            return;
+        }
+        Block firstPointBlock = GeneralUtil.getBlockFromKey(config.getString("structures.blueprints." + name +".firstpoint"));
+
+        if(targettedBlock.getX() != firstPointBlock.getX() + 15 && targettedBlock.getZ() != firstPointBlock.getZ() + 15){
+            ChatUtil.sendErrorMessage(player, "Second point must be in the same chunk as first point.");
+            return;
+        }
         String blockKey = GeneralUtil.getKeyFromBlock(targettedBlock);
         config.set("structures.blueprints." + name + ".secondpoint", blockKey);
         ChatUtil.sendSuccessMessage(player, "Successfully added second point to blueprint.");
