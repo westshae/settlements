@@ -116,48 +116,15 @@ public class StructureUtil {
         editResources(player, chunk, -50);
     }
 
-    public static void deleteStructure(Player player, Chunk chunk) {
+    public static boolean doesStructureNameExist(String type){
         FileConfiguration config = getStructureConfig();
-        if (!DomainUtil.doesPlayerOwnChunk(player, chunk)) {
-            ChatUtil.sendErrorMessage(player, "You don't own this structure");
-            return;
-        }
-        List<String> allBlocks = new ArrayList<>();
-        allBlocks.addAll(GeneralUtil.createListFromString(
-                (String) config.get("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".interactiveBlocks")));
-        allBlocks.addAll(GeneralUtil.createListFromString(
-                (String) config.get("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".blocks")));
-
-        for (String blockKey : allBlocks) {
-            String allBlockPath = "structures.all_blocks." + blockKey;
-            if (config.contains(allBlockPath)) {
-                Block block = GeneralUtil.getBlockFromKey(blockKey);
-                block.setType(Material.AIR);
-                config.set(allBlockPath, null);
-            }
-        }
-
-        config.set("structures." + GeneralUtil.getKeyFromChunk(chunk), null);
-
-        saveStructureConfig(config);
-
-        ChatUtil.sendSuccessMessage(player, "Structure successfully deleted.");
+        return (config.contains("structures.types." + type));
     }
 
-    public static void generateMineBuilding(Player player, Chunk chunk) {
-        if (isChunkStructure(chunk)) {
-            ChatUtil.sendErrorMessage(player, "There is already a structure in this chunk");
-            return;
-        }
-        createNewStructure(player, "mine");
-        Location centerLocation = player.getLocation();
-        for (int i = -2; i <= 2; i++) {
-            for (int j = -2; j <= 2; j++) {
-                Location adjustedLocation = centerLocation.clone().add(i, 0, j);
-                placeInteractiveBlock(player, adjustedLocation, Material.COAL_ORE);
-            }
-        }
-
-        ChatUtil.sendSuccessMessage(player, "Mine successfully generated");
+    public static String getStructureType(String type){
+        FileConfiguration config = getStructureConfig();
+        return (String) config.get("structures.types." + type);
     }
+
+
 }
