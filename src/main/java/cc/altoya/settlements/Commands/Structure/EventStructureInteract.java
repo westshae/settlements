@@ -1,5 +1,8 @@
 package cc.altoya.settlements.Commands.Structure;
 
+import java.util.List;
+import java.util.Arrays;
+
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -33,15 +36,18 @@ public class EventStructureInteract implements Listener {
             case "mine":
                 handleMine(event, block, player);
                 break;
+            case "farm":
+                handleFarm(event, block, player);
+                break;
             default:
                 event.setCancelled(true);
                 return;
         }
     }
 
-    private static void handleMine(BlockBreakEvent event, Block block, Player player){
+    private static void handleMine(BlockBreakEvent event, Block block, Player player) {
         Material currentMaterial = block.getType();
-        if(currentMaterial == Material.STONE){
+        if (currentMaterial == Material.STONE) {
             event.setCancelled(true);
             return;
         }
@@ -55,6 +61,25 @@ public class EventStructureInteract implements Listener {
                 block.setType(currentMaterial);
             }
         }.runTaskLater(GeneralUtil.getPlugin(), 100L);
-
     }
+
+    private static void handleFarm(BlockBreakEvent event, Block block, Player player) {
+        Material currentMaterial = block.getType();
+        List<Material> allowedCrops = Arrays.asList(Material.SUGAR_CANE, Material.WHEAT, Material.PUMPKIN, Material.MELON);
+        if(!allowedCrops.contains(currentMaterial)){
+            event.setCancelled(true);
+            return;
+        }
+        event.setCancelled(true);
+        event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_PUMPKIN_CARVE, 1.0f, 1.0f);
+        StructureUtil.editResources(player, block.getChunk(), 1);
+        block.setType(Material.AIR);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                block.setType(currentMaterial);
+            }
+        }.runTaskLater(GeneralUtil.getPlugin(), 100L);
+    }
+
 }
