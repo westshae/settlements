@@ -29,13 +29,20 @@ public class StructureUtil {
         }
     }
 
-    public static void createNewStructure(Player player, String type) {
+    public static void createNewStructure(Player player, Chunk chunk, String type) {
         FileConfiguration config = getStructureConfig();
-        Chunk chunk = player.getLocation().getChunk();
 
         config.set("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".owner", GeneralUtil.getKeyFromPlayer(player));
         config.set("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".type", type);
         saveStructureConfig(config);
+    }
+
+    public static String getStructureType(Chunk chunk){
+        FileConfiguration config = getStructureConfig();
+        if(!isChunkStructure(chunk)){
+            return null;
+        }
+        return config.getString("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".type");
     }
 
     public static void saveBlockAsStructureBlock(Block block, boolean isInteractive) {

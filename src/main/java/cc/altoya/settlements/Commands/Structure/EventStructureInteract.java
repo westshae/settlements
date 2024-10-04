@@ -15,7 +15,7 @@ import cc.altoya.settlements.Util.StructureUtil;
 
 public class EventStructureInteract implements Listener {
     @EventHandler
-    public void onInteractWithStructureChunk(BlockBreakEvent event) {
+    public void onBreakInMineStructureChunk(BlockBreakEvent event) {
         Block block = event.getBlock();
         Player player = event.getPlayer();
 
@@ -27,17 +27,26 @@ public class EventStructureInteract implements Listener {
             ChatUtil.sendErrorMessage(player, "Cannot break blocks within a structure chunk.");
             event.setCancelled(true);
             return;
-        } else {
-            event.setCancelled(true);
-            event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_STONE_BREAK, 1.0f, 1.0f);
-            StructureUtil.editResources(player, block.getChunk(), 1);
-            block.setType(Material.STONE);
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    block.setType(Material.COAL_ORE);
-                }
-            }.runTaskLater(GeneralUtil.getPlugin(), 100L);
         }
+        if(!StructureUtil.getStructureType(block.getChunk()).equals("mine")){
+            event.setCancelled(true);
+            return;
+        }
+        Material currentMaterial = block.getType();
+        if(currentMaterial == Material.STONE){
+            event.setCancelled(true);
+            return;
+        }
+        event.setCancelled(true);
+        event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_STONE_BREAK, 1.0f, 1.0f);
+        StructureUtil.editResources(player, block.getChunk(), 1);
+        block.setType(Material.STONE);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                block.setType(currentMaterial);
+            }
+        }.runTaskLater(GeneralUtil.getPlugin(), 100L);
+
     }
 }

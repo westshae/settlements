@@ -4,13 +4,14 @@ import java.io.File;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import cc.altoya.settlements.Commands.Alliance.EventAllianceChat;
 import cc.altoya.settlements.Commands.Alliance.MainAlliance;
+import cc.altoya.settlements.Commands.Domain.EventProtectBlocks;
+import cc.altoya.settlements.Commands.Domain.EventProtectEntities;
 import cc.altoya.settlements.Commands.Domain.MainDomain;
+import cc.altoya.settlements.Commands.Structure.EventStructureInteract;
 import cc.altoya.settlements.Commands.Structure.MainStructure;
-import cc.altoya.settlements.Events.EventAllianceChat;
-import cc.altoya.settlements.Events.EventProtectBlocks;
-import cc.altoya.settlements.Events.EventProtectEntities;
-import cc.altoya.settlements.Events.EventStructureInteract;
+
 
 public class App extends JavaPlugin {
     @Override

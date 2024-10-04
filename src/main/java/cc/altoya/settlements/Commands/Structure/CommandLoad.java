@@ -140,7 +140,6 @@ public class CommandLoad {
                 }
             }
         }
-
         config.set("structures.blueprints." + name + ".blocks", blockList);
         config.set("structures.blueprints." + name + ".originalY", firstBlock.getY());
         StructureUtil.saveStructureConfig(config);
