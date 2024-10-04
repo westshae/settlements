@@ -7,7 +7,7 @@ import cc.altoya.settlements.Util.StructureUtil;
 
 public class CommandGenerate {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2, "/structure generate")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2, "/structure generate {type}")) {
             return true;
         }
         switch (args[1]) {

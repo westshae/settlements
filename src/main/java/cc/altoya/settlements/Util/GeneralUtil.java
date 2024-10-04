@@ -12,16 +12,17 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class GeneralUtil {
   public static boolean handlePermissionsAndArguments(Player player, String permissionRoot, String permissionChild,
-      String[] args, int argsRequired, String commandString) {
+      String[] args, int argsMinimum, String commandString) {
     if (!player.hasPermission(permissionRoot + "." + permissionChild)) {
       ChatUtil.sendErrorMessage(player, "You don't have permission to run this command.");
       return false;
     }
-    if (args.length != argsRequired) {
-      ChatUtil.sendErrorMessage(player, "This command only requires " + argsRequired + " argument. " + commandString);
+    if (args.length <= argsMinimum) {
+      ChatUtil.sendErrorMessage(player, "This command requires at least " + argsMinimum + " arguments. " + commandString);
       return false;
     }
 
@@ -67,23 +68,23 @@ public class GeneralUtil {
     return "x" + chunkX + "y" + chunkZ;
   }
 
-  public static Block getBlockFromKey(String key){
-        String[] parts = key.split("[xyz]");
-    
+  public static Block getBlockFromKey(String key) {
+    String[] parts = key.split("[xyz]");
+
     if (parts.length != 4) {
-        return null;
+      return null;
     }
 
     try {
-        int blockX = Integer.parseInt(parts[1]);
-        int blockY = Integer.parseInt(parts[2]);
-        int blockZ = Integer.parseInt(parts[3]);
-        
-        World world = Bukkit.getServer().getWorlds().get(0);
-        
-        return world.getBlockAt(blockX, blockY, blockZ);
+      int blockX = Integer.parseInt(parts[1]);
+      int blockY = Integer.parseInt(parts[2]);
+      int blockZ = Integer.parseInt(parts[3]);
+
+      World world = Bukkit.getServer().getWorlds().get(0);
+
+      return world.getBlockAt(blockX, blockY, blockZ);
     } catch (NumberFormatException e) {
-        return null;
+      return null;
     }
 
   }
@@ -100,4 +101,17 @@ public class GeneralUtil {
     return player.getUniqueId().toString();
   }
 
+  public static JavaPlugin getPlugin() {
+    JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin("settlements");
+
+    if(plugin == null){
+      return null;
+    }
+
+    if(!plugin.isEnabled()){
+      return null;
+    }
+
+    return plugin;
+  }
 }
