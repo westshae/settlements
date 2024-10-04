@@ -2,9 +2,12 @@ package cc.altoya.settlements.Commands.Structure;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -94,56 +97,58 @@ public class CommandLoad {
         StructureUtil.saveStructureConfig(config);
     }
 
-    private static void saveCurrentStructure(Player player, String name) {
-        FileConfiguration config = StructureUtil.getStructureConfig();
+private static void saveCurrentStructure(Player player, String name) {
+    FileConfiguration config = StructureUtil.getStructureConfig();
 
-        if (!StructureUtil.doesStructureNameExist(name)) {
-            ChatUtil.sendErrorMessage(player, "This structure doesn't exist, use create first.");
-            return;
-        }
+    if (!StructureUtil.doesStructureNameExist(name)) {
+        ChatUtil.sendErrorMessage(player, "This structure doesn't exist, use create first.");
+        return;
+    }
 
-        String firstPointKey = config.getString("structures.blueprints." + name + ".firstpoint");
-        String secondPointKey = config.getString("structures.blueprints." + name + ".secondpoint");
+    String firstPointKey = config.getString("structures.blueprints." + name + ".firstpoint");
+    String secondPointKey = config.getString("structures.blueprints." + name + ".secondpoint");
 
-        if (firstPointKey == null || secondPointKey == null) {
-            ChatUtil.sendErrorMessage(player, "Both first and second points must be set before saving the structure.");
-            return;
-        }
+    if (firstPointKey == null || secondPointKey == null) {
+        ChatUtil.sendErrorMessage(player, "Both first and second points must be set before saving the structure.");
+        return;
+    }
 
-        Block firstBlock = GeneralUtil.getBlockFromKey(firstPointKey);
-        Block secondBlock = GeneralUtil.getBlockFromKey(secondPointKey);
+    Block firstBlock = GeneralUtil.getBlockFromKey(firstPointKey);
+    Block secondBlock = GeneralUtil.getBlockFromKey(secondPointKey);
 
-        if (firstBlock == null || secondBlock == null) {
-            ChatUtil.sendErrorMessage(player, "Error retrieving blocks from the given points.");
-            return;
-        }
+    if (firstBlock == null || secondBlock == null) {
+        ChatUtil.sendErrorMessage(player, "Error retrieving blocks from the given points.");
+        return;
+    }
 
-        int x1 = firstBlock.getX();
-        int y1 = firstBlock.getY();
-        int z1 = firstBlock.getZ();
+    int x1 = firstBlock.getX();
+    int y1 = firstBlock.getY();
+    int z1 = firstBlock.getZ();
 
-        int x2 = secondBlock.getX();
-        int y2 = secondBlock.getY();
-        int z2 = secondBlock.getZ();
+    int x2 = secondBlock.getX();
+    int y2 = secondBlock.getY();
+    int z2 = secondBlock.getZ();
 
-        List<String> blockList = new ArrayList<>();
+    List<String> blockList = new ArrayList<>();
 
-        for (int x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
-            for (int y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
-                for (int z = Math.min(z1, z2); z <= Math.max(z1, z2); z++) {
-                    Block block = firstBlock.getWorld().getBlockAt(x, y, z);
-                    if(block.getType() == Material.AIR){
-                        continue;
-                    }
-                    String blockKey = GeneralUtil.getKeyFromBlock(block);
-                    blockList.add(blockKey);
+    for (int x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
+        for (int y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
+            for (int z = Math.min(z1, z2); z <= Math.max(z1, z2); z++) {
+                Block block = firstBlock.getWorld().getBlockAt(x, y, z);
+                
+                if (block.getType() == Material.AIR) {
+                    continue;
                 }
+                String blockString = StructureUtil.turnBlockIntoString(block);
+                blockList.add(blockString);
             }
         }
-        config.set("structures.blueprints." + name + ".blocks", blockList);
-        config.set("structures.blueprints." + name + ".originalY", firstBlock.getY());
-        StructureUtil.saveStructureConfig(config);
-
-        ChatUtil.sendSuccessMessage(player, "Successfully saved structure with " + blockList.size() + " blocks.");
     }
+
+    config.set("structures.blueprints." + name + ".blocks", blockList);
+    config.set("structures.blueprints." + name + ".originalY", firstBlock.getY());
+    StructureUtil.saveStructureConfig(config);
+
+    ChatUtil.sendSuccessMessage(player, "Successfully saved structure with " + blockList.size() + " blocks.");
+}
 }

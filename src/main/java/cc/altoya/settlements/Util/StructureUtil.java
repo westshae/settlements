@@ -10,6 +10,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -37,9 +38,9 @@ public class StructureUtil {
         saveStructureConfig(config);
     }
 
-    public static String getStructureType(Chunk chunk){
+    public static String getStructureType(Chunk chunk) {
         FileConfiguration config = getStructureConfig();
-        if(!isChunkStructure(chunk)){
+        if (!isChunkStructure(chunk)) {
             return null;
         }
         return config.getString("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".type");
@@ -70,15 +71,17 @@ public class StructureUtil {
         return config.getBoolean("structures.all_blocks." + GeneralUtil.getKeyFromBlock(block) + ".interactive");
     }
 
-    public static void placeStructureBlock(Player player, Location location, Material material) {
+    public static void placeStructureBlock(Player player, Location location, Material material, BlockData blockData) {
         Block currentBlockAtLocation = location.getBlock();
         currentBlockAtLocation.setType(material);
+        currentBlockAtLocation.setBlockData(blockData);
         saveBlockAsStructureBlock(currentBlockAtLocation, false);
     }
 
-    public static void placeInteractiveBlock(Player player, Location location, Material material) {
+    public static void placeInteractiveBlock(Player player, Location location, Material material, BlockData blockData) {
         Block currentBlockAtLocation = location.getBlock();
         currentBlockAtLocation.setType(material);
+        currentBlockAtLocation.setBlockData(blockData);
         saveBlockAsStructureBlock(currentBlockAtLocation, true);
     }
 
@@ -123,8 +126,71 @@ public class StructureUtil {
         editResources(player, chunk, -50);
     }
 
-    public static boolean doesStructureNameExist(String name){
+    public static boolean doesStructureNameExist(String name) {
         FileConfiguration config = getStructureConfig();
         return (config.contains("structures.blueprints." + name));
     }
+
+    public static String turnBlockIntoString(Block block) {
+        if (block == null) {
+            return null; // Return null if block is null
+        }
+
+        Material material = block.getType();
+        BlockData blockData = block.getBlockData();
+        Location location = block.getLocation();
+
+        // Format: material|blockData|worldName;x;y;z
+        return String.format("%s|%s|%s;%d;%d;%d",
+                material.toString(),
+                blockData.getAsString(),
+                location.getWorld().getName(),
+                location.getBlockX(),
+                location.getBlockY(),
+                location.getBlockZ());
+    }
+
+    // Converts a String representation back into a Block
+    public static Block turnStringIntoBlock(String data) {
+        if (data == null || !data.contains("|")) {
+            return null; // Return null if data is invalid
+        }
+
+        String[] parts = data.split("\\|");
+        if (parts.length != 3) {
+            return null; // Ensure the correct format is maintained
+        }
+
+        String materialString = parts[0];
+        String blockDataString = parts[1];
+        String[] locationParts = parts[2].split(";");
+
+        // Validate location parts
+        if (locationParts.length != 4) {
+            return null; // Return null if location is invalid
+        }
+
+        // Retrieve the world and coordinates
+        String worldName = locationParts[0];
+        int x = Integer.parseInt(locationParts[1]);
+        int y = Integer.parseInt(locationParts[2]);
+        int z = Integer.parseInt(locationParts[3]);
+
+        // Get the world from the server
+        org.bukkit.World world = Bukkit.getWorld(worldName);
+        if (world == null) {
+            return null; // Return null if world is not found
+        }
+
+        // Create the Block at the specified location
+        Block block = world.getBlockAt(x, y, z);
+        block.setType(Material.valueOf(materialString)); // Set the block type
+
+        // Create BlockData from the string
+        BlockData blockData = Bukkit.createBlockData(blockDataString);
+        block.setBlockData(blockData);
+
+        return block;
+    }
+
 }
