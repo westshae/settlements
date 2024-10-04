@@ -3,7 +3,6 @@ package cc.altoya.settlements.Util;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
