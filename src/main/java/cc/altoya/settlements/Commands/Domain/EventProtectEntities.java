@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Events;
+package cc.altoya.settlements.Commands.Domain;
 
 import org.bukkit.Chunk;
 import org.bukkit.entity.EntityType;

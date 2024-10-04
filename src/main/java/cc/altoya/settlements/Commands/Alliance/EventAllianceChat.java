@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Events;
+package cc.altoya.settlements.Commands.Alliance;
 
 import java.util.List;
 import java.util.UUID;

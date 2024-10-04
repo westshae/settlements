@@ -66,7 +66,6 @@ public class CommandGenerate {
     
         // Get the original coordinates of the first block
         int originX = firstBlock.getX();
-        int originY = firstBlock.getY();
         int originZ = firstBlock.getZ();
     
         // Loop through the block list and place each block

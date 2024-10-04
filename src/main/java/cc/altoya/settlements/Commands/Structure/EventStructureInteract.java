@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Events;
+package cc.altoya.settlements.Commands.Structure;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
