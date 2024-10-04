@@ -15,7 +15,7 @@ import cc.altoya.settlements.Util.StructureUtil;
 
 public class EventStructureInteract implements Listener {
     @EventHandler
-    public void onBreakInMineStructureChunk(BlockBreakEvent event) {
+    public void onBreakInStructureChunk(BlockBreakEvent event) {
         Block block = event.getBlock();
         Player player = event.getPlayer();
 
@@ -28,10 +28,18 @@ public class EventStructureInteract implements Listener {
             event.setCancelled(true);
             return;
         }
-        if(!StructureUtil.getStructureType(block.getChunk()).equals("mine")){
-            event.setCancelled(true);
-            return;
+
+        switch (StructureUtil.getStructureType(block.getChunk())) {
+            case "mine":
+                handleMine(event, block, player);
+                break;
+            default:
+                event.setCancelled(true);
+                return;
         }
+    }
+
+    private static void handleMine(BlockBreakEvent event, Block block, Player player){
         Material currentMaterial = block.getType();
         if(currentMaterial == Material.STONE){
             event.setCancelled(true);
