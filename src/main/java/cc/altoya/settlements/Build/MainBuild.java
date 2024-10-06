@@ -16,7 +16,7 @@ public class MainBuild implements CommandExecutor{
         }
 
         if (args.length == 0) {
-            sender.sendMessage("Usage: /build <generate|delete>");
+            sender.sendMessage("Usage: /build <generate|delete|help>");
             return true;
         }
 
@@ -25,6 +25,8 @@ public class MainBuild implements CommandExecutor{
                 return CommandGenerate.handle((Player) sender, args);
             case "delete":
                 return CommandDelete.handle((Player) sender, args);
+            case "help":
+                return CommandHelp.handle((Player) sender, args);
         }
 
         return true;

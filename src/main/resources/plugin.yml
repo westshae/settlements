@@ -11,9 +11,9 @@ commands:
   alliance:
     description: Alliances
     usage: /alliance {var} {var}
-  structure:
-    description: Structure
-    usage: /structure {var} {var}
+  build:
+    description: Build
+    usage: /build {var} {var}
   blueprint:
     description: Blueprint
     usage: /blueprint {var} {var}

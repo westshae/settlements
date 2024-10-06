@@ -16,7 +16,7 @@ public class MainDomain implements CommandExecutor{
         }
 
         if (args.length == 0) {
-            sender.sendMessage("Usage: /domain <claim|unclaim|list>");
+            sender.sendMessage("Usage: /domain <claim|unclaim|list|help>");
             return true;
         }
 
@@ -27,6 +27,8 @@ public class MainDomain implements CommandExecutor{
                 return CommandUnclaim.handle((Player) sender, args);
             case "list":
                 return CommandList.handle((Player) sender, args);
+            case "help":
+                return CommandHelp.handle((Player) sender, args);
         }
 
         return true;

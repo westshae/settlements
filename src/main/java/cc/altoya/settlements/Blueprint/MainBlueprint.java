@@ -16,7 +16,7 @@ public class MainBlueprint implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            sender.sendMessage("Usage: /blueprint <create|first|second|interactive|save>");
+            sender.sendMessage("Usage: /blueprint <create|first|second|interactive|save|help>");
             return true;
         }
 
@@ -31,6 +31,8 @@ public class MainBlueprint implements CommandExecutor {
                 return CommandInteractive.handle((Player) sender, args);
             case "save":
                 return CommandSave.handle((Player) sender, args);
+            case "help":
+                return CommandHelp.handle((Player) sender, args);
         }
 
         return true;
