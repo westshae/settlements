@@ -24,7 +24,8 @@ public class CommandSecond {
             return;
         }
         Block targettedBlock = player.getTargetBlock(null, 10);
-        if (!(targettedBlock.getX() % 16 == -1 && targettedBlock.getZ() % 16 == -1)) {// -1 is 15 from this setup
+        ChatUtil.sendSuccessMessage(player, Integer.toString(targettedBlock.getX() % 16));
+        if (!(targettedBlock.getX() % 16 == 15 && targettedBlock.getZ() % 16 == 15)) {// -1 is 15 from this setup
             ChatUtil.sendErrorMessage(player, "The second point of a blueprint must be placed at a chunk's [15, ~, 15]");
             return;
         }
