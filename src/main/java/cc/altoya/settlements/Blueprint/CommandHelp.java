@@ -25,6 +25,7 @@ public class CommandHelp {
             "/blueprint interactive {blueprintName}", "Specifies if a block is an interactive block (A mine's ore, a factories lever, etc) based on the block you're looking at.",
             "/blueprint save {blueprintName}", "Gets all blocks between the first/second point, then converts each block to a string form for future generation.",
             "/blueprint dupe {blueprintName}", "Places down all the blocks from the blueprint specified, without any data, to be used for a new blueprint.", 
+            "/blueprint upgrade {baseBlueprintName}", "Creates a new blueprint named {original}v{version#}, with a version of {version#}, and creates a dupe of the previous blueprint.", 
             "/blueprint help", "The command you're looking at right now"
         );
 
