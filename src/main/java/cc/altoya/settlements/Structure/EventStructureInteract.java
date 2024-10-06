@@ -15,7 +15,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
-import cc.altoya.settlements.Util.StructureUtil;
 
 public class EventStructureInteract implements Listener {
     @EventHandler

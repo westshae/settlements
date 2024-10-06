@@ -9,7 +9,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import cc.altoya.settlements.Util.ChatUtil;
-import cc.altoya.settlements.Util.DomainUtil;
 
 public class EventProtectEntities implements Listener {
     @EventHandler

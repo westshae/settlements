@@ -5,7 +5,6 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Util.ChatUtil;
-import cc.altoya.settlements.Util.DomainUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandList {

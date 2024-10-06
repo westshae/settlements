@@ -3,9 +3,8 @@ package cc.altoya.settlements.Alliance;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import cc.altoya.settlements.Util.AllianceUtil;
+import cc.altoya.settlements.Domain.DomainUtil;
 import cc.altoya.settlements.Util.ChatUtil;
-import cc.altoya.settlements.Util.DomainUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
 import java.util.List;

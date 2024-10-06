@@ -9,9 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import cc.altoya.settlements.Util.AllianceUtil;
+import cc.altoya.settlements.Domain.DomainUtil;
 import cc.altoya.settlements.Util.ChatUtil;
-import cc.altoya.settlements.Util.DomainUtil;
 
 public class EventAllianceChat implements Listener {
     @EventHandler

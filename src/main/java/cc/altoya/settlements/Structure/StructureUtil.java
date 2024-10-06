@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Util;
+package cc.altoya.settlements.Structure;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +13,9 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import cc.altoya.settlements.Util.ChatUtil;
+import cc.altoya.settlements.Util.GeneralUtil;
 
 public class StructureUtil {
     public static FileConfiguration getStructureConfig() {

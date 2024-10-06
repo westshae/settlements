@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
-import cc.altoya.settlements.Util.StructureUtil;
 
 public class CommandGenerate {
     public static boolean handle(Player sender, String[] args) {

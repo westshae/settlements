@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Util;
+package cc.altoya.settlements.Alliance;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +7,9 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+
+import cc.altoya.settlements.Domain.DomainUtil;
+import cc.altoya.settlements.Util.GeneralUtil;
 
 public class AllianceUtil {
     public static FileConfiguration getAllianceConfig() {

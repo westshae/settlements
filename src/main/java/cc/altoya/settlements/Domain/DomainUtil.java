@@ -1,9 +1,11 @@
-package cc.altoya.settlements.Util;
+package cc.altoya.settlements.Domain;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+
+import cc.altoya.settlements.Util.GeneralUtil;
 
 import java.io.File;
 import java.io.IOException;
