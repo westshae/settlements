@@ -157,6 +157,27 @@ public class BuildUtil {
         }
     }
 
+    public static Integer getSuppliesFromStructure(Chunk chunk) {
+        FileConfiguration config = getBuildConfig();
+        if (!isChunkStructure(chunk)) {
+            return null;
+        }
+        return config.getInt("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".supplies");
+    }
+
+
+    public static void editSupplies(Player player, Chunk chunk, int amount) {
+        FileConfiguration config = getBuildConfig();
+        if (!isChunkStructure(chunk)) {
+            return;
+        }
+        config.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".supplies",
+        getSuppliesFromStructure(chunk) + amount);
+        saveBuildConfig(config);
+        ChatUtil.sendSuccessMessage(player, "Supplies are now at " + getSuppliesFromStructure(chunk));
+    }
+
+
     public static void deleteBlocksFromBlueprint(Chunk chunk, Player player) {
         FileConfiguration config = getBuildConfig();
 

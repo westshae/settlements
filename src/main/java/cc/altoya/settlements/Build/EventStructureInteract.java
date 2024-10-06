@@ -54,6 +54,10 @@ public class EventStructureInteract implements Listener {
             return;
         }
 
+        if(block.getType() == Material.CHEST){
+            return;
+        }
+
         switch (BuildUtil.getStructureType(block.getChunk())) {
             case "factory":
                 handleFactory(event, block, player);
