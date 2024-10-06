@@ -50,6 +50,13 @@ public class CommandDelete {
 
                     if (config.contains(allBlockPath)) {
                         Block block = GeneralUtil.getBlockFromKey(blockKey);
+
+                        if(block.getType() == Material.AIR){
+                            blocksProcessed++;
+                            index++;
+                            continue;
+                        }
+
                         if (block != null) {
                             block.setType(Material.AIR); // Remove the block
                             config.set(allBlockPath, null); // Remove from config

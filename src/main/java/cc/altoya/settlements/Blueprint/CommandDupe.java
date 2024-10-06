@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -76,7 +77,9 @@ public class CommandDupe {
                         int adjustedZ = (chunk.getZ() * 16 + z) - originZ;
 
                         Location blockLocation = new Location(chunk.getWorld(), adjustedX, relativeY, adjustedZ);
-                        BlueprintUtil.placeBlockWithoutBlueprintData(blockLocation, block.getType(), block.getBlockData());
+
+                        BlueprintUtil.placeBlockWithoutBlueprintData(blockLocation, block.getType(),
+                                block.getBlockData());
 
                         blocksProcessed++;
                     } else {

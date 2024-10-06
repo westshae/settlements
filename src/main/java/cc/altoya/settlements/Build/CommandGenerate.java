@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -90,6 +91,16 @@ public class CommandGenerate {
 
                         Location blockLocation = new Location(chunk.getWorld(), adjustedX, relativeY, adjustedZ);
                         boolean isInteractive = interactiveBlocks.contains(blockString);
+
+                        boolean existingBlockIsAir = chunk.getWorld().getBlockAt(adjustedX, relativeY, adjustedZ).getType() == Material.AIR;
+                        boolean newBlockIsAir = block.getType() == Material.AIR;
+
+                        if(existingBlockIsAir && newBlockIsAir){
+                            blocksProcessed++;
+                            index++;
+                            continue;
+                        }
+
                         BuildUtil.placeBlockForStructure(player, blockLocation, block.getType(), block.getBlockData(), isInteractive);
 
                         blocksProcessed++;
