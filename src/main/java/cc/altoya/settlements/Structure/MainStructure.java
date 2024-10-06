@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Commands.Structure;
+package cc.altoya.settlements.Structure;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

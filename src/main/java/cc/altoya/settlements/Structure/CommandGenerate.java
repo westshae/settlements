@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Commands.Structure;
+package cc.altoya.settlements.Structure;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Commands.Domain;
+package cc.altoya.settlements.Domain;
 
 import org.bukkit.Chunk;
 import org.bukkit.entity.EntityType;

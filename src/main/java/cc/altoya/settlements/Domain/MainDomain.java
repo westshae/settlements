@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Commands.Domain;
+package cc.altoya.settlements.Domain;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

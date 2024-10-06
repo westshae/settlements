@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Commands.Alliance;
+package cc.altoya.settlements.Alliance;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
