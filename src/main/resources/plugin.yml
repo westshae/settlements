@@ -1,24 +1,24 @@
 main: cc.altoya.settlements.App
 name: settlements
-version: 1
+version: 1.0
 api-version: 1.21.1
 description: Settlements plugin
 
 commands:
   domain:
     description: Domains
-    usage: /domain {var} {var}
+    usage: /domain {subcommand} {var}
     tab-completer: cc.altoya.settlements.Domain.DomainTabCompleter
 
   alliance:
     description: Alliances
-    usage: /alliance {var} {var}
+    usage: /alliance {subcommand} {var}
     tab-completer: cc.altoya.settlements.Alliance.AllianceTabCompleter
   build:
     description: Build
-    usage: /build {var} {var}
+    usage: /build {subcommand} {var}
     tab-completer: cc.altoya.settlements.Build.BuildTabCompleter
   blueprint:
     description: Blueprint
-    usage: /blueprint {var} {var}
+    usage: /blueprint {subcommand} {var}
     tab-completer: cc.altoya.settlements.Blueprint.BlueprintTabCompleter

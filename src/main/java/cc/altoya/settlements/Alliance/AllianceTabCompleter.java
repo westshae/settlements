@@ -11,7 +11,7 @@ import java.util.List;
 
 public class AllianceTabCompleter implements TabCompleter {
 
-    private final List<String> subCommands = Arrays.asList("create","delete","invite","kick","join","info","chat","help");
+    private final List<String> subCommands = Arrays.asList("create","delete","invite","kick","join", "leave","info","chat","help");
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {

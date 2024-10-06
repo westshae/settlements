@@ -18,7 +18,7 @@ public class MainAlliance implements CommandExecutor{
         }
 
         if (args.length == 0) {
-            ChatUtil.sendErrorMessage((Player) sender, "Usage: /alliance <create|delete|invite|kick|join|info|chat|help>");
+            ChatUtil.sendErrorMessage((Player) sender, "Usage: /alliance <create|delete|invite|kick|join|leave|info|chat|help>");
             return true;
         }
 
@@ -31,6 +31,8 @@ public class MainAlliance implements CommandExecutor{
                 return CommandInvite.handle((Player) sender, args);
             case "join":
                 return CommandJoin.handle((Player) sender, args);
+            case "leave":
+                return CommandLeave.handle((Player) sender, args);
             case "info":
                 return CommandInfo.handle((Player) sender, args);
             case "chat":

@@ -24,6 +24,7 @@ public class CommandHelp {
             "/alliance info", "Prints out information about the alliance. Eg players, name, wealth.",
             "/alliance invite {username}", "Extends an invitation to the player specified.",
             "/alliance join {allianceName}", "Allows you to join an alliance if you've been invited.",
+            "/alliance leave", "Allows you to leave your alliance.",
             "/alliance help", "The command you're looking at right now."
         );
 

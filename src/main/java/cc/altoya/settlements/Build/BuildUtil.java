@@ -74,15 +74,15 @@ public class BuildUtil {
 
     public static void placeStructureBlock(Player player, Location location, Material material, BlockData blockData) {
         Block currentBlockAtLocation = location.getBlock();
-        currentBlockAtLocation.setType(material);
-        currentBlockAtLocation.setBlockData(blockData);
+        currentBlockAtLocation.setType(material, false);
+        currentBlockAtLocation.setBlockData(blockData, false);
         saveBlockAsStructureBlock(currentBlockAtLocation, false);
     }
 
     public static void placeInteractiveBlock(Player player, Location location, Material material, BlockData blockData) {
         Block currentBlockAtLocation = location.getBlock();
-        currentBlockAtLocation.setType(material);
-        currentBlockAtLocation.setBlockData(blockData);
+        currentBlockAtLocation.setType(material, false);
+        currentBlockAtLocation.setBlockData(blockData, false);
         saveBlockAsStructureBlock(currentBlockAtLocation, true);
     }
 
