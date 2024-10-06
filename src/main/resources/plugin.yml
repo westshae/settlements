@@ -8,12 +8,17 @@ commands:
   domain:
     description: Domains
     usage: /domain {var} {var}
+    tab-completer: cc.altoya.settlements.Domain.DomainTabCompleter
+
   alliance:
     description: Alliances
     usage: /alliance {var} {var}
+    tab-completer: cc.altoya.settlements.Alliance.AllianceTabCompleter
   build:
     description: Build
     usage: /build {var} {var}
+    tab-completer: cc.altoya.settlements.Build.BuildTabCompleter
   blueprint:
     description: Blueprint
     usage: /blueprint {var} {var}
+    tab-completer: cc.altoya.settlements.Blueprint.BlueprintTabCompleter
