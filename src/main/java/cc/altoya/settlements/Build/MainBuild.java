@@ -18,7 +18,7 @@ public class MainBuild implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            ChatUtil.sendErrorMessage((Player) sender, "Usage: /build <generate|delete|refresh|collect|help>");
+            ChatUtil.sendErrorMessage((Player) sender, "Usage: /build <generate|delete|refresh|collect|plot|help>");
             return true;
         }
 
@@ -31,6 +31,8 @@ public class MainBuild implements CommandExecutor {
                 return CommandRefresh.handle((Player) sender, args);
             case "collect":
                 return CommandCollect.handle((Player) sender, args);
+            case "plot":
+                return CommandPlot.handle((Player) sender, args);
             case "help":
                 return CommandHelp.handle((Player) sender, args);
         }
