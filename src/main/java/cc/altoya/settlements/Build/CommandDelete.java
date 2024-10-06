@@ -1,7 +1,14 @@
 package cc.altoya.settlements.Build;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Chunk;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import cc.altoya.settlements.Domain.DomainUtil;
 import cc.altoya.settlements.Util.ChatUtil;
@@ -23,7 +30,49 @@ public class CommandDelete {
             return;
         }
 
-        BuildUtil.deleteBlocksFromBlueprint(chunk, player);
+        FileConfiguration config = BuildUtil.getBuildConfig();
+
+        List<String> blocks = new ArrayList<>();
+
+        blocks.addAll(config.getStringList("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".interactiveBlocks"));
+        blocks.addAll(config.getStringList("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".blocks"));
+
+        new BukkitRunnable() {
+            int index = 0;
+
+            @Override
+            public void run() {
+                int blocksProcessed = 0;
+                int blocksToProcess = 1;
+                while (index < blocks.size() && blocksProcessed < blocksToProcess) {
+                    String blockKey = blocks.get(index);
+                    String allBlockPath = "builds.all_blocks." + blockKey;
+
+                    if (config.contains(allBlockPath)) {
+                        Block block = GeneralUtil.getBlockFromKey(blockKey);
+                        if (block != null) {
+                            block.setType(Material.AIR); // Remove the block
+                            config.set(allBlockPath, null); // Remove from config
+                            blocksProcessed++;
+                        }
+                    }
+                    index++;
+                }
+
+                // If there are more blocks to process, schedule the next run after a brief
+                // pause
+                if (index < blocks.size()) {
+                    // Pause for 1 tick (50 milliseconds) to allow server to process other tasks
+                    this.runTaskLater(GeneralUtil.getPlugin(), 1); // Replace MyPlugin with your plugin instance class
+                } else {
+                    // Clean up the structure entry from config
+                    config.set("structures." + GeneralUtil.getKeyFromChunk(chunk), null);
+                    BuildUtil.saveBuildConfig(config); // Save the updated config
+                    this.cancel(); // Stop the runnable if all blocks have been processed
+                }
+            }
+        }.runTaskTimer(GeneralUtil.getPlugin(), 0, 1); // Start immediately and run every tick
+
         ChatUtil.sendSuccessMessage(player, "Structure successfully deleted.");
     }
 
