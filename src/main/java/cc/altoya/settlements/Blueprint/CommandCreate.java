@@ -24,6 +24,7 @@ public class CommandCreate {
         }
         config.set("blueprints." + name + ".structureType", structureType);
         config.set("blueprints." + name + ".resourceType", resourceType);
+        config.set("blueprints." + name + ".version", 1);
 
         ChatUtil.sendSuccessMessage(player, "Blueprint boilerplate created.");
         BlueprintUtil.saveBlueprintConfig(config);
