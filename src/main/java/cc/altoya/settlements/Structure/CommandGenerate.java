@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -29,29 +30,29 @@ public class CommandGenerate {
             return;
         }
     
-        if (!StructureUtil.doesStructureNameExist(blueprintName)) {
+        if (!BlueprintUtil.doesBlueprintExist(blueprintName)) {
             ChatUtil.sendErrorMessage(player, "This blueprint doesn't exist.");
             return;
         }
     
-        FileConfiguration config = StructureUtil.getStructureConfig();
+        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
     
-        String type = config.getString("structures.blueprints." + blueprintName + ".type");
+        String type = config.getString("blueprints." + blueprintName + ".type");
     
         StructureUtil.createNewStructure(player, chunk, type);
     
         // Get the block list from the saved structure (contains both block type and block data)
-        List<String> blockList = config.getStringList("structures.blueprints." + blueprintName + ".blocks");
+        List<String> blockList = config.getStringList("blueprints." + blueprintName + ".blocks");
     
         // Retrieve the list of interactive blocks from the configuration
-        List<String> interactiveBlocks = GeneralUtil.createListFromString((String) config.get("structures.blueprints." + blueprintName + ".interactive"));
+        List<String> interactiveBlocks = GeneralUtil.createListFromString((String) config.get("blueprints." + blueprintName + ".interactive"));
     
         // Get the player's height
         int playerHeight = player.getLocation().getBlockY();
-        int originalY = config.getInt("structures.blueprints." + blueprintName + ".originalY");
+        int originalY = config.getInt("blueprints." + blueprintName + ".originalY");
     
         // Retrieve the first block's position as the origin for the structure
-        String firstBlockKey = config.getString("structures.blueprints." + blueprintName + ".firstpoint");
+        String firstBlockKey = config.getString("blueprints." + blueprintName + ".first");
         Block firstBlock = GeneralUtil.getBlockFromKey(firstBlockKey);
     
         if (firstBlock == null) {
@@ -66,7 +67,7 @@ public class CommandGenerate {
         // Loop through the block list and place each block
         for (String blockString : blockList) {
             // Convert string representation to a block
-            Block block = StructureUtil.turnStringIntoBlock(blockString);
+            Block block = BlueprintUtil.turnStringIntoBlock(blockString);
     
             if (block != null) {
                 // Calculate relative positions
@@ -79,12 +80,6 @@ public class CommandGenerate {
     
                 Location blockLocation = new Location(chunk.getWorld(), adjustedX, relativeY, adjustedZ);
     
-                // Place the block with its type
-                // Block targetBlock = chunk.getWorld().getBlockAt(blockLocation);
-                // targetBlock.setType(block.getType()); // Set block type from the converted block
-                // targetBlock.setBlockData(block.getBlockData());
-    
-                // Check if the block is in the interactive blocks list
                 if (interactiveBlocks.contains(blockString)) {
                     StructureUtil.placeInteractiveBlock(player, blockLocation, block.getType(), block.getBlockData());
                 } else {

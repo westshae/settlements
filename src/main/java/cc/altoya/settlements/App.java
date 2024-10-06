@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import cc.altoya.settlements.Alliance.EventAllianceChat;
 import cc.altoya.settlements.Alliance.MainAlliance;
+import cc.altoya.settlements.Blueprint.MainBlueprint;
 import cc.altoya.settlements.Domain.EventProtectBlocks;
 import cc.altoya.settlements.Domain.EventProtectEntities;
 import cc.altoya.settlements.Domain.MainDomain;
@@ -22,6 +23,7 @@ public class App extends JavaPlugin {
         this.getCommand("domain").setExecutor(new MainDomain());
         this.getCommand("alliance").setExecutor(new MainAlliance());
         this.getCommand("structure").setExecutor(new MainStructure());
+        this.getCommand("blueprint").setExecutor(new MainBlueprint());
 
         // How to register eventListeners
         this.getServer().getPluginManager().registerEvents(new EventProtectBlocks(), this);

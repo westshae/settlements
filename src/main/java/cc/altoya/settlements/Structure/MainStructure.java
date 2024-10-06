@@ -25,8 +25,6 @@ public class MainStructure implements CommandExecutor{
                 return CommandGenerate.handle((Player) sender, args);
             case "delete":
                 return CommandDelete.handle((Player) sender, args);
-            case "load":
-                return CommandLoad.handle((Player) sender, args);
         }
 
         return true;

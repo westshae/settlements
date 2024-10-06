@@ -16,13 +16,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class GeneralUtil {
   public static boolean handlePermissionsAndArguments(Player player, String permissionRoot, String permissionChild,
-      String[] args, int argsMinimum, String commandString) {
+      String[] args, int requiredArgs, String commandString) {
     if (!player.hasPermission(permissionRoot + "." + permissionChild)) {
       ChatUtil.sendErrorMessage(player, "You don't have permission to run this command.");
       return false;
     }
-    if (args.length < argsMinimum) {
-      ChatUtil.sendErrorMessage(player, "This command requires at least " + argsMinimum + " arguments. " + commandString);
+    if (args.length != requiredArgs) {
+      ChatUtil.sendErrorMessage(player, "This command requires " + requiredArgs + " arguments. " + commandString);
       return false;
     }
 
