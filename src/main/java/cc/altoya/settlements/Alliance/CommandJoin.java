@@ -37,13 +37,11 @@ public class CommandJoin {
             ChatUtil.sendErrorMessage(player, "You don't have an invite.");
             return;
         }
-        List<String> allianceInvites = GeneralUtil
-                .createListFromString((String) allianceConfig.get("alliances." + allianceName + ".invites"));
+        List<String> allianceInvites = allianceConfig.getStringList("alliances." + allianceName + ".invites");
         allianceInvites.removeIf((playerUuid) -> playerUuid.equals(GeneralUtil.getKeyFromPlayer(player)));
-        allianceConfig.set("alliances." + allianceName + ".invites", GeneralUtil.createStringFromList(allianceInvites));
+        allianceConfig.set("alliances." + allianceName + ".invites", allianceInvites);
 
-        List<String> alliancePlayers = GeneralUtil
-                .createListFromString((String) allianceConfig.get("alliances." + allianceName + ".players"));
+        List<String> alliancePlayers = allianceConfig.getStringList("alliances." + allianceName + ".players");
 
         ChatUtil.sendSuccessMessage(player, "You've joined the alliance.");
         alliancePlayers.forEach((playerUuid) -> {
@@ -52,7 +50,7 @@ public class CommandJoin {
         });
 
         alliancePlayers.add(GeneralUtil.getKeyFromPlayer(player));
-        allianceConfig.set("alliances." + allianceName + ".players", GeneralUtil.createStringFromList(alliancePlayers));
+        allianceConfig.set("alliances." + allianceName + ".players", alliancePlayers);
 
         domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance", allianceName);
 

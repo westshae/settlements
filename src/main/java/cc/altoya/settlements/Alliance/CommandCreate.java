@@ -36,7 +36,7 @@ public class CommandCreate {
         allianceConfig.set("alliances." + allianceName + ".owner", GeneralUtil.getKeyFromPlayer(player));
         List<String> alliancePlayers = new ArrayList<>();
         alliancePlayers.add(GeneralUtil.getKeyFromPlayer(player));
-        allianceConfig.set("alliances." + allianceName + ".players", GeneralUtil.createStringFromList(alliancePlayers));
+        allianceConfig.set("alliances." + allianceName + ".players", alliancePlayers);
 
         DomainUtil.saveDomainConfig(domainConfig);
         AllianceUtil.saveAllianceConfig(allianceConfig);

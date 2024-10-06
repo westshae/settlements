@@ -26,9 +26,9 @@ public class CommandClaim {
         }
         config.set("domains.claimed_tiles." + GeneralUtil.getKeyFromChunk(chunk), GeneralUtil.getKeyFromPlayer(player));
         String playerPath = "domains." + GeneralUtil.getKeyFromPlayer(player) + ".claims";
-        List<String> claims = GeneralUtil.createListFromString(config.getString(playerPath));
+        List<String> claims = config.getStringList(playerPath);
         claims.add(GeneralUtil.getKeyFromChunk(chunk));
-        config.set(playerPath, GeneralUtil.createStringFromList(claims));
+        config.set(playerPath, claims);
         DomainUtil.saveDomainConfig(config);
         ChatUtil.sendSuccessMessage(player, "Chunk claimed");
     }

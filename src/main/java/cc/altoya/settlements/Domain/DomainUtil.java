@@ -39,8 +39,7 @@ public class DomainUtil {
 
   public static List<String> getPlayersChunks(Player player) {
     FileConfiguration config = getDomainConfig();
-    return GeneralUtil
-        .createListFromString((String) config.get("domains." + GeneralUtil.getKeyFromPlayer(player) + ".claims"));
+    return config.getStringList("domains." + GeneralUtil.getKeyFromPlayer(player) + ".claims");
   }
 
   public static boolean isAllianceChatMode(Player player) {

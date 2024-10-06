@@ -42,10 +42,9 @@ public class CommandInvite {
             return;
         }
         String allianceName = AllianceUtil.getPlayerAlliance(allianceLeader);
-        List<String> allianceInvites = GeneralUtil
-                .createListFromString((String) allianceConfig.get("alliances." + allianceName + ".invites"));
+        List<String> allianceInvites = allianceConfig.getStringList("alliances." + allianceName + ".invites");
         allianceInvites.add(GeneralUtil.getKeyFromPlayer(invitee));
-        allianceConfig.set("alliances." + allianceName + ".invites", GeneralUtil.createStringFromList(allianceInvites));
+        allianceConfig.set("alliances." + allianceName + ".invites", allianceInvites);
         AllianceUtil.saveAllianceConfig(allianceConfig);
         ChatUtil.sendSuccessMessage(allianceLeader, "Invite successfully sent.");
         ChatUtil.sendSuccessMessage(invitee, "You've been invited to " + allianceName);

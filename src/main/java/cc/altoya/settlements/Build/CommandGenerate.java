@@ -45,7 +45,7 @@ public class CommandGenerate {
         List<String> blockList = config.getStringList("blueprints." + blueprintName + ".blocks");
     
         // Retrieve the list of interactive blocks from the configuration
-        List<String> interactiveBlocks = GeneralUtil.createListFromString((String) config.get("blueprints." + blueprintName + ".interactive"));
+        List<String> interactiveBlocks = config.getStringList("blueprints." + blueprintName + ".interactive");
     
         // Get the player's height
         int playerHeight = player.getLocation().getBlockY();

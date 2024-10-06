@@ -11,7 +11,8 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandInteractive {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2, "/blueprint interactive")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2,
+                "/blueprint interactive")) {
             return true;
         }
 
@@ -27,11 +28,10 @@ public class CommandInteractive {
         }
         Block targettedBlock = player.getTargetBlock(null, 10);
         String blockKey = GeneralUtil.getKeyFromBlock(targettedBlock);
-        List<String> interactiveBlocks = GeneralUtil
-                .createListFromString((String) config.get("blueprints." + name + ".interactive"));
+        List<String> interactiveBlocks = config.getStringList("blueprints." + name + ".interactive");
         interactiveBlocks.add(blockKey);
         config.set("blueprints." + name + ".interactive",
-                GeneralUtil.createStringFromList(interactiveBlocks));
+                interactiveBlocks);
         ChatUtil.sendSuccessMessage(player, "Added block to blueprints interactive block list.");
         BlueprintUtil.saveBlueprintConfig(config);
     }

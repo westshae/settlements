@@ -30,9 +30,9 @@ public class CommandUnclaim {
         }
         config.set("domains.claimed_tiles." + GeneralUtil.getKeyFromChunk(chunk), null);
         String playerPath = "domains." + GeneralUtil.getKeyFromPlayer(player) + ".claims";
-        List<String> claims = GeneralUtil.createListFromString((String) config.get(playerPath));
+        List<String> claims = config.getStringList(playerPath);
         claims.removeIf(claim -> claim.equals(GeneralUtil.getKeyFromChunk(chunk)));
-        config.set(playerPath, GeneralUtil.createStringFromList(claims));
+        config.set(playerPath, claims);
 
         DomainUtil.saveDomainConfig(config);
         ChatUtil.sendSuccessMessage(player, "Claim unclaimed.");

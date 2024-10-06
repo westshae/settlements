@@ -30,10 +30,8 @@ public class CommandDelete {
             return;
         }
         List<String> allBlocks = new ArrayList<>();
-        allBlocks.addAll(GeneralUtil.createListFromString(
-                (String) config.get("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".interactiveBlocks")));
-        allBlocks.addAll(GeneralUtil.createListFromString(
-                (String) config.get("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".blocks")));
+        allBlocks.addAll(config.getStringList("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".interactiveBlocks"));
+        allBlocks.addAll(config.getStringList("structures." + GeneralUtil.getKeyFromChunk(chunk) + ".blocks"));
 
         for (String blockKey : allBlocks) {
             String allBlockPath = "structures.all_blocks." + blockKey;

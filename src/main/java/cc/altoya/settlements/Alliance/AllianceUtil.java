@@ -50,14 +50,13 @@ public class AllianceUtil {
 
     public static boolean doesPlayerHaveInvite(Player player, String allianceName) {
         FileConfiguration allianceConfig = getAllianceConfig();
-        List<String> invites = GeneralUtil
-                .createListFromString((String) allianceConfig.get("alliances." + allianceName + ".invites"));
+        List<String> invites = allianceConfig.getStringList("alliances." + allianceName + ".invites");
         return invites.contains(GeneralUtil.getKeyFromPlayer(player));
     }
 
     public static List<String> getAlliancePlayers(String allianceName) {
         FileConfiguration allianceConfig = getAllianceConfig();
 
-        return GeneralUtil.createListFromString((String) allianceConfig.get("alliances." + allianceName + ".players"));
+        return allianceConfig.getStringList("alliances." + allianceName + ".players");
     }
 }

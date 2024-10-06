@@ -54,12 +54,11 @@ public class BuildUtil {
 
         String blockPath = (isInteractive) ? ".interactiveBlocks" : ".blocks";
 
-        List<String> structureBlocks = GeneralUtil.createListFromString(
-                (String) config.get("builds." + GeneralUtil.getKeyFromChunk(block.getChunk()) + blockPath));
+        List<String> structureBlocks = config.getStringList("builds." + GeneralUtil.getKeyFromChunk(block.getChunk()) + blockPath);
         structureBlocks.add(GeneralUtil.getKeyFromBlock(block));
 
         config.set("builds." + GeneralUtil.getKeyFromChunk(block.getChunk()) + blockPath,
-                GeneralUtil.createStringFromList(structureBlocks));
+                structureBlocks);
         saveStructureConfig(config);
     }
 
