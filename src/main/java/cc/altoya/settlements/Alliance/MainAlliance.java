@@ -5,6 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.Util.ChatUtil;
+
 public class MainAlliance implements CommandExecutor{
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -16,7 +18,7 @@ public class MainAlliance implements CommandExecutor{
         }
 
         if (args.length == 0) {
-            sender.sendMessage("Usage: /alliance <create|delete|invite|kick|join|info|chat|help>");
+            ChatUtil.sendErrorMessage((Player) sender, "Usage: /alliance <create|delete|invite|kick|join|info|chat|help>");
             return true;
         }
 

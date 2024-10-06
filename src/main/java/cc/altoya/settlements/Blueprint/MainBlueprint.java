@@ -5,6 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.Util.ChatUtil;
+
 public class MainBlueprint implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -16,7 +18,7 @@ public class MainBlueprint implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            sender.sendMessage("Usage: /blueprint <create|first|second|interactive|save|help>");
+            ChatUtil.sendErrorMessage((Player) sender, "Usage: /blueprint <create|first|second|interactive|save|help>");
             return true;
         }
 

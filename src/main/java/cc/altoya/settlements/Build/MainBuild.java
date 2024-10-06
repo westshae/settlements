@@ -5,7 +5,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class MainBuild implements CommandExecutor{
+import cc.altoya.settlements.Util.ChatUtil;
+
+public class MainBuild implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!command.getName().equalsIgnoreCase("build")) {
@@ -16,7 +18,7 @@ public class MainBuild implements CommandExecutor{
         }
 
         if (args.length == 0) {
-            sender.sendMessage("Usage: /build <generate|delete|help>");
+            ChatUtil.sendErrorMessage((Player) sender, "Usage: /build <generate|delete|help>");
             return true;
         }
 
