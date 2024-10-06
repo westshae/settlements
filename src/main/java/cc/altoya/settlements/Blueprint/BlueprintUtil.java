@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
+
 import cc.altoya.settlements.Util.GeneralUtil;
 
 public class BlueprintUtil {
@@ -93,19 +94,25 @@ public class BlueprintUtil {
         return block;
     }
 
-    public static String getBuildingType(String blueprintName){
+    public static String getBuildingType(String blueprintName) {
         FileConfiguration config = getBlueprintConfig();
-        if(!doesBlueprintExist(blueprintName)){
+        if (!doesBlueprintExist(blueprintName)) {
             return null;
         }
         return config.getString("blueprints." + blueprintName + ".structureType");
     }
-    public static String getResourceType(String blueprintName){
+
+    public static String getResourceType(String blueprintName) {
         FileConfiguration config = getBlueprintConfig();
-        if(!doesBlueprintExist(blueprintName)){
+        if (!doesBlueprintExist(blueprintName)) {
             return null;
         }
         return config.getString("blueprints." + blueprintName + ".resourceType");
     }
 
+    public static void placeBlockWithoutBlueprintData(Location location, Material material, BlockData blockData) {
+        Block block = location.getBlock();
+        block.setType(material, false);
+        block.setBlockData(blockData, false);
+    }
 }
