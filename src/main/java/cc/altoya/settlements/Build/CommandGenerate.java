@@ -11,7 +11,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 public class CommandGenerate {
     public static boolean handle(Player sender, String[] args) {
         if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2,
-                "/build generate {type}")) {
+                "/build generate {structureType}")) {
             return true;
         }
         generateBuildingFromBlueprint(sender, args[1]);
@@ -33,9 +33,7 @@ public class CommandGenerate {
 
         FileConfiguration config = BlueprintUtil.getBlueprintConfig();
 
-        String type = config.getString("blueprints." + blueprintName + ".type");
-
-        BuildUtil.createNewStructure(player, chunk, type, blueprintName);
+        BuildUtil.createNewStructure(player, chunk, blueprintName);
 
         BuildUtil.placeBlocksFromBlueprint(chunk, player, blueprintName);
         ChatUtil.sendSuccessMessage(player, "Successfully generated structure from blueprint: " + blueprintName);

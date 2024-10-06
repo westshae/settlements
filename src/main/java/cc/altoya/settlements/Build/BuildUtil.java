@@ -9,16 +9,23 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
+import net.md_5.bungee.api.ChatColor;
 
 public class BuildUtil {
     public static FileConfiguration getBuildConfig() {
@@ -35,21 +42,12 @@ public class BuildUtil {
         }
     }
 
-    public static void createNewStructure(Player player, Chunk chunk, String type, String blueprintName) {
+    public static void createNewStructure(Player player, Chunk chunk, String blueprintName) {
         FileConfiguration config = getBuildConfig();
 
         config.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".owner", GeneralUtil.getKeyFromPlayer(player));
-        config.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".type", type);
         config.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".blueprintName", blueprintName);
         saveBuildConfig(config);
-    }
-
-    public static String getStructureType(Chunk chunk) {
-        FileConfiguration config = getBuildConfig();
-        if (!isChunkStructure(chunk)) {
-            return null;
-        }
-        return config.getString("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".type");
     }
 
     public static String getStructureBlueprintName(Chunk chunk) {
@@ -121,23 +119,6 @@ public class BuildUtil {
                 getResourcesFromStructure(chunk) + amount);
         saveBuildConfig(config);
         ChatUtil.sendSuccessMessage(player, "Resources now at " + getResourcesFromStructure(chunk));
-        onResourceAmountGivePlayerItem(player, chunk);
-    }
-
-    public static void onResourceAmountGivePlayerItem(Player player, Chunk chunk) {
-        if (!isChunkStructure(chunk)) {
-            return;
-        }
-        Integer resources = getResourcesFromStructure(chunk);
-        if (resources == null) {
-            return;
-        }
-        if (resources < 50) {
-            return;
-        }
-        player.getInventory().addItem(new ItemStack(Material.DIAMOND, 1));
-        ChatUtil.sendSuccessMessage(player, "You reached 50 resources, here's a diamond.");
-        editResources(player, chunk, -50);
     }
 
     public static void setStructurePlayerheight(Chunk chunk, Player player, int playerHeight) {
@@ -165,18 +146,16 @@ public class BuildUtil {
         return config.getInt("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".supplies");
     }
 
-
     public static void editSupplies(Player player, Chunk chunk, int amount) {
         FileConfiguration config = getBuildConfig();
         if (!isChunkStructure(chunk)) {
             return;
         }
         config.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".supplies",
-        getSuppliesFromStructure(chunk) + amount);
+                getSuppliesFromStructure(chunk) + amount);
         saveBuildConfig(config);
         ChatUtil.sendSuccessMessage(player, "Supplies are now at " + getSuppliesFromStructure(chunk));
     }
-
 
     public static void deleteBlocksFromBlueprint(Chunk chunk, Player player) {
         FileConfiguration config = getBuildConfig();
@@ -260,11 +239,11 @@ public class BuildUtil {
                     Block block = BlueprintUtil.turnStringIntoBlock(blockString);
 
                     Integer playerHeight = getStructurePlayerheight(chunk, player);
-                    if(playerHeight == null){
+                    if (playerHeight == null) {
                         playerHeight = potentialPlayerHeight;
                         BuildUtil.setStructurePlayerheight(chunk, player, playerHeight);
                     }
-            
+
                     if (block != null) {
                         int relativeY = block.getY() - originalY + playerHeight;
                         int x = block.getX();
@@ -299,6 +278,115 @@ public class BuildUtil {
                 }
             }
         }.runTaskTimer(GeneralUtil.getPlugin(), 0, 1); // Start immediately and run every tick
+    }
+
+    public static void collectResourcesFromStructure(Player player, Chunk chunk) {
+        String resourceType = BlueprintUtil.getResourceType(getStructureBlueprintName(chunk));
+        Integer resourceAmount = getResourcesFromStructure(chunk);
+        editResources(player, chunk, -resourceAmount);
+        ItemStack item = new ItemStack(Material.ACACIA_BOAT);
+        ItemMeta meta = item.getItemMeta();
+        NamespacedKey key = new NamespacedKey(GeneralUtil.getPlugin(), "resource_item");
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+
+        ChatUtil.sendErrorMessage(player, resourceType);
+        switch (resourceType) {
+            case "wheat":
+                item.setType(Material.WHEAT);
+                item.setAmount(resourceAmount);
+                meta.setDisplayName(ChatColor.AQUA + "Wheat");
+                meta.setLore(List.of(ChatColor.AQUA + "Resource Item", ChatColor.AQUA + "Used to feed your workers"));
+                meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+                data.set(key, PersistentDataType.STRING, "wheat_resource_item");
+
+                item.setItemMeta(meta);
+                ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " wheat.");
+                break;
+            case "sugar":
+                item.setType(Material.SUGAR);
+                item.setAmount(resourceAmount);
+                meta.setDisplayName(ChatColor.AQUA + "Sugar");
+                meta.setLore(
+                        List.of(ChatColor.AQUA + "Resource Item", ChatColor.AQUA + "Used to speed up your workers"));
+                meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                data.set(key, PersistentDataType.STRING, "sugar_resource_item");
+
+                item.setItemMeta(meta);
+                ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " sugar.");
+
+                break;
+            case "coal":
+                item.setType(Material.COAL);
+                item.setAmount(resourceAmount);
+                meta.setDisplayName(ChatColor.AQUA + "Coal");
+                meta.setLore(List.of(ChatColor.AQUA + "Resource Item", ChatColor.AQUA + "Used to fuel your factories"));
+                meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                data.set(key, PersistentDataType.STRING, "coal_resource_item");
+
+                item.setItemMeta(meta);
+                ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " coal.");
+
+                break;
+            case "iron":
+                item.setType(Material.IRON_INGOT);
+                item.setAmount(resourceAmount);
+                meta.setDisplayName(ChatColor.AQUA + "Iron");
+                meta.setLore(List.of(ChatColor.AQUA + "Resource Item", ChatColor.AQUA + "Used in your factories"));
+                meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                data.set(key, PersistentDataType.STRING, "iron_resource_item");
+
+                item.setItemMeta(meta);
+                ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " iron.");
+
+                break;
+            case "manufacturedGoods":
+                item.setType(Material.RAIL);
+                item.setAmount(resourceAmount);
+                meta.setDisplayName(ChatColor.AQUA + "Manufactured Goods");
+                meta.setLore(List.of(ChatColor.AQUA + "Resource Item",
+                        ChatColor.AQUA + "Product of your factories, indicates GDP"));
+                meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                data.set(key, PersistentDataType.STRING, "manufacturedGoods_resource_item");
+
+                item.setItemMeta(meta);
+                ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " manufactured goods.");
+
+                break;
+            case "militaryGoods":
+                item.setType(Material.DISPENSER);
+                item.setAmount(resourceAmount);
+                meta.setDisplayName(ChatColor.AQUA + "Military Goods");
+                meta.setLore(List.of(ChatColor.AQUA + "Resource Item",
+                        ChatColor.AQUA + "Product of your factories, indicates military strength"));
+                meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                data.set(key, PersistentDataType.STRING, "militaryGoods_resource_item");
+
+                item.setItemMeta(meta);
+                ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " military goods.");
+
+                break;
+        }
+
+        player.getInventory().addItem(item);
 
     }
+    public static String getItemPersistentValue(ItemStack item) {
+        if (item == null || !item.hasItemMeta()) {
+            return null; // Return null if item is invalid or has no meta
+        }
+
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(GeneralUtil.getPlugin(), "resource_item");
+
+        return data.get(key, PersistentDataType.STRING);
+    }
+
 }

@@ -22,6 +22,7 @@ public class CommandHelp {
             "/build delete", "Deletes any structure within the chunk you are in.",
             "/build generate {blueprintName}", "Generates a structure in the chunk you are in.",
             "/build refresh", "Deletes then builds the structure of the chunk you are in.",
+            "/build collect", "Collects resources from the structure of the chunk you are in.",
             "/build help", "The command you're looking at right now"
         );
 

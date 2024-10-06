@@ -11,7 +11,7 @@ import java.util.List;
 
 public class BuildTabCompleter implements TabCompleter {
 
-    private final List<String> subCommands = Arrays.asList("generate","delete", "refresh","help");
+    private final List<String> subCommands = Arrays.asList("generate","delete", "refresh", "collect","help");
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {

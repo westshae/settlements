@@ -92,4 +92,20 @@ public class BlueprintUtil {
 
         return block;
     }
+
+    public static String getBuildingType(String blueprintName){
+        FileConfiguration config = getBlueprintConfig();
+        if(!doesBlueprintExist(blueprintName)){
+            return null;
+        }
+        return config.getString("blueprints." + blueprintName + ".structureType");
+    }
+    public static String getResourceType(String blueprintName){
+        FileConfiguration config = getBlueprintConfig();
+        if(!doesBlueprintExist(blueprintName)){
+            return null;
+        }
+        return config.getString("blueprints." + blueprintName + ".resourceType");
+    }
+
 }

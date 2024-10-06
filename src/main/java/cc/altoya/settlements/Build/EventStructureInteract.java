@@ -13,6 +13,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -32,7 +33,7 @@ public class EventStructureInteract implements Listener {
             return;
         }
 
-        switch (BuildUtil.getStructureType(block.getChunk())) {
+        switch (BlueprintUtil.getBuildingType(BuildUtil.getStructureBlueprintName(block.getChunk()))) {
             case "mine":
                 handleMine(event, block, player);
                 break;
@@ -58,7 +59,7 @@ public class EventStructureInteract implements Listener {
             return;
         }
 
-        switch (BuildUtil.getStructureType(block.getChunk())) {
+        switch (BlueprintUtil.getBuildingType(BuildUtil.getStructureBlueprintName(block.getChunk()))) {
             case "factory":
                 handleFactory(event, block, player);
                 break;
