@@ -24,6 +24,7 @@ public class CommandHelp {
             "/build refresh", "Deletes then builds the structure of the chunk you are in.",
             "/build collect", "Collects resources from the structure of the chunk you are in.",
             "/build plot", "Shows you where the bottom level of the structure will begin to generate to allow you to terraform.",
+            "/build upgrade", "Upgrades your structure to the next level.",
             "/build help", "The command you're looking at right now"
         );
 

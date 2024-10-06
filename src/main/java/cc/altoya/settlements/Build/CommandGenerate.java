@@ -25,11 +25,7 @@ public class CommandGenerate {
 
     public static void generateBuildingFromBlueprint(Player player, String blueprintName) {
         Chunk chunk = player.getLocation().getChunk();
-
-        if (BuildUtil.isChunkStructure(chunk)) {
-            ChatUtil.sendErrorMessage(player, "There is already a structure in this chunk.");
-            return;
-        }
+        Integer version = BlueprintUtil.getVersion(blueprintName);
 
         if (!BlueprintUtil.doesBlueprintExist(blueprintName)) {
             ChatUtil.sendErrorMessage(player, "This blueprint doesn't exist.");
@@ -40,6 +36,8 @@ public class CommandGenerate {
 
         buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".owner", GeneralUtil.getKeyFromPlayer(player));
         buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".blueprintName", blueprintName);
+        buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".version", version);
+
         BuildUtil.saveBuildConfig(buildConfig);
 
         FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();

@@ -128,6 +128,26 @@ public class BuildUtil {
         ChatUtil.sendSuccessMessage(player, "Resources now at " + getResourcesFromStructure(chunk));
     }
 
+    public static void setBlueprintName(Chunk chunk, Player player, String newBlueprintName){
+        if(!BuildUtil.isChunkStructure(chunk)){
+            return;
+        }
+        FileConfiguration buildConfig = getBuildConfig();
+        buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".blueprintName", newBlueprintName);
+
+        saveBuildConfig(buildConfig);
+    }
+
+    public static void setVersion(Chunk chunk, Player player, int version){
+        if(!BuildUtil.isChunkStructure(chunk)){
+            return;
+        }
+        FileConfiguration buildConfig = getBuildConfig();
+        buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".version", version);
+
+        saveBuildConfig(buildConfig);
+    }
+
     public static void setStructurePlayerheight(Chunk chunk, Player player, int playerHeight) {
         FileConfiguration buildConfig = getBuildConfig();
 

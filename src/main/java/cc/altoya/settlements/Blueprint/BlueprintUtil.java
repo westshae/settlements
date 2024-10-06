@@ -110,6 +110,15 @@ public class BlueprintUtil {
         return config.getString("blueprints." + blueprintName + ".resourceType");
     }
 
+    public static Integer getVersion(String blueprintName) {
+        FileConfiguration config = getBlueprintConfig();
+        if (!doesBlueprintExist(blueprintName)) {
+            return null;
+        }
+        return config.getInt("blueprints." + blueprintName + ".version");
+    }
+
+
     public static void placeBlockWithoutBlueprintData(Location location, Material material, BlockData blockData) {
         Block block = location.getBlock();
         block.setType(material, false);
