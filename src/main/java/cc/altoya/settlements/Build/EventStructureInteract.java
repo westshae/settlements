@@ -113,9 +113,15 @@ public class EventStructureInteract implements Listener {
             event.setCancelled(true);
             return;
         }
+        if(BuildUtil.getSuppliesFromStructure(block.getChunk()) <= 0){
+            ChatUtil.sendErrorMessage(player, "You are out of supplies, please restock.");
+            event.setCancelled(true);
+            return;
+        }
         event.setCancelled(true);
         event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, 1.0f, 1.0f);
-        BuildUtil.editResources(player, block.getChunk(), 1);
+        BuildUtil.editResources(player, block.getChunk(), 5);
+        BuildUtil.editSupplies(player, block.getChunk(), -1);
         block.setType(Material.AIR);
         new BukkitRunnable() {
             @Override
