@@ -7,24 +7,26 @@ import cc.altoya.settlements.Domain.DomainUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
-public class CommandDelete {
+public class CommandRefresh {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/build delete")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/build refresh")) {
             return true;
         }
 
-        deleteStructure(sender, sender.getLocation().getChunk());
+        refreshStructure(sender, sender.getLocation().getChunk());
         return true;
     }
 
-    private static void deleteStructure(Player player, Chunk chunk) {
+    private static void refreshStructure(Player player, Chunk chunk) {
         if (!DomainUtil.doesPlayerOwnChunk(player, chunk)) {
             ChatUtil.sendErrorMessage(player, "You don't own this structure");
             return;
         }
+        String blueprintName = BuildUtil.getStructureBlueprintName(chunk);
 
-        BuildUtil.deleteBlocksFromBlueprint(chunk, player);
-        ChatUtil.sendSuccessMessage(player, "Structure successfully deleted.");
+        BuildUtil.placeBlocksFromBlueprint(chunk, player, blueprintName);
+
+        ChatUtil.sendSuccessMessage(player, "Successessfully refreshed structure.");
     }
 
 }

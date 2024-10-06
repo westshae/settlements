@@ -59,10 +59,6 @@ public class CommandSave {
             for (int y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
                 for (int z = Math.min(z1, z2); z <= Math.max(z1, z2); z++) {
                     Block block = firstBlock.getWorld().getBlockAt(x, y, z);
-
-                    if (block.getType() == Material.AIR) {
-                        continue;
-                    }
                     String blockString = BlueprintUtil.turnBlockIntoString(block);
                     blockList.add(blockString);
                 }

@@ -1,13 +1,8 @@
 package cc.altoya.settlements.Build;
 
-import java.util.List;
-
 import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.Util.ChatUtil;
@@ -40,103 +35,9 @@ public class CommandGenerate {
 
         String type = config.getString("blueprints." + blueprintName + ".type");
 
-        BuildUtil.createNewStructure(player, chunk, type);
+        BuildUtil.createNewStructure(player, chunk, type, blueprintName);
 
-        // Get the block list from the saved structure (contains both block type and
-        // block data)
-        List<String> blockList = config.getStringList("blueprints." + blueprintName + ".blocks");
-
-        // Retrieve the list of interactive blocks from the configuration
-        List<String> interactiveBlocks = config.getStringList("blueprints." + blueprintName + ".interactive");
-
-        // Get the player's height
-        int playerHeight = player.getLocation().getBlockY();
-        int originalY = config.getInt("blueprints." + blueprintName + ".originalY");
-
-        // Retrieve the first block's position as the origin for the structure
-        String firstBlockKey = config.getString("blueprints." + blueprintName + ".first");
-        Block firstBlock = GeneralUtil.getBlockFromKey(firstBlockKey);
-
-        if (firstBlock == null) {
-            ChatUtil.sendErrorMessage(player, "Error retrieving the first block from key: " + firstBlockKey);
-            return;
-        }
-
-        // Get the original coordinates of the first block
-        int originX = firstBlock.getX();
-        int originZ = firstBlock.getZ();
-
-            new BukkitRunnable() {
-        int index = 0;
-
-        @Override
-        public void run() {
-            int blocksProcessed = 0;
-
-            while (index < blockList.size() && blocksProcessed < 1) {
-                String blockString = blockList.get(index);
-                Block block = BlueprintUtil.turnStringIntoBlock(blockString);
-
-                if (block != null) {
-                    int relativeY = block.getY() - originalY + playerHeight;
-                    int x = block.getX();
-                    int z = block.getZ();
-
-                    int adjustedX = (chunk.getX() * 16 + x) - originX;
-                    int adjustedZ = (chunk.getZ() * 16 + z) - originZ;
-
-                    Location blockLocation = new Location(chunk.getWorld(), adjustedX, relativeY, adjustedZ);
-
-                    if (interactiveBlocks.contains(blockString)) {
-                        BuildUtil.placeInteractiveBlock(player, blockLocation, block.getType(), block.getBlockData());
-                    } else {
-                        BuildUtil.placeStructureBlock(player, blockLocation, block.getType(), block.getBlockData());
-                    }
-
-                    blocksProcessed++;
-                } else {
-                    ChatUtil.sendErrorMessage(player, "Error converting block from string: " + blockString);
-                }
-                index++;
-            }
-
-            // If there are more blocks to process, schedule the next run after a brief pause
-            if (index < blockList.size()) {
-                // Pause for 1 tick (50 milliseconds) to allow server to process other tasks
-                this.runTaskLater(GeneralUtil.getPlugin(), 1); // Replace MyPlugin with your plugin instance class
-            } else {
-                ChatUtil.sendSuccessMessage(player, "Successfully generated structure from blueprint: " + blueprintName);
-                this.cancel(); // Stop the runnable if all blocks have been processed
-            }
-        }
-    }.runTaskTimer(GeneralUtil.getPlugin(), 0, 1); // Start immediately and run every tick
-
-
-        // for (String blockString : blockList) {
-        //     // Convert string representation to a block
-        //     Block block = BlueprintUtil.turnStringIntoBlock(blockString);
-
-        //     if (block != null) {
-        //         // Calculate relative positions
-        //         int relativeY = block.getY() - originalY + playerHeight;
-        //         int x = block.getX();
-        //         int z = block.getZ();
-
-        //         int adjustedX = (chunk.getX() * 16 + x) - originX;
-        //         int adjustedZ = (chunk.getZ() * 16 + z) - originZ;
-
-        //         Location blockLocation = new Location(chunk.getWorld(), adjustedX, relativeY, adjustedZ);
-
-        //         if (interactiveBlocks.contains(blockString)) {
-        //             BuildUtil.placeInteractiveBlock(player, blockLocation, block.getType(), block.getBlockData());
-        //         } else {
-        //             BuildUtil.placeStructureBlock(player, blockLocation, block.getType(), block.getBlockData());
-        //         }
-        //     } else {
-        //         ChatUtil.sendErrorMessage(player, "Error converting block from string: " + blockString);
-        //     }
-        // }
-
+        BuildUtil.placeBlocksFromBlueprint(chunk, player, blueprintName);
         ChatUtil.sendSuccessMessage(player, "Successfully generated structure from blueprint: " + blueprintName);
     }
 }
