@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Structure;
+package cc.altoya.settlements.Build;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandDelete {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/structure delete")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/build delete")) {
             return true;
         }
 
@@ -24,7 +24,7 @@ public class CommandDelete {
     }
 
         private static void deleteStructure(Player player, Chunk chunk) {
-        FileConfiguration config = StructureUtil.getStructureConfig();
+        FileConfiguration config = BuildUtil.getStructureConfig();
         if (!DomainUtil.doesPlayerOwnChunk(player, chunk)) {
             ChatUtil.sendErrorMessage(player, "You don't own this structure");
             return;
@@ -46,7 +46,7 @@ public class CommandDelete {
 
         config.set("structures." + GeneralUtil.getKeyFromChunk(chunk), null);
 
-        StructureUtil.saveStructureConfig(config);
+        BuildUtil.saveStructureConfig(config);
 
         ChatUtil.sendSuccessMessage(player, "Structure successfully deleted.");
     }

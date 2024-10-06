@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Structure;
+package cc.altoya.settlements.Build;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 public class CommandGenerate {
     public static boolean handle(Player sender, String[] args) {
         if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2,
-                "/structure generate {type}")) {
+                "/build generate {type}")) {
             return true;
         }
         generateBuildingFromBlueprint(sender, args[1]);
@@ -25,7 +25,7 @@ public class CommandGenerate {
     private static void generateBuildingFromBlueprint(Player player, String blueprintName) {
         Chunk chunk = player.getLocation().getChunk();
     
-        if (StructureUtil.isChunkStructure(chunk)) {
+        if (BuildUtil.isChunkStructure(chunk)) {
             ChatUtil.sendErrorMessage(player, "There is already a structure in this chunk.");
             return;
         }
@@ -39,7 +39,7 @@ public class CommandGenerate {
     
         String type = config.getString("blueprints." + blueprintName + ".type");
     
-        StructureUtil.createNewStructure(player, chunk, type);
+        BuildUtil.createNewStructure(player, chunk, type);
     
         // Get the block list from the saved structure (contains both block type and block data)
         List<String> blockList = config.getStringList("blueprints." + blueprintName + ".blocks");
@@ -81,9 +81,9 @@ public class CommandGenerate {
                 Location blockLocation = new Location(chunk.getWorld(), adjustedX, relativeY, adjustedZ);
     
                 if (interactiveBlocks.contains(blockString)) {
-                    StructureUtil.placeInteractiveBlock(player, blockLocation, block.getType(), block.getBlockData());
+                    BuildUtil.placeInteractiveBlock(player, blockLocation, block.getType(), block.getBlockData());
                 } else {
-                    StructureUtil.placeStructureBlock(player, blockLocation, block.getType(), block.getBlockData());
+                    BuildUtil.placeStructureBlock(player, blockLocation, block.getType(), block.getBlockData());
                 }
             } else {
                 ChatUtil.sendErrorMessage(player, "Error converting block from string: " + blockString);

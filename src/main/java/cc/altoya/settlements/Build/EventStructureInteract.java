@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Structure;
+package cc.altoya.settlements.Build;
 
 import java.util.List;
 import java.util.Arrays;
@@ -22,17 +22,17 @@ public class EventStructureInteract implements Listener {
         Block block = event.getBlock();
         Player player = event.getPlayer();
 
-        if (!StructureUtil.isChunkStructure(block.getChunk())) {
+        if (!BuildUtil.isChunkStructure(block.getChunk())) {
             return;
         }
 
-        if (!StructureUtil.isBlockInteractiveBlock(block)) {
+        if (!BuildUtil.isBlockInteractiveBlock(block)) {
             ChatUtil.sendErrorMessage(player, "Cannot break blocks within a structure chunk.");
             event.setCancelled(true);
             return;
         }
 
-        switch (StructureUtil.getStructureType(block.getChunk())) {
+        switch (BuildUtil.getStructureType(block.getChunk())) {
             case "mine":
                 handleMine(event, block, player);
                 break;
@@ -50,11 +50,11 @@ public class EventStructureInteract implements Listener {
         Block block = event.getClickedBlock();
         Player player = event.getPlayer();
 
-        if (!StructureUtil.isChunkStructure(block.getChunk())) {
+        if (!BuildUtil.isChunkStructure(block.getChunk())) {
             return;
         }
 
-        switch (StructureUtil.getStructureType(block.getChunk())) {
+        switch (BuildUtil.getStructureType(block.getChunk())) {
             case "factory":
                 handleFactory(event, block, player);
                 break;
@@ -73,7 +73,7 @@ public class EventStructureInteract implements Listener {
         }
         event.setCancelled(true);
         event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_STONE_BREAK, 1.0f, 1.0f);
-        StructureUtil.editResources(player, block.getChunk(), 1);
+        BuildUtil.editResources(player, block.getChunk(), 1);
         block.setType(Material.STONE);
         new BukkitRunnable() {
             @Override
@@ -92,7 +92,7 @@ public class EventStructureInteract implements Listener {
         }
         event.setCancelled(true);
         event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_PUMPKIN_CARVE, 1.0f, 1.0f);
-        StructureUtil.editResources(player, block.getChunk(), 1);
+        BuildUtil.editResources(player, block.getChunk(), 1);
         block.setType(Material.AIR);
         new BukkitRunnable() {
             @Override
@@ -111,7 +111,7 @@ public class EventStructureInteract implements Listener {
         }
         event.setCancelled(true);
         event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, 1.0f, 1.0f);
-        StructureUtil.editResources(player, block.getChunk(), 1);
+        BuildUtil.editResources(player, block.getChunk(), 1);
         block.setType(Material.AIR);
         new BukkitRunnable() {
             @Override

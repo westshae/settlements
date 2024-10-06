@@ -7,11 +7,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import cc.altoya.settlements.Alliance.EventAllianceChat;
 import cc.altoya.settlements.Alliance.MainAlliance;
 import cc.altoya.settlements.Blueprint.MainBlueprint;
+import cc.altoya.settlements.Build.EventStructureInteract;
+import cc.altoya.settlements.Build.MainBuild;
 import cc.altoya.settlements.Domain.EventProtectBlocks;
 import cc.altoya.settlements.Domain.EventProtectEntities;
 import cc.altoya.settlements.Domain.MainDomain;
-import cc.altoya.settlements.Structure.EventStructureInteract;
-import cc.altoya.settlements.Structure.MainStructure;
 
 
 public class App extends JavaPlugin {
@@ -22,7 +22,7 @@ public class App extends JavaPlugin {
         // Register commands
         this.getCommand("domain").setExecutor(new MainDomain());
         this.getCommand("alliance").setExecutor(new MainAlliance());
-        this.getCommand("structure").setExecutor(new MainStructure());
+        this.getCommand("build").setExecutor(new MainBuild());
         this.getCommand("blueprint").setExecutor(new MainBlueprint());
 
         // How to register eventListeners
