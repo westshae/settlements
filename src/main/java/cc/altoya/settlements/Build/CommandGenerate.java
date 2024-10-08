@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -71,7 +70,7 @@ public class CommandGenerate {
         String buildFirstKey = buildConfig.getString("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".first");
         Block buildFirstBlock = BlueprintUtil.turnStringIntoBlock(buildFirstKey);
 
-        List<String> normalBlocks = blueprintConfig.getStringList("blueprints." + blueprintName + ".blocks");
+        List<String> blocks = blueprintConfig.getStringList("blueprints." + blueprintName + ".blocks");
 
         new BukkitRunnable() {
             int index = 0;
@@ -80,8 +79,8 @@ public class CommandGenerate {
             public void run() {
                 int blocksProcessed = 0;
 
-                while (index < normalBlocks.size() && blocksProcessed < 1) {
-                    String blockString = normalBlocks.get(index);
+                while (index < blocks.size() && blocksProcessed < 1) {
+                    String blockString = blocks.get(index);
                     Block block = BlueprintUtil.turnStringIntoBlock(blockString);
 
                     if (block != null) {
@@ -99,7 +98,7 @@ public class CommandGenerate {
 
                 // If there are more blocks to process, schedule the next run after a brief
                 // pause
-                if (index < normalBlocks.size()) {
+                if (index < blocks.size()) {
                     // Pause for 1 tick (50 milliseconds) to allow server to process other tasks
                     this.runTaskLater(GeneralUtil.getPlugin(), 1); // Replace MyPlugin with your plugin instance class
                 } else {
