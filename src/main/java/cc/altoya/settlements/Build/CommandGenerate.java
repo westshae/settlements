@@ -65,7 +65,6 @@ public class CommandGenerate {
             return;
         }
 
-
         FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
         FileConfiguration buildConfig = BuildUtil.getBuildConfig();
 
@@ -73,10 +72,6 @@ public class CommandGenerate {
         Block buildFirstBlock = BlueprintUtil.turnStringIntoBlock(buildFirstKey);
 
         List<String> normalBlocks = blueprintConfig.getStringList("blueprints." + blueprintName + ".blocks");
-        Integer playerHeight = buildConfig.getInt("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".playerHeight");
-
-
-        // Retrieve the first block's position as the origin for the structure
 
         new BukkitRunnable() {
             int index = 0;
@@ -90,18 +85,8 @@ public class CommandGenerate {
                     Block block = BlueprintUtil.turnStringIntoBlock(blockString);
 
                     if (block != null) {
-                        int relativeY = block.getY() - buildFirstBlock.getY() + playerHeight;
                         Location relativeLocation = block.getLocation(); 
                         Location nonRelativeLocation = BlueprintUtil.getNonRelativeLocation(buildFirstBlock, relativeLocation);
-
-                        boolean existingBlockIsAir = chunk.getWorld().getBlockAt(nonRelativeLocation.getBlockX(), relativeY, nonRelativeLocation.getBlockZ()).getType() == Material.AIR;
-                        boolean newBlockIsAir = block.getType() == Material.AIR;
-
-                        if(existingBlockIsAir && newBlockIsAir){
-                            blocksProcessed++;
-                            index++;
-                            continue;
-                        }
 
                         BuildUtil.placeBlockForStructure(player, nonRelativeLocation, block.getType(), block.getBlockData());
 
