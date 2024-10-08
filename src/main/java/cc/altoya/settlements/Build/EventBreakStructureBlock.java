@@ -27,7 +27,7 @@ public class EventBreakStructureBlock implements Listener {
             return;
         }
 
-        if (!BuildUtil.getStructureOwner(block.getChunk()).equals(GeneralUtil.getKeyFromPlayer(player))){
+        if (!BuildUtil.getStructureOwner(block.getChunk()).equals(GeneralUtil.getKeyFromPlayer(player))) {
             ChatUtil.sendErrorMessage(player, "You don't own this structure.");
             return;
         }
@@ -38,6 +38,18 @@ public class EventBreakStructureBlock implements Listener {
                 break;
             case IRON_ORE:
                 handleOre(event, block, player);
+                break;
+            case WHEAT:
+                handlePlants(event, block, player);
+                break;
+            case SUGAR_CANE:
+                handlePlants(event, block, player);
+                break;
+            case PUMPKIN:
+                handlePlants(event, block, player);
+                break;
+            case MELON:
+                handlePlants(event, block, player);
                 break;
             default:
                 ChatUtil.sendErrorMessage(player, "You cannot break this structure block.");
@@ -55,7 +67,7 @@ public class EventBreakStructureBlock implements Listener {
             return;
         }
 
-        if(block.getType() == Material.CHEST){
+        if (block.getType() == Material.CHEST) {
             return;
         }
 
@@ -84,33 +96,10 @@ public class EventBreakStructureBlock implements Listener {
         }.runTaskLater(GeneralUtil.getPlugin(), 100L);
     }
 
-    private static void handleMine(BlockBreakEvent event, Block block, Player player) {
+    private static void handlePlants(BlockBreakEvent event, Block block, Player player) {
         Material currentMaterial = block.getType();
-        if (currentMaterial == Material.STONE) {
-            event.setCancelled(true);
-            return;
-        }
         event.setCancelled(true);
-        event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_STONE_BREAK, 1.0f, 1.0f);
-        BuildUtil.editResources(player, block.getChunk(), 1);
-        block.setType(Material.STONE);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                block.setType(currentMaterial);
-            }
-        }.runTaskLater(GeneralUtil.getPlugin(), 100L);
-    }
-
-    private static void handleFarm(BlockBreakEvent event, Block block, Player player) {
-        Material currentMaterial = block.getType();
-        List<Material> allowedCrops = Arrays.asList(Material.SUGAR_CANE, Material.WHEAT, Material.PUMPKIN, Material.MELON);
-        if(!allowedCrops.contains(currentMaterial)){
-            event.setCancelled(true);
-            return;
-        }
-        event.setCancelled(true);
-        event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_PUMPKIN_CARVE, 1.0f, 1.0f);
+        event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_BREAK, 1.0f, 1.0f);
         BuildUtil.editResources(player, block.getChunk(), 1);
         block.setType(Material.AIR);
         new BukkitRunnable() {
@@ -119,16 +108,18 @@ public class EventBreakStructureBlock implements Listener {
                 block.setType(currentMaterial);
             }
         }.runTaskLater(GeneralUtil.getPlugin(), 100L);
+
     }
 
-    private static void handleFactory(PlayerInteractEvent event, Block block, Player player){
+    private static void handleFactory(PlayerInteractEvent event, Block block, Player player) {
         Material currentMaterial = block.getType();
-        List<Material> allowedInteractables = Arrays.asList(Material.LEVER, Material.STONE_BUTTON, Material.OAK_BUTTON, Material.STONE_PRESSURE_PLATE);
-        if(!allowedInteractables.contains(currentMaterial)){
+        List<Material> allowedInteractables = Arrays.asList(Material.LEVER, Material.STONE_BUTTON, Material.OAK_BUTTON,
+                Material.STONE_PRESSURE_PLATE);
+        if (!allowedInteractables.contains(currentMaterial)) {
             event.setCancelled(true);
             return;
         }
-        if(BuildUtil.getSuppliesFromStructure(block.getChunk()) <= 0){
+        if (BuildUtil.getSuppliesFromStructure(block.getChunk()) <= 0) {
             ChatUtil.sendErrorMessage(player, "You are out of supplies, please restock.");
             event.setCancelled(true);
             return;
