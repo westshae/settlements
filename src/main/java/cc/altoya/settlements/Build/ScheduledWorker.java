@@ -72,6 +72,7 @@ public class ScheduledWorker {
                                 nonRelativeRandomBlock.clone().add(0.5, yIncrease, 0.5),
                                 EntityType.VILLAGER);
                         villager.setAI(false);
+                        villager.setInvulnerable(true);
                         new BukkitRunnable() {
                             int timeElapsed = 0;
 

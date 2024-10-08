@@ -73,7 +73,6 @@ public class EventBreakStructureBlock implements Listener {
         if (!serverCalled) {
             ChatUtil.sendSuccessBar(player, "Resources now at " + BuildUtil.getResourcesFromStructure(block.getChunk(), resource));
             event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_WOOD_BREAK, 1.0f, 1.0f);
-
         }
         block.setType(Material.AIR);
         new BukkitRunnable() {
