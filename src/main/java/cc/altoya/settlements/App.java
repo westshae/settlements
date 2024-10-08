@@ -10,8 +10,8 @@ import cc.altoya.settlements.Alliance.MainAlliance;
 import cc.altoya.settlements.Blueprint.BlueprintTabCompleter;
 import cc.altoya.settlements.Blueprint.MainBlueprint;
 import cc.altoya.settlements.Build.BuildTabCompleter;
-import cc.altoya.settlements.Build.EventInputSupplies;
-import cc.altoya.settlements.Build.EventStructureInteract;
+import cc.altoya.settlements.Build.EventInteractStructure;
+import cc.altoya.settlements.Build.EventBreakStructureBlock;
 import cc.altoya.settlements.Build.MainBuild;
 import cc.altoya.settlements.Domain.DomainTabCompleter;
 import cc.altoya.settlements.Domain.EventProtectBlocks;
@@ -40,8 +40,8 @@ public class App extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EventProtectBlocks(), this);
         this.getServer().getPluginManager().registerEvents(new EventProtectEntities(), this);
         this.getServer().getPluginManager().registerEvents(new EventAllianceChat(), this);
-        this.getServer().getPluginManager().registerEvents(new EventStructureInteract(), this);
-        this.getServer().getPluginManager().registerEvents(new EventInputSupplies(), this);
+        this.getServer().getPluginManager().registerEvents(new EventBreakStructureBlock(), this);
+        this.getServer().getPluginManager().registerEvents(new EventInteractStructure(), this);
 
     }
 

@@ -1,16 +1,16 @@
 package cc.altoya.settlements.Build;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import cc.altoya.settlements.Domain.DomainUtil;
+import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -20,22 +20,25 @@ public class CommandDelete {
             return true;
         }
 
-        deleteStructure(sender, sender.getLocation().getChunk());
+        deleteStructure(sender);
         return true;
     }
 
-    private static void deleteStructure(Player player, Chunk chunk) {
-        if (!DomainUtil.doesPlayerOwnChunk(player, chunk)) {
-            ChatUtil.sendErrorMessage(player, "You don't own this structure");
+    public static void deleteStructure(Player player) {
+        Chunk chunk = player.getLocation().getChunk();
+        String blueprintName = BuildUtil.getStructureBlueprintName(chunk);
+        if (!BlueprintUtil.doesBlueprintExist(blueprintName)) {
+            ChatUtil.sendErrorMessage(player, "This blueprint doesn't exist.");
             return;
         }
 
-        FileConfiguration config = BuildUtil.getBuildConfig();
+        FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
+        FileConfiguration buildConfig = BuildUtil.getBuildConfig();
 
-        List<String> blocks = new ArrayList<>();
+        String buildFirstKey = buildConfig.getString("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".first");
+        Block buildFirstBlock = BlueprintUtil.turnStringIntoBlock(buildFirstKey);
 
-        blocks.addAll(config.getStringList("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".interactiveBlocks"));
-        blocks.addAll(config.getStringList("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".blocks"));
+        List<String> blocks = blueprintConfig.getStringList("blueprints." + blueprintName + ".blocks");
 
         new BukkitRunnable() {
             int index = 0;
@@ -43,44 +46,33 @@ public class CommandDelete {
             @Override
             public void run() {
                 int blocksProcessed = 0;
-                int blocksToProcess = 1;
-                while (index < blocks.size() && blocksProcessed < blocksToProcess) {
-                    String blockKey = blocks.get(index);
-                    String allBlockPath = "builds.all_blocks." + blockKey;
 
-                    if (config.contains(allBlockPath)) {
-                        Block block = GeneralUtil.getBlockFromKey(blockKey);
+                while (index < blocks.size() && blocksProcessed < 1) {
+                    String blockString = blocks.get(index);
+                    Block block = BlueprintUtil.turnStringIntoBlock(blockString);
 
-                        if(block.getType() == Material.AIR){
-                            blocksProcessed++;
-                            index++;
-                            continue;
-                        }
+                    if (block != null) {
+                        Location relativeLocation = block.getLocation(); 
+                        Location nonRelativeLocation = BlueprintUtil.getNonRelativeLocation(buildFirstBlock, relativeLocation);
 
-                        if (block != null) {
-                            block.setType(Material.AIR); // Remove the block
-                            config.set(allBlockPath, null); // Remove from config
-                            blocksProcessed++;
-                        }
+                        nonRelativeLocation.getBlock().setType(Material.AIR);
+
+                        blocksProcessed++;
+                    } else {
+                        ChatUtil.sendErrorMessage(player, "Error converting block from string: " + blockString);
                     }
                     index++;
                 }
 
-                // If there are more blocks to process, schedule the next run after a brief
-                // pause
                 if (index < blocks.size()) {
-                    // Pause for 1 tick (50 milliseconds) to allow server to process other tasks
-                    this.runTaskLater(GeneralUtil.getPlugin(), 1); // Replace MyPlugin with your plugin instance class
+                    this.runTaskLater(GeneralUtil.getPlugin(), 1);
                 } else {
-                    // Clean up the structure entry from config
-                    config.set("structures." + GeneralUtil.getKeyFromChunk(chunk), null);
-                    BuildUtil.saveBuildConfig(config); // Save the updated config
-                    this.cancel(); // Stop the runnable if all blocks have been processed
+                    this.cancel();
                 }
             }
-        }.runTaskTimer(GeneralUtil.getPlugin(), 0, 1); // Start immediately and run every tick
+        }.runTaskTimer(GeneralUtil.getPlugin(), 0, 1);
 
-        ChatUtil.sendSuccessMessage(player, "Structure successfully deleted.");
+        ChatUtil.sendSuccessMessage(player, "Successfully generated structure from blueprint: " + blueprintName);
     }
 
 }

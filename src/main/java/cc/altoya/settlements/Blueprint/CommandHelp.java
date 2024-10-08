@@ -19,13 +19,11 @@ public class CommandHelp {
 
     private static void help(Player player) {
         Map<String, String> commands = Map.of(
-                "/blueprint create {blueprintName} {blueprintType}", "The first command to create a blueprint.",
+                "/blueprint create {blueprintName}", "The first command to create a blueprint.",
                 "/blueprint first {blueprintName}",
                 "Sets the blueprints chunk [0, ~, 0] point based on the block you're looking at.",
                 "/blueprint second {blueprintName}",
                 "Sets the blueprints chunk [15, ~, 15] point based on the block you're looking at.",
-                "/blueprint interactive {blueprintName}",
-                "Specifies if a block is an interactive block (A mine's ore, a factories lever, etc) based on the block you're looking at.",
                 "/blueprint save {blueprintName}",
                 "Gets all blocks between the first/second point, then converts each block to a string form for future generation.",
                 "/blueprint dupe {blueprintName}",

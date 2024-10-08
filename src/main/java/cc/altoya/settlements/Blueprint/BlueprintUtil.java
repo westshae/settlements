@@ -27,19 +27,30 @@ public class BlueprintUtil {
         }
     }
 
+    public static Location getRelativeLocation(Block origin, Block block) {
+        int relativeX = block.getX() - origin.getX();
+        int relativeY = block.getY() - origin.getY();
+        int relativeZ = block.getZ() - origin.getZ();
+    
+        return new Location(origin.getWorld(), relativeX, relativeY, relativeZ);
+    }
+
+    public static Location getNonRelativeLocation(Block origin, Location relativeLocation){
+        return origin.getRelative(relativeLocation.getBlockX(), relativeLocation.getBlockY(), relativeLocation.getBlockZ()).getLocation();
+    }
+
     public static boolean doesBlueprintExist(String name) {
         FileConfiguration config = getBlueprintConfig();
         return (config.contains("blueprints." + name));
     }
 
-    public static String turnBlockIntoString(Block block) {
-        if (block == null) {
+    public static String turnBlockIntoString(Block block, Location location) {
+        if (block == null || location == null) {
             return null; // Return null if block is null
         }
 
         Material material = block.getType();
         BlockData blockData = block.getBlockData();
-        Location location = block.getLocation();
 
         // Format: material|blockData|worldName;x;y;z
         return String.format("%s|%s|%s;%d;%d;%d",
@@ -92,22 +103,6 @@ public class BlueprintUtil {
         block.setBlockData(blockData);
 
         return block;
-    }
-
-    public static String getBuildingType(String blueprintName) {
-        FileConfiguration config = getBlueprintConfig();
-        if (!doesBlueprintExist(blueprintName)) {
-            return null;
-        }
-        return config.getString("blueprints." + blueprintName + ".structureType");
-    }
-
-    public static String getResourceType(String blueprintName) {
-        FileConfiguration config = getBlueprintConfig();
-        if (!doesBlueprintExist(blueprintName)) {
-            return null;
-        }
-        return config.getString("blueprints." + blueprintName + ".resourceType");
     }
 
     public static Integer getVersion(String blueprintName) {

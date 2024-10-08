@@ -25,16 +25,8 @@ public class CommandUpgrade {
         String nextBlueprintName = currentBlueprintName + "v" + Integer.toString(currentVersion + 1);
 
         BuildUtil.setBlueprintName(chunk, player, nextBlueprintName);
-
+        CommandDelete.deleteStructure(player);
         CommandGenerate.generateBuildingFromBlueprint(player, nextBlueprintName);
-        // Get resources and supplies
-        // Get version
-        // Get next version blueprint name
-        // Set new blueprint name
-        // Set new version
-        // Set resources & supplies
-        // Generate like Refresh
-
     }
 
 }

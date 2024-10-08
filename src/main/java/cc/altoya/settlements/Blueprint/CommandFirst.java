@@ -28,8 +28,7 @@ public class CommandFirst {
             ChatUtil.sendErrorMessage(player, "The first block of a blueprint must be placed at a chunk's [0, ~, 0]");
             return;
         }
-        String blockKey = GeneralUtil.getKeyFromBlock(targettedBlock);
-        config.set("blueprints." + name + ".first", blockKey);
+        config.set("blueprints." + name + ".first", BlueprintUtil.turnBlockIntoString(targettedBlock, targettedBlock.getLocation()));
         ChatUtil.sendSuccessMessage(player, "Successfully added first block to blueprint.");
         BlueprintUtil.saveBlueprintConfig(config);
     }

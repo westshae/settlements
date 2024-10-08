@@ -1,5 +1,6 @@
 package cc.altoya.settlements.Blueprint;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -24,31 +25,20 @@ public class CommandSecond {
             return;
         }
         Block targettedBlock = player.getTargetBlock(null, 10);
+        Block firstPointBlock = BlueprintUtil.turnStringIntoBlock(config.getString("blueprints." + name + ".first"));
 
-        int x = targettedBlock.getX();
-        int z = targettedBlock.getZ();
+        Block chunksBlock = firstPointBlock.getChunk().getBlock(15, targettedBlock.getY(), 15);
 
-        int adjustedX = (x % 16 + 16) % 16;
-        int adjustedZ = (z % 16 + 16) % 16;
+        Location relativeSecondLocation = BlueprintUtil.getRelativeLocation(firstPointBlock, targettedBlock);
+        BlueprintUtil.turnBlockIntoString(targettedBlock, relativeSecondLocation);
 
-        if (!(adjustedX == 15 && adjustedZ == 15)) {
-            ChatUtil.sendErrorMessage(player,
-                    "The second point of a blueprint must be placed at a chunk's [15, ~, 15]");
+        if(!targettedBlock.equals(chunksBlock)){
+            ChatUtil.sendErrorMessage(player, "The second point of a blueprint must be placed at a chunk's [15, ~, 15]");
             return;
         }
-        Block firstPointBlock = GeneralUtil
-                .getBlockFromKey(config.getString("blueprints." + name + ".first"));
-
-        if (targettedBlock.getX() != firstPointBlock.getX() + 15
-                && targettedBlock.getZ() != firstPointBlock.getZ() + 15) {
-            ChatUtil.sendErrorMessage(player, "Second point must be in the same chunk as first point.");
-            return;
-        }
-        String blockKey = GeneralUtil.getKeyFromBlock(targettedBlock);
-        config.set("blueprints." + name + ".second", blockKey);
-        ChatUtil.sendSuccessMessage(player, "Successfully added second point to blueprint.");
+        config.set("blueprints." + name + ".second", BlueprintUtil.turnBlockIntoString(targettedBlock, targettedBlock.getLocation()));
         BlueprintUtil.saveBlueprintConfig(config);
-
+        ChatUtil.sendSuccessMessage(player, "Successfully added second point to blueprint.");
     }
 
 }

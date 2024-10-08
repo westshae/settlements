@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -20,49 +19,58 @@ public class CommandGenerate {
                 "/build generate {structureType}")) {
             return true;
         }
+        setBuildConfig(sender, args[1]);
         generateBuildingFromBlueprint(sender, args[1]);
         return true;
     }
 
-    public static void generateBuildingFromBlueprint(Player player, String blueprintName) {
-        Chunk chunk = player.getLocation().getChunk();
+    public static void setBuildConfig(Player player, String blueprintName){
         Integer version = BlueprintUtil.getVersion(blueprintName);
 
         if (!BlueprintUtil.doesBlueprintExist(blueprintName)) {
             ChatUtil.sendErrorMessage(player, "This blueprint doesn't exist.");
             return;
         }
-
         FileConfiguration buildConfig = BuildUtil.getBuildConfig();
 
+        int playerHeight = player.getLocation().getBlockY();
+        Chunk chunk = player.getLocation().getChunk();
         buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".owner", GeneralUtil.getKeyFromPlayer(player));
         buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".blueprintName", blueprintName);
         buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".version", version);
-
-        BuildUtil.saveBuildConfig(buildConfig);
+        buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".playerHeight", playerHeight);
 
         FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
 
-        List<String> normalBlocks = blueprintConfig.getStringList("blueprints." + blueprintName + ".blocks");
+        Block nonRelativeFirstBlock = chunk.getBlock(0, playerHeight, 0);
 
-        // Retrieve the list of interactive blocks from the configuration
-        List<String> interactiveBlocks = blueprintConfig.getStringList("blueprints." + blueprintName + ".interactive");
+        String secondBlockKey = blueprintConfig.getString("blueprints." + blueprintName + ".second");
+        Block blueprintSecondBlock = BlueprintUtil.turnStringIntoBlock(secondBlockKey);
 
-        int originalY = blueprintConfig.getInt("blueprints." + blueprintName + ".originalY");
-        int potentialPlayerHeight = player.getLocation().getBlockY();
+        Location nonRelativeSecondLocation = BlueprintUtil.getNonRelativeLocation(nonRelativeFirstBlock, blueprintSecondBlock.getLocation());
+        Block nonRelativeSecondBlock = chunk.getWorld().getBlockAt(nonRelativeSecondLocation.getBlockX(), nonRelativeSecondLocation.getBlockY(), nonRelativeSecondLocation.getBlockZ());
+        
+        buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".first", BlueprintUtil.turnBlockIntoString(nonRelativeFirstBlock, nonRelativeFirstBlock.getLocation()));
+        buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".second", BlueprintUtil.turnBlockIntoString(nonRelativeSecondBlock, nonRelativeSecondLocation));
 
-        // Retrieve the first block's position as the origin for the structure
-        String firstBlockKey = blueprintConfig.getString("blueprints." + blueprintName + ".first");
-        Block firstBlock = GeneralUtil.getBlockFromKey(firstBlockKey);
+        BuildUtil.saveBuildConfig(buildConfig);
 
-        if (firstBlock == null) {
-            ChatUtil.sendErrorMessage(player, "Error retrieving the first block from key: " + firstBlockKey);
+    }
+
+    public static void generateBuildingFromBlueprint(Player player, String blueprintName) {
+        Chunk chunk = player.getLocation().getChunk();
+        if (!BlueprintUtil.doesBlueprintExist(blueprintName)) {
+            ChatUtil.sendErrorMessage(player, "This blueprint doesn't exist.");
             return;
         }
 
-        // Get the original coordinates of the first block
-        int originX = firstBlock.getX();
-        int originZ = firstBlock.getZ();
+        FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
+        FileConfiguration buildConfig = BuildUtil.getBuildConfig();
+
+        String buildFirstKey = buildConfig.getString("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".first");
+        Block buildFirstBlock = BlueprintUtil.turnStringIntoBlock(buildFirstKey);
+
+        List<String> blocks = blueprintConfig.getStringList("blueprints." + blueprintName + ".blocks");
 
         new BukkitRunnable() {
             int index = 0;
@@ -71,37 +79,15 @@ public class CommandGenerate {
             public void run() {
                 int blocksProcessed = 0;
 
-                while (index < normalBlocks.size() && blocksProcessed < 1) {
-                    String blockString = normalBlocks.get(index);
+                while (index < blocks.size() && blocksProcessed < 1) {
+                    String blockString = blocks.get(index);
                     Block block = BlueprintUtil.turnStringIntoBlock(blockString);
 
-                    Integer playerHeight = BuildUtil.getStructurePlayerheight(chunk, player);
-                    if (playerHeight == null) {
-                        playerHeight = potentialPlayerHeight;
-                        BuildUtil.setStructurePlayerheight(chunk, player, playerHeight);
-                    }
-
                     if (block != null) {
-                        int relativeY = block.getY() - originalY + playerHeight;
-                        int x = block.getX();
-                        int z = block.getZ();
+                        Location relativeLocation = block.getLocation(); 
+                        Location nonRelativeLocation = BlueprintUtil.getNonRelativeLocation(buildFirstBlock, relativeLocation);
 
-                        int adjustedX = (chunk.getX() * 16 + x) - originX;
-                        int adjustedZ = (chunk.getZ() * 16 + z) - originZ;
-
-                        Location blockLocation = new Location(chunk.getWorld(), adjustedX, relativeY, adjustedZ);
-                        boolean isInteractive = interactiveBlocks.contains(blockString);
-
-                        boolean existingBlockIsAir = chunk.getWorld().getBlockAt(adjustedX, relativeY, adjustedZ).getType() == Material.AIR;
-                        boolean newBlockIsAir = block.getType() == Material.AIR;
-
-                        if(existingBlockIsAir && newBlockIsAir){
-                            blocksProcessed++;
-                            index++;
-                            continue;
-                        }
-
-                        BuildUtil.placeBlockForStructure(player, blockLocation, block.getType(), block.getBlockData(), isInteractive);
+                        BuildUtil.placeBlockForStructure(player, nonRelativeLocation, block.getType(), block.getBlockData());
 
                         blocksProcessed++;
                     } else {
@@ -112,7 +98,7 @@ public class CommandGenerate {
 
                 // If there are more blocks to process, schedule the next run after a brief
                 // pause
-                if (index < normalBlocks.size()) {
+                if (index < blocks.size()) {
                     // Pause for 1 tick (50 milliseconds) to allow server to process other tasks
                     this.runTaskLater(GeneralUtil.getPlugin(), 1); // Replace MyPlugin with your plugin instance class
                 } else {

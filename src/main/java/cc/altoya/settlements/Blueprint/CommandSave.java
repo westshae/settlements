@@ -3,6 +3,8 @@ package cc.altoya.settlements.Blueprint;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -31,18 +33,8 @@ public class CommandSave {
         String firstPointKey = config.getString("blueprints." + name + ".first");
         String secondPointKey = config.getString("blueprints." + name + ".second");
 
-        if (firstPointKey == null || secondPointKey == null) {
-            ChatUtil.sendErrorMessage(player, "Both first and second points must be set before saving the blueprint.");
-            return;
-        }
-
-        Block firstBlock = GeneralUtil.getBlockFromKey(firstPointKey);
-        Block secondBlock = GeneralUtil.getBlockFromKey(secondPointKey);
-
-        if (firstBlock == null || secondBlock == null) {
-            ChatUtil.sendErrorMessage(player, "Error retrieving blocks from the given points.");
-            return;
-        }
+        Block firstBlock = BlueprintUtil.turnStringIntoBlock(firstPointKey);
+        Block secondBlock = BlueprintUtil.turnStringIntoBlock(secondPointKey);
 
         int x1 = firstBlock.getX();
         int y1 = firstBlock.getY();
@@ -58,14 +50,16 @@ public class CommandSave {
             for (int y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
                 for (int z = Math.min(z1, z2); z <= Math.max(z1, z2); z++) {
                     Block block = firstBlock.getWorld().getBlockAt(x, y, z);
-                    String blockString = BlueprintUtil.turnBlockIntoString(block);
+                    if(block.getType() == Material.AIR){
+                        continue;
+                    }
+                    Location relativeLocation = BlueprintUtil.getRelativeLocation(firstBlock, block);
+                    String blockString = BlueprintUtil.turnBlockIntoString(block, relativeLocation);
                     blockList.add(blockString);
                 }
             }
         }
-
         config.set("blueprints." + name + ".blocks", blockList);
-        config.set("blueprints." + name + ".originalY", firstBlock.getY());
         BlueprintUtil.saveBlueprintConfig(config);
 
         ChatUtil.sendSuccessMessage(player, "Successfully saved structure with " + blockList.size() + " blocks.");

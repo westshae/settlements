@@ -40,12 +40,11 @@ public class CommandDupe {
 
         List<String> normalBlocks = blueprintConfig.getStringList("blueprints." + blueprintName + ".blocks");
 
-        int originalY = blueprintConfig.getInt("blueprints." + blueprintName + ".originalY");
         int playerHeight = player.getLocation().getBlockY();
 
         // Retrieve the first block's position as the origin for the structure
         String firstBlockKey = blueprintConfig.getString("blueprints." + blueprintName + ".first");
-        Block firstBlock = GeneralUtil.getBlockFromKey(firstBlockKey);
+        Block firstBlock = BlueprintUtil.turnStringIntoBlock(firstBlockKey);
 
         if (firstBlock == null) {
             ChatUtil.sendErrorMessage(player, "Error retrieving the first block from key: " + firstBlockKey);
@@ -54,6 +53,7 @@ public class CommandDupe {
 
         // Get the original coordinates of the first block
         int originX = firstBlock.getX();
+        int originY = firstBlock.getY();
         int originZ = firstBlock.getZ();
 
         new BukkitRunnable() {
@@ -68,7 +68,7 @@ public class CommandDupe {
                     Block block = BlueprintUtil.turnStringIntoBlock(blockString);
 
                     if (block != null) {
-                        int relativeY = block.getY() - originalY + playerHeight;
+                        int relativeY = block.getY() - originY + playerHeight;
                         int x = block.getX();
                         int z = block.getZ();
 
