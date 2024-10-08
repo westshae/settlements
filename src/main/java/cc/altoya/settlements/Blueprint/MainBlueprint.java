@@ -18,7 +18,7 @@ public class MainBlueprint implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            ChatUtil.sendErrorMessage((Player) sender, "Usage: /blueprint <create|first|second|interactive|save|dupe|upgrade|delete|help>");
+            ChatUtil.sendErrorMessage((Player) sender, "Usage: /blueprint <create|first|second|save|dupe|upgrade|delete|help>");
             return true;
         }
 
@@ -29,8 +29,6 @@ public class MainBlueprint implements CommandExecutor {
                 return CommandFirst.handle((Player) sender, args);
             case "second":
                 return CommandSecond.handle((Player) sender, args);
-            case "interactive":
-                return CommandInteractive.handle((Player) sender, args);
             case "save":
                 return CommandSave.handle((Player) sender, args);
             case "dupe":
