@@ -34,13 +34,13 @@ public class EventInteractStructure implements Listener {
 
         switch (block.getType()) {
             case LEVER:
-                handleInteractables(event, block, player);
+                handleInteractables(event, block, player, Material.COAL);
                 break;
             case STONE_PRESSURE_PLATE:
-                handleInteractables(event, block, player);
+                handleInteractables(event, block, player, Material.COAL);
                 break;
             case STONE_BUTTON:
-                handleInteractables(event, block, player);
+                handleInteractables(event, block, player, Material.COAL);
                 break;
             case CHEST:
                 break;
@@ -51,17 +51,18 @@ public class EventInteractStructure implements Listener {
         }
     }
 
-    private static void handleInteractables(PlayerInteractEvent event, Block block, Player player) {
-        if (BuildUtil.getSuppliesFromStructure(block.getChunk()) <= 0) {
-            ChatUtil.sendErrorBar(player, "You cannot interact with this structure block.");
+    private static void handleInteractables(PlayerInteractEvent event, Block block, Player player, Material supply) {
+        if (BuildUtil.getSuppliesFromStructure(block.getChunk(), supply) <= 0) {
+            ChatUtil.sendErrorBar(player, "You are out of supplies. Type: " + supply.toString());
             event.setCancelled(true);
             return;
         }
         Material currentMaterial = block.getType();
         event.setCancelled(true);
         event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, 1.0f, 1.0f);
-        BuildUtil.editResources(player, block.getChunk(), 5);
-        BuildUtil.editSupplies(player, block.getChunk(), -1);
+        Material resource = BuildUtil.getResourceFromBlock(currentMaterial);
+        BuildUtil.editResources(player, block.getChunk(), resource, 1);
+        BuildUtil.editSupplies(player, block.getChunk(), supply, -1);
         block.setType(Material.AIR);
         new BukkitRunnable() {
             @Override
@@ -83,13 +84,16 @@ public class EventInteractStructure implements Listener {
             Player player = (Player) event.getWhoClicked();
             ItemStack item = event.getCurrentItem();
 
-            if (item != null && item.getType() == Material.COAL && item.getAmount() > 0) {
-                // Your custom logic here
-                BuildUtil.editSupplies(player, chestChunk, item.getAmount());
-                ChatUtil.sendSuccessMessage(player,
-                        "You put " + item.getAmount() + " of " + item.getType() + " into the chest.");
-                item.setAmount(0);
+            if (!BuildUtil.isValidSupplyType(item.getType())) {
+                ChatUtil.sendErrorMessage(player, "This isn't a valid supplies type.");
+                return;
             }
+
+            BuildUtil.editSupplies(player, chestChunk, item.getType(), item.getAmount());
+            ChatUtil.sendSuccessMessage(player,
+                    "You put " + item.getAmount() + " of " + item.getType() + " into the chest.");
+            item.setAmount(0);
+
         }
     }
 }

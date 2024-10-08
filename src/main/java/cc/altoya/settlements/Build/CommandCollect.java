@@ -12,8 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-
-import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.Domain.DomainUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
@@ -35,79 +33,32 @@ public class CommandCollect {
             return;
         }
 
-        String resourceType = BlueprintUtil.getResourceType(BuildUtil.getStructureBlueprintName(chunk));
-        Integer resourceAmount = BuildUtil.getResourcesFromStructure(chunk);
-        BuildUtil.editResources(player, chunk, -resourceAmount);
-        ItemStack item = new ItemStack(Material.AIR);
-        ItemMeta meta = item.getItemMeta();
-        NamespacedKey key = new NamespacedKey(GeneralUtil.getPlugin(), "resource_item");
-        PersistentDataContainer data = meta.getPersistentDataContainer();
+        List<Material> materials = BuildUtil.getAllResourceMaterials(chunk);
+        for (Material material : materials) {
+            Integer resourceAmount = BuildUtil.getResourcesFromStructure(chunk, material);
+            if(resourceAmount == 0){
+                continue;
+            }
+            BuildUtil.editResources(player, chunk, material, -resourceAmount);
 
-        ChatUtil.sendErrorMessage(player, resourceType);
-        switch (resourceType) {
-            case "wheat":
-                item.setType(Material.WHEAT);
-                meta.setDisplayName(ChatColor.AQUA + "Wheat");
-                meta.setLore(List.of(ChatColor.AQUA + "Resource Item", ChatColor.AQUA + "Used to feed your workers"));
-                data.set(key, PersistentDataType.STRING, "wheat_resource_item");
+            ItemStack item = new ItemStack(material);
+            ItemMeta meta = item.getItemMeta();
 
-                ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " wheat.");
-                break;
-            case "sugar":
-                item.setType(Material.SUGAR);
-                meta.setDisplayName(ChatColor.AQUA + "Sugar");
-                meta.setLore(
-                        List.of(ChatColor.AQUA + "Resource Item", ChatColor.AQUA + "Used to speed up your workers"));
-                data.set(key, PersistentDataType.STRING, "sugar_resource_item");
-                ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " sugar.");
+            NamespacedKey key = new NamespacedKey(GeneralUtil.getPlugin(), "resource_item");
+            PersistentDataContainer data = meta.getPersistentDataContainer();
 
-                break;
-            case "coal":
-                item.setType(Material.COAL);
-                meta.setDisplayName(ChatColor.AQUA + "Coal");
-                meta.setLore(List.of(ChatColor.AQUA + "Resource Item", ChatColor.AQUA + "Used to fuel your factories"));
-                data.set(key, PersistentDataType.STRING, "coal_resource_item");
+            meta.setDisplayName(ChatColor.AQUA + material.toString());
+            item.setAmount(resourceAmount);
+            meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            item.setItemMeta(meta);
+            data.set(key, PersistentDataType.STRING, material + "_resource_item");
+            meta.setLore(
+                    List.of(ChatColor.AQUA + "Resource Item", ChatColor.AQUA + BuildUtil.getMaterialLore(material)));
 
-                ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " coal.");
+            player.getInventory().addItem(item);
 
-                break;
-            case "iron":
-                item.setType(Material.IRON_INGOT);
-                meta.setDisplayName(ChatColor.AQUA + "Iron");
-                meta.setLore(List.of(ChatColor.AQUA + "Resource Item", ChatColor.AQUA + "Used in your factories"));
-                data.set(key, PersistentDataType.STRING, "iron_resource_item");
-
-                ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " iron.");
-
-                break;
-            case "manufacturedGoods":
-                item.setType(Material.RAIL);
-                meta.setDisplayName(ChatColor.AQUA + "Manufactured Goods");
-                meta.setLore(List.of(ChatColor.AQUA + "Resource Item",
-                        ChatColor.AQUA + "Product of your factories, indicates GDP"));
-                data.set(key, PersistentDataType.STRING, "manufacturedGoods_resource_item");
-
-                ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " manufactured goods.");
-
-                break;
-            case "militaryGoods":
-                item.setType(Material.DISPENSER);
-                meta.setDisplayName(ChatColor.AQUA + "Military Goods");
-                meta.setLore(List.of(ChatColor.AQUA + "Resource Item",
-                        ChatColor.AQUA + "Product of your factories, indicates military strength"));
-                data.set(key, PersistentDataType.STRING, "militaryGoods_resource_item");
-
-                ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " military goods.");
-
-                break;
+            ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " " + material);
         }
-        item.setAmount(resourceAmount);
-        meta.addEnchant(Enchantment.UNBREAKING, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        item.setItemMeta(meta);
-
-        player.getInventory().addItem(item);
-
     }
-
 }

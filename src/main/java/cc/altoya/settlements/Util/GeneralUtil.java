@@ -53,11 +53,11 @@ public class GeneralUtil {
   public static JavaPlugin getPlugin() {
     JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin("settlements");
 
-    if(plugin == null){
+    if (plugin == null) {
       return null;
     }
 
-    if(!plugin.isEnabled()){
+    if (!plugin.isEnabled()) {
       return null;
     }
 

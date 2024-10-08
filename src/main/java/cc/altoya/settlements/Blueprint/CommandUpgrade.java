@@ -3,6 +3,7 @@ package cc.altoya.settlements.Blueprint;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.Build.CommandGenerate;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -27,15 +28,11 @@ public class CommandUpgrade {
         }
         FileConfiguration config = BlueprintUtil.getBlueprintConfig();
 
-        config.set("blueprints." + currentBlueprintName + ".structureType",
-                BlueprintUtil.getBuildingType(originalBlueprintName));
-        config.set("blueprints." + currentBlueprintName + ".resourceType",
-                BlueprintUtil.getResourceType(originalBlueprintName));
         config.set("blueprints." + currentBlueprintName + ".version", versionInt);
 
         BlueprintUtil.saveBlueprintConfig(config);
 
-        CommandDupe.duplicateBlueprintBlocksOnly(player, originalBlueprintName);
+        CommandGenerate.generateBuildingFromBlueprint(player, currentBlueprintName);
         ChatUtil.sendSuccessMessage(player, "New blueprint upgrade based off " + originalBlueprintName + " has been made. The new name is " + currentBlueprintName);
         ChatUtil.sendSuccessMessage(player, "Please note, you need to set interactives, firstBlock, secondBlock, again.");
     }

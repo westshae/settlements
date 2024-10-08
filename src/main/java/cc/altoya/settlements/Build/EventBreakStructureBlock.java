@@ -58,7 +58,8 @@ public class EventBreakStructureBlock implements Listener {
         Material currentMaterial = block.getType();
         event.setCancelled(true);
         event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_STONE_BREAK, 1.0f, 1.0f);
-        BuildUtil.editResources(player, block.getChunk(), 1);
+        Material resource = BuildUtil.getResourceFromBlock(currentMaterial);
+        BuildUtil.editResources(player, block.getChunk(), resource, 1);
         block.setType(Material.STONE);
         new BukkitRunnable() {
             @Override
@@ -72,7 +73,8 @@ public class EventBreakStructureBlock implements Listener {
         Material currentMaterial = block.getType();
         event.setCancelled(true);
         event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_BREAK, 1.0f, 1.0f);
-        BuildUtil.editResources(player, block.getChunk(), 1);
+        Material resource = BuildUtil.getResourceFromBlock(currentMaterial);
+        BuildUtil.editResources(player, block.getChunk(), resource, 1);
         block.setType(Material.AIR);
         new BukkitRunnable() {
             @Override
