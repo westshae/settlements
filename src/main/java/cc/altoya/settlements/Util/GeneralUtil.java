@@ -43,7 +43,7 @@ public class GeneralUtil {
     int chunkX = chunk.getX();
     int chunkZ = chunk.getZ();
 
-    return "x" + chunkX + "y" + chunkZ;
+    return "x" + chunkX + "z" + chunkZ;
   }
 
   public static String getKeyFromPlayer(Player player) {

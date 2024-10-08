@@ -13,6 +13,7 @@ import cc.altoya.settlements.Build.BuildTabCompleter;
 import cc.altoya.settlements.Build.EventInteractStructure;
 import cc.altoya.settlements.Build.EventBreakStructureBlock;
 import cc.altoya.settlements.Build.MainBuild;
+import cc.altoya.settlements.Build.ScheduledWorker;
 import cc.altoya.settlements.Domain.DomainTabCompleter;
 import cc.altoya.settlements.Domain.EventProtectBlocks;
 import cc.altoya.settlements.Domain.EventProtectEntities;
@@ -36,13 +37,15 @@ public class App extends JavaPlugin {
         this.getCommand("build").setTabCompleter(new BuildTabCompleter());
         this.getCommand("blueprint").setTabCompleter(new BlueprintTabCompleter());
 
-        // How to register eventListeners
+        //Register eventListeners
         this.getServer().getPluginManager().registerEvents(new EventProtectBlocks(), this);
         this.getServer().getPluginManager().registerEvents(new EventProtectEntities(), this);
         this.getServer().getPluginManager().registerEvents(new EventAllianceChat(), this);
         this.getServer().getPluginManager().registerEvents(new EventBreakStructureBlock(), this);
         this.getServer().getPluginManager().registerEvents(new EventInteractStructure(), this);
 
+        //Register runnables
+        this.getServer().getScheduler().runTaskTimer(this, ScheduledWorker.getRunnable(), 0L, 100L);
     }
 
     private void initializeConfig() {

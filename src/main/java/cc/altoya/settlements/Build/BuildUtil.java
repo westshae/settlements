@@ -129,7 +129,6 @@ public class BuildUtil {
         config.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".supplies." + material, currentAmount + amount);
 
         saveBuildConfig(config);
-        ChatUtil.sendSuccessBar(player, "Supplies are now at " + getSuppliesFromStructure(chunk, material));
     }
 
     public static Integer getSuppliesFromStructure(Chunk chunk, Material material) {
@@ -153,7 +152,6 @@ public class BuildUtil {
         config.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".resources." + material, currentAmount + amount);
 
         saveBuildConfig(config);
-        ChatUtil.sendSuccessBar(player, "Resources now at " + getResourcesFromStructure(chunk, material));
     }
 
     public static Integer getResourcesFromStructure(Chunk chunk, Material material) {
@@ -164,6 +162,10 @@ public class BuildUtil {
         return config.getInt("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".resources." + material);
     }
 
+    public static List<Material> getAllResourceBlocks(Chunk chunk) {
+        return List.of(Material.COAL_ORE, Material.IRON_ORE, Material.WHEAT, Material.SUGAR_CANE, Material.PUMPKIN,
+                Material.MELON, Material.LEVER, Material.STONE_PRESSURE_PLATE, Material.STONE_BUTTON, Material.OAK_LOG);
+    }
 
     public static Material getResourceFromBlock(Material blockType) {
         switch (blockType) {
@@ -193,7 +195,8 @@ public class BuildUtil {
     }
 
     public static List<Material> getAllResourceMaterials(Chunk chunk) {
-        return List.of(Material.COAL, Material.IRON_INGOT, Material.WHEAT, Material.SUGAR, Material.PUMPKIN, Material.MELON_SLICE, Material.REDSTONE_LAMP, Material.OAK_PLANKS);
+        return List.of(Material.COAL, Material.IRON_INGOT, Material.WHEAT, Material.SUGAR, Material.PUMPKIN,
+                Material.MELON_SLICE, Material.REDSTONE_LAMP, Material.OAK_PLANKS);
     }
 
     public static String getMaterialLore(Material material) {

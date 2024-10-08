@@ -8,10 +8,6 @@ import org.bukkit.World;
 import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandPlot {
-
-    private static final int DISPLAY_DURATION_TICKS = 200; // 10 seconds (20 ticks per second)
-    private static final int PARTICLE_INTERVAL_TICKS = 5;  // How often to spawn particles
-
     public static boolean handle(Player sender, String[] args) {
         if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/build plot")) {
             return true;
@@ -34,17 +30,17 @@ public class CommandPlot {
 
             @Override
             public void run() {
-                if (ticksElapsed > DISPLAY_DURATION_TICKS) {
-                    this.cancel(); // Stop after 10 seconds
+                if (ticksElapsed > 200) {
+                    this.cancel();
                     return;
                 }
 
                 // Display particles along the edges of the chunk
                 displayChunkBorder(world, chunkX, y, chunkZ);
 
-                ticksElapsed += PARTICLE_INTERVAL_TICKS;
+                ticksElapsed += 5;
             }
-        }.runTaskTimer(GeneralUtil.getPlugin(), 0L, PARTICLE_INTERVAL_TICKS);
+        }.runTaskTimer(GeneralUtil.getPlugin(), 0L, 5);
     }
 
     private static void displayChunkBorder(World world, int chunkX, int y, int chunkZ) {

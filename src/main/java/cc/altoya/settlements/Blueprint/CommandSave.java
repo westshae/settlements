@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.Build.BuildUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -44,6 +45,10 @@ public class CommandSave {
         int y2 = secondBlock.getY();
         int z2 = secondBlock.getZ();
 
+        List<Material> resourceBlockList = BuildUtil.getAllResourceBlocks(firstBlock.getChunk());
+
+        List<String> resourceBlocksInChunk = new ArrayList<String>();
+
         List<String> blockList = new ArrayList<>();
 
         for (int x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
@@ -55,11 +60,15 @@ public class CommandSave {
                     }
                     Location relativeLocation = BlueprintUtil.getRelativeLocation(firstBlock, block);
                     String blockString = BlueprintUtil.turnBlockIntoString(block, relativeLocation);
+                    if(resourceBlockList.contains(block.getType())){
+                        resourceBlocksInChunk.add(blockString);
+                    }
                     blockList.add(blockString);
                 }
             }
         }
         config.set("blueprints." + name + ".blocks", blockList);
+        config.set("blueprints." + name + ".resourceBlocks", resourceBlocksInChunk);
         BlueprintUtil.saveBlueprintConfig(config);
 
         ChatUtil.sendSuccessMessage(player, "Successfully saved structure with " + blockList.size() + " blocks.");
