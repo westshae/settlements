@@ -90,6 +90,12 @@ public class BuildUtil {
         return config.contains("builds." + GeneralUtil.getKeyFromChunk(chunk));
     }
 
+    public static String getStructureOwner(Chunk chunk) {
+        FileConfiguration config = getBuildConfig();
+        return config.getString("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".owner");
+    }
+
+
     public static void placeBlockForStructure(Player player, Location location, Material material, BlockData blockData) {
         Block block = location.getBlock();
         block.setType(material, false);

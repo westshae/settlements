@@ -17,7 +17,7 @@ import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
-public class EventStructureInteract implements Listener {
+public class EventBreakStructureBlock implements Listener {
     @EventHandler
     public void onBreakInStructureChunk(BlockBreakEvent event) {
         Block block = event.getBlock();
@@ -27,16 +27,22 @@ public class EventStructureInteract implements Listener {
             return;
         }
 
-        switch (BlueprintUtil.getBuildingType(BuildUtil.getStructureBlueprintName(block.getChunk()))) {
-            case "mine":
-                handleMine(event, block, player);
+        if (!BuildUtil.getStructureOwner(block.getChunk()).equals(GeneralUtil.getKeyFromPlayer(player))){
+            ChatUtil.sendErrorMessage(player, "You don't own this structure.");
+            return;
+        }
+
+        switch (block.getType()) {
+            case COAL_ORE:
+                handleOre(event, block, player);
                 break;
-            case "farm":
-                handleFarm(event, block, player);
+            case IRON_ORE:
+                handleOre(event, block, player);
                 break;
             default:
+                ChatUtil.sendErrorMessage(player, "You cannot break this structure block.");
                 event.setCancelled(true);
-                return;
+                break;
         }
     }
 
@@ -62,6 +68,20 @@ public class EventStructureInteract implements Listener {
                 return;
         }
 
+    }
+
+    private static void handleOre(BlockBreakEvent event, Block block, Player player) {
+        Material currentMaterial = block.getType();
+        event.setCancelled(true);
+        event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_STONE_BREAK, 1.0f, 1.0f);
+        BuildUtil.editResources(player, block.getChunk(), 1);
+        block.setType(Material.STONE);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                block.setType(currentMaterial);
+            }
+        }.runTaskLater(GeneralUtil.getPlugin(), 100L);
     }
 
     private static void handleMine(BlockBreakEvent event, Block block, Player player) {
