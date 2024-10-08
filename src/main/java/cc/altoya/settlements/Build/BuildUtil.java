@@ -111,7 +111,7 @@ public class BuildUtil {
         config.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".resources",
                 getResourcesFromStructure(chunk) + amount);
         saveBuildConfig(config);
-        ChatUtil.sendSuccessMessage(player, "Resources now at " + getResourcesFromStructure(chunk));
+        ChatUtil.sendSuccessBar(player, "Resources now at " + getResourcesFromStructure(chunk));
     }
 
     public static void setBlueprintName(Chunk chunk, Player player, String newBlueprintName){
@@ -142,7 +142,7 @@ public class BuildUtil {
         config.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".supplies",
                 getSuppliesFromStructure(chunk) + amount);
         saveBuildConfig(config);
-        ChatUtil.sendSuccessMessage(player, "Supplies are now at " + getSuppliesFromStructure(chunk));
+        ChatUtil.sendSuccessBar(player, "Supplies are now at " + getSuppliesFromStructure(chunk));
     }
 
 }

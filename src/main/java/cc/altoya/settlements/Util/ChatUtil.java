@@ -48,6 +48,11 @@ public class ChatUtil {
     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(formattedMessage));
   }
 
+  public static void sendSuccessBar(Player player, String message){
+    String formattedMessage = "" + successColour + "[+] " + message;
+    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(formattedMessage));
+  }
+
   public static ChatColor getPrimaryColour() {
     return pluginPrimaryColour;
   }

@@ -23,7 +23,7 @@ public class EventBreakStructureBlock implements Listener {
         }
 
         if (!BuildUtil.getStructureOwner(block.getChunk()).equals(GeneralUtil.getKeyFromPlayer(player))) {
-            ChatUtil.sendErrorMessage(player, "You don't own this structure.");
+            ChatUtil.sendSuccessBar(player, "You don't own this structure.");
             return;
         }
 
@@ -47,7 +47,7 @@ public class EventBreakStructureBlock implements Listener {
                 handlePlants(event, block, player);
                 break;
             default:
-                ChatUtil.sendErrorMessage(player, "You cannot break this structure block.");
+                ChatUtil.sendErrorBar(player, "You cannot break this structure block.");
                 event.setCancelled(true);
                 break;
         }
