@@ -5,6 +5,8 @@ import java.util.Map;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class ChatUtil {
   private static ChatColor pluginPrimaryColour = ChatColor.DARK_AQUA;
@@ -39,6 +41,11 @@ public class ChatUtil {
       String commandMessage = successColour + key + ": " + value;
       player.sendMessage(commandMessage);
     }
+  }
+
+  public static void sendErrorBar(Player player, String message){
+    String formattedMessage = "" + errorColour + "[!] " + message;
+    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(formattedMessage));
   }
 
   public static ChatColor getPrimaryColour() {
