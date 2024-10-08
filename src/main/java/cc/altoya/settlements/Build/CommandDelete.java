@@ -24,7 +24,7 @@ public class CommandDelete {
         return true;
     }
 
-    private static void deleteStructure(Player player) {
+    public static void deleteStructure(Player player) {
         Chunk chunk = player.getLocation().getChunk();
         String blueprintName = BuildUtil.getStructureBlueprintName(chunk);
         if (!BlueprintUtil.doesBlueprintExist(blueprintName)) {
