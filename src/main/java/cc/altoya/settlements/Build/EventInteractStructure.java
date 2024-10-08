@@ -10,6 +10,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -58,6 +59,7 @@ public class EventInteractStructure implements Listener {
             return;
         }
         Material currentMaterial = block.getType();
+        BlockData data = block.getBlockData();
         event.setCancelled(true);
         event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, 1.0f, 1.0f);
         Material resource = BuildUtil.getResourceFromBlock(currentMaterial);
@@ -68,6 +70,7 @@ public class EventInteractStructure implements Listener {
             @Override
             public void run() {
                 block.setType(currentMaterial);
+                block.setBlockData(data);
             }
         }.runTaskLater(GeneralUtil.getPlugin(), 100L);
 

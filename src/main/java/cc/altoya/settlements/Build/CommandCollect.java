@@ -36,7 +36,7 @@ public class CommandCollect {
         List<Material> materials = BuildUtil.getAllResourceMaterials(chunk);
         for (Material material : materials) {
             Integer resourceAmount = BuildUtil.getResourcesFromStructure(chunk, material);
-            if(resourceAmount == 0){
+            if (resourceAmount == 0) {
                 continue;
             }
             BuildUtil.editResources(player, chunk, material, -resourceAmount);
@@ -51,10 +51,10 @@ public class CommandCollect {
             item.setAmount(resourceAmount);
             meta.addEnchant(Enchantment.UNBREAKING, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            item.setItemMeta(meta);
             data.set(key, PersistentDataType.STRING, material + "_resource_item");
             meta.setLore(
                     List.of(ChatColor.AQUA + "Resource Item", ChatColor.AQUA + BuildUtil.getMaterialLore(material)));
+            item.setItemMeta(meta);
 
             player.getInventory().addItem(item);
 
