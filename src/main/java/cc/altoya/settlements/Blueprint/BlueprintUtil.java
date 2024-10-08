@@ -35,6 +35,10 @@ public class BlueprintUtil {
         return new Location(origin.getWorld(), relativeX, relativeY, relativeZ);
     }
 
+    public static Location getNonRelativeLocation(Block origin, Location relativeLocation){
+        return origin.getRelative(relativeLocation.getBlockX(), relativeLocation.getBlockY(), relativeLocation.getBlockZ()).getLocation();
+    }
+
     public static boolean doesBlueprintExist(String name) {
         FileConfiguration config = getBlueprintConfig();
         return (config.contains("blueprints." + name));

@@ -44,7 +44,7 @@ public class CommandDupe {
 
         // Retrieve the first block's position as the origin for the structure
         String firstBlockKey = blueprintConfig.getString("blueprints." + blueprintName + ".first");
-        Block firstBlock = GeneralUtil.getBlockFromKey(firstBlockKey);
+        Block firstBlock = BlueprintUtil.turnStringIntoBlock(firstBlockKey);
 
         if (firstBlock == null) {
             ChatUtil.sendErrorMessage(player, "Error retrieving the first block from key: " + firstBlockKey);

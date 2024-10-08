@@ -27,12 +27,6 @@ public class EventStructureInteract implements Listener {
             return;
         }
 
-        if (!BuildUtil.isBlockInteractiveBlock(block)) {
-            ChatUtil.sendErrorMessage(player, "Cannot break blocks within a structure chunk.");
-            event.setCancelled(true);
-            return;
-        }
-
         switch (BlueprintUtil.getBuildingType(BuildUtil.getStructureBlueprintName(block.getChunk()))) {
             case "mine":
                 handleMine(event, block, player);

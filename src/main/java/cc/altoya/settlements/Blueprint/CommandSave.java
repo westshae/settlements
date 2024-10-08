@@ -33,18 +33,8 @@ public class CommandSave {
         String firstPointKey = config.getString("blueprints." + name + ".first");
         String secondPointKey = config.getString("blueprints." + name + ".second");
 
-        if (firstPointKey == null || secondPointKey == null) {
-            ChatUtil.sendErrorMessage(player, "Both first and second points must be set before saving the blueprint.");
-            return;
-        }
-
-        Block firstBlock = GeneralUtil.getBlockFromKey(firstPointKey);
-        Block secondBlock = GeneralUtil.getBlockFromKey(secondPointKey);
-
-        if (firstBlock == null || secondBlock == null) {
-            ChatUtil.sendErrorMessage(player, "Error retrieving blocks from the given points.");
-            return;
-        }
+        Block firstBlock = BlueprintUtil.turnStringIntoBlock(firstPointKey);
+        Block secondBlock = BlueprintUtil.turnStringIntoBlock(secondPointKey);
 
         int x1 = firstBlock.getX();
         int y1 = firstBlock.getY();

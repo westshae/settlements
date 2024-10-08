@@ -2,7 +2,6 @@ package cc.altoya.settlements.Build;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -81,14 +80,9 @@ public class BuildUtil {
         return data.get(key, PersistentDataType.STRING);
     }
 
-    public static boolean isBlockStructureBlock(Block block) {
+    public static boolean isBlockStructureBlock(Chunk chunk) {
         FileConfiguration config = getBuildConfig();
-        return config.contains("builds.all_blocks." + GeneralUtil.getKeyFromBlock(block));
-    }
-
-    public static boolean isBlockInteractiveBlock(Block block) {
-        FileConfiguration config = getBuildConfig();
-        return config.getBoolean("builds.all_blocks." + GeneralUtil.getKeyFromBlock(block) + ".interactive");
+        return config.contains("builds." + GeneralUtil.getKeyFromChunk(chunk));
     }
 
     public static boolean isChunkStructure(Chunk chunk) {
@@ -96,24 +90,10 @@ public class BuildUtil {
         return config.contains("builds." + GeneralUtil.getKeyFromChunk(chunk));
     }
 
-    public static void placeBlockForStructure(Player player, Location location, Material material, BlockData blockData,
-            boolean isInteractive) {
+    public static void placeBlockForStructure(Player player, Location location, Material material, BlockData blockData) {
         Block block = location.getBlock();
         block.setType(material, false);
         block.setBlockData(blockData, false);
-
-        FileConfiguration config = getBuildConfig();
-        config.set("builds.all_blocks." + GeneralUtil.getKeyFromBlock(block) + ".interactive", isInteractive);
-
-        String blockPath = (isInteractive) ? ".interactiveBlocks" : ".blocks";
-
-        List<String> structureBlocks = config
-                .getStringList("builds." + GeneralUtil.getKeyFromChunk(block.getChunk()) + blockPath);
-        structureBlocks.add(GeneralUtil.getKeyFromBlock(block));
-
-        config.set("builds." + GeneralUtil.getKeyFromChunk(block.getChunk()) + blockPath,
-                structureBlocks);
-        saveBuildConfig(config);
     }
 
 
@@ -144,14 +124,6 @@ public class BuildUtil {
         }
         FileConfiguration buildConfig = getBuildConfig();
         buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".version", version);
-
-        saveBuildConfig(buildConfig);
-    }
-
-    public static void setStructurePlayerheight(Chunk chunk, Player player, int playerHeight) {
-        FileConfiguration buildConfig = getBuildConfig();
-
-        buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".playerHeight", playerHeight);
 
         saveBuildConfig(buildConfig);
     }

@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.Domain.DomainUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
@@ -49,7 +50,7 @@ public class CommandDelete {
                     String allBlockPath = "builds.all_blocks." + blockKey;
 
                     if (config.contains(allBlockPath)) {
-                        Block block = GeneralUtil.getBlockFromKey(blockKey);
+                        Block block = BlueprintUtil.turnStringIntoBlock(blockKey);
 
                         if(block.getType() == Material.AIR){
                             blocksProcessed++;
