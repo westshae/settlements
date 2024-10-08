@@ -46,11 +46,28 @@ public class EventBreakStructureBlock implements Listener {
             case MELON:
                 handlePlants(event, block, player);
                 break;
+            case OAK_LOG:
+                handleWood(event, block, player);
+                break;
             default:
                 ChatUtil.sendErrorBar(player, "You cannot break this structure block.");
                 event.setCancelled(true);
                 break;
         }
+    }
+    private static void handleWood(BlockBreakEvent event, Block block, Player player) {
+        Material currentMaterial = block.getType();
+        event.setCancelled(true);
+        event.getPlayer().playSound(player.getLocation(), Sound.BLOCK_WOOD_BREAK, 1.0f, 1.0f);
+        Material resource = BuildUtil.getResourceFromBlock(currentMaterial);
+        BuildUtil.editResources(player, block.getChunk(), resource, 1);
+        block.setType(Material.AIR);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                block.setType(currentMaterial);
+            }
+        }.runTaskLater(GeneralUtil.getPlugin(), 100L);
     }
 
 

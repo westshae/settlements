@@ -185,14 +185,15 @@ public class BuildUtil {
                 return Material.REDSTONE_LAMP;
             case STONE_BUTTON:
                 return Material.REDSTONE_LAMP;
-
+            case OAK_LOG:
+                return Material.OAK_PLANKS;
             default:
                 return null;
         }
     }
 
     public static List<Material> getAllResourceMaterials(Chunk chunk) {
-        return List.of(Material.COAL, Material.IRON_INGOT, Material.WHEAT, Material.SUGAR, Material.PUMPKIN, Material.MELON_SLICE, Material.REDSTONE_LAMP);
+        return List.of(Material.COAL, Material.IRON_INGOT, Material.WHEAT, Material.SUGAR, Material.PUMPKIN, Material.MELON_SLICE, Material.REDSTONE_LAMP, Material.OAK_PLANKS);
     }
 
     public static String getMaterialLore(Material material) {
@@ -211,6 +212,8 @@ public class BuildUtil {
                 return "Used to speed up your workers";
             case REDSTONE_LAMP:
                 return "GDP Item";
+            case OAK_PLANKS:
+                return "Used to build structures";
             default:
                 return "";
         }
