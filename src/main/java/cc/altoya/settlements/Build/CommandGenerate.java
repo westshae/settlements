@@ -48,7 +48,6 @@ public class CommandGenerate {
         // Retrieve the list of interactive blocks from the configuration
         List<String> interactiveBlocks = blueprintConfig.getStringList("blueprints." + blueprintName + ".interactive");
 
-        int originalY = blueprintConfig.getInt("blueprints." + blueprintName + ".originalY");
         int potentialPlayerHeight = player.getLocation().getBlockY();
 
         // Retrieve the first block's position as the origin for the structure
@@ -62,6 +61,7 @@ public class CommandGenerate {
 
         // Get the original coordinates of the first block
         int originX = firstBlock.getX();
+        int originY = firstBlock.getY();
         int originZ = firstBlock.getZ();
 
         new BukkitRunnable() {
@@ -82,7 +82,7 @@ public class CommandGenerate {
                     }
 
                     if (block != null) {
-                        int relativeY = block.getY() - originalY + playerHeight;
+                        int relativeY = block.getY() - originY + playerHeight;
                         int x = block.getX();
                         int z = block.getZ();
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -59,15 +60,16 @@ public class CommandSave {
             for (int y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
                 for (int z = Math.min(z1, z2); z <= Math.max(z1, z2); z++) {
                     Block block = firstBlock.getWorld().getBlockAt(x, y, z);
+                    if(block.getType() == Material.AIR){
+                        continue;
+                    }
                     Location relativeLocation = BlueprintUtil.getRelativeLocation(firstBlock, block);
-                    String blockString = BlueprintUtil.turnBlockIntoString(block);
+                    String blockString = BlueprintUtil.turnBlockIntoString(block, relativeLocation);
                     blockList.add(blockString);
                 }
             }
         }
-
         config.set("blueprints." + name + ".blocks", blockList);
-        config.set("blueprints." + name + ".originalY", firstBlock.getY());
         BlueprintUtil.saveBlueprintConfig(config);
 
         ChatUtil.sendSuccessMessage(player, "Successfully saved structure with " + blockList.size() + " blocks.");
