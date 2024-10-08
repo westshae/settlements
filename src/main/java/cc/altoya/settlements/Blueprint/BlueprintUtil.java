@@ -27,19 +27,26 @@ public class BlueprintUtil {
         }
     }
 
+    public static Location getRelativeLocation(Block origin, Block block) {
+        int relativeX = block.getX() - origin.getX();
+        int relativeY = block.getY() - origin.getY();
+        int relativeZ = block.getZ() - origin.getZ();
+    
+        return new Location(origin.getWorld(), relativeX, relativeY, relativeZ);
+    }
+
     public static boolean doesBlueprintExist(String name) {
         FileConfiguration config = getBlueprintConfig();
         return (config.contains("blueprints." + name));
     }
 
-    public static String turnBlockIntoString(Block block) {
-        if (block == null) {
+    public static String turnBlockIntoString(Block block, Location location) {
+        if (block == null || location == null) {
             return null; // Return null if block is null
         }
 
         Material material = block.getType();
         BlockData blockData = block.getBlockData();
-        Location location = block.getLocation();
 
         // Format: material|blockData|worldName;x;y;z
         return String.format("%s|%s|%s;%d;%d;%d",
