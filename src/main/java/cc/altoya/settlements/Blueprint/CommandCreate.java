@@ -23,6 +23,7 @@ public class CommandCreate {
             return;
         }
         config.set("blueprints." + name + ".version", 1);
+        config.set("blueprints." + name + ".housing", 0);
 
         ChatUtil.sendSuccessMessage(player, "Blueprint boilerplate created.");
         BlueprintUtil.saveBlueprintConfig(config);

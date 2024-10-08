@@ -32,6 +32,8 @@ public class CommandHelp {
                 "Creates a new blueprint named {original}v{version#}, with a version of {version#}, and creates a dupe of the previous blueprint.",
                 "/blueprint delete {blueprintName}",
                 "Deletes the blueprint provided.",
+                "/blueprint housing {blueprintName} {amount}",
+                "Sets the blueprints housing count.",
                 "/blueprint help", "The command you're looking at right now");
 
         ChatUtil.sendCommandHelpMessage(player, "/blueprint", commands);
