@@ -20,7 +20,7 @@ public class CommandHelp {
     private static void help(Player player){
         Map<String, String> commands = Map.of(
             "/build delete", "Deletes any structure within the chunk you are in.",
-            "/build generate {blueprintName}", "Generates a structure in the chunk you are in.",
+            "/build new {blueprintName}", "Generates a structure in the chunk you are in.",
             "/build refresh", "Deletes then builds the structure of the chunk you are in.",
             "/build collect", "Collects resources from the structure of the chunk you are in.",
             "/build plot", "Shows you where the bottom level of the structure will begin to generate to allow you to terraform.",

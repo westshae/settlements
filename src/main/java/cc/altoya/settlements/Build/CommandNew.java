@@ -13,10 +13,10 @@ import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
-public class CommandGenerate {
+public class CommandNew {
     public static boolean handle(Player sender, String[] args) {
         if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2,
-                "/build generate {structureType}")) {
+                "/build new {blueprintName}")) {
             return true;
         }
         setBuildConfig(sender, args[1]);

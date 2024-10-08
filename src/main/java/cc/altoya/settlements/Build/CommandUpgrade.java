@@ -26,7 +26,7 @@ public class CommandUpgrade {
 
         BuildUtil.setBlueprintName(chunk, player, nextBlueprintName);
         CommandDelete.deleteStructure(player);
-        CommandGenerate.generateBuildingFromBlueprint(player, nextBlueprintName);
+        CommandNew.generateBuildingFromBlueprint(player, nextBlueprintName);
     }
 
 }

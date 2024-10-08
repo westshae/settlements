@@ -23,8 +23,8 @@ public class MainBuild implements CommandExecutor {
         }
 
         switch (args[0].toLowerCase()) {
-            case "generate":
-                return CommandGenerate.handle((Player) sender, args);
+            case "new":
+                return CommandNew.handle((Player) sender, args);
             case "delete":
                 return CommandDelete.handle((Player) sender, args);
             case "refresh":
