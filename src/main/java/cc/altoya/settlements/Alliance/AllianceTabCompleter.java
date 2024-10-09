@@ -19,12 +19,28 @@ public class AllianceTabCompleter implements TabCompleter {
             return null;
         }
 
+        List<String> completions = new ArrayList<>();
         if (args.length == 1) {
-            List<String> completions = new ArrayList<>();
             for (String subCommand : subCommands) {
                 if (subCommand.startsWith(args[0].toLowerCase())) {
                     completions.add(subCommand);
                 }
+            }
+            return completions;
+        }else if (args.length == 2) {
+            String subCommand = args[0].toLowerCase();
+            switch (subCommand) {
+                case "create":
+                    completions.add("{allianceName}");
+                    break;
+                case "invite":
+                    completions.add("{username}");
+                    break;
+                case "join":
+                    completions.add("{allianceName}");
+                    break;
+                default:
+                    break;
             }
             return completions;
         }
