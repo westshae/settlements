@@ -18,7 +18,7 @@ public class CommandClaim {
         return true;
     }
 
-    private static void addPlayerChunk(Player player, Chunk chunk) {
+    public static void addPlayerChunk(Player player, Chunk chunk) {
         FileConfiguration config = DomainUtil.getDomainConfig();
         if (DomainUtil.isChunkClaimed(chunk)) {
             ChatUtil.sendErrorMessage(player, "This chunk is already claimed.");
