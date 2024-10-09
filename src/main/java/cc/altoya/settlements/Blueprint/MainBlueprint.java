@@ -18,7 +18,7 @@ public class MainBlueprint implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            ChatUtil.sendErrorMessage((Player) sender, "Usage: /blueprint <create|first|second|save|dupe|upgrade|delete|help>");
+            ChatUtil.sendErrorMessage((Player) sender, "Usage: /blueprint <create|first|second|save|dupe|upgrade|delete|housing|cost|help>");
             return true;
         }
 
@@ -39,6 +39,8 @@ public class MainBlueprint implements CommandExecutor {
                 return CommandDelete.handle((Player) sender, args);
             case "housing":
                 return CommandHousing.handle((Player) sender, args);
+            case "cost":
+                return CommandCost.handle((Player) sender, args);
             case "help":
                 return CommandHelp.handle((Player) sender, args);
         }

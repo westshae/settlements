@@ -34,6 +34,8 @@ public class CommandHelp {
                 "Deletes the blueprint provided.",
                 "/blueprint housing {blueprintName} {amount}",
                 "Sets the blueprints housing count.",
+                "/blueprint cost {blueprintName} {amount}",
+                "Sets the blueprints resource cost for the item you are holding.",
                 "/blueprint help", "The command you're looking at right now");
 
         ChatUtil.sendCommandHelpMessage(player, "/blueprint", commands);
