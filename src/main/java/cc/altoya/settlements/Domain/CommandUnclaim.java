@@ -10,32 +10,32 @@ import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandUnclaim {
-    public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/domain unclaim")) {
-            return true;
-        }
-        removePlayerChunk(sender, sender.getLocation().getChunk());
-        return true;
+  public static boolean handle(Player sender, String[] args) {
+    if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/domain unclaim")) {
+      return true;
     }
+    removePlayerChunk(sender, sender.getLocation().getChunk());
+    return true;
+  }
 
-    private static void removePlayerChunk(Player player, Chunk chunk) {
-        FileConfiguration config = DomainUtil.getDomainConfig();
-        if (!DomainUtil.isChunkClaimed(chunk)) {
-            ChatUtil.sendErrorMessage(player, "This chunk isn't claimed.");
-            return;
-        }
-        if (!DomainUtil.doesPlayerOwnChunk(player, chunk)) {
-            ChatUtil.sendErrorMessage(player, "You aren't the owner of this claim.");
-            return;
-        }
-        config.set("domains.claimed_tiles." + GeneralUtil.getKeyFromChunk(chunk), null);
-        String playerPath = "domains." + GeneralUtil.getKeyFromPlayer(player) + ".claims";
-        List<String> claims = config.getStringList(playerPath);
-        claims.removeIf(claim -> claim.equals(GeneralUtil.getKeyFromChunk(chunk)));
-        config.set(playerPath, claims);
-
-        DomainUtil.saveDomainConfig(config);
-        ChatUtil.sendSuccessMessage(player, "Claim unclaimed.");
+  private static void removePlayerChunk(Player player, Chunk chunk) {
+    FileConfiguration config = DomainUtil.getDomainConfig();
+    if (!DomainUtil.isChunkClaimed(chunk)) {
+      ChatUtil.sendErrorMessage(player, "This chunk isn't claimed.");
+      return;
     }
+    if (!DomainUtil.doesPlayerOwnChunk(player, chunk)) {
+      ChatUtil.sendErrorMessage(player, "You aren't the owner of this claim.");
+      return;
+    }
+    config.set("domains.claimed_tiles." + GeneralUtil.getKeyFromChunk(chunk), null);
+    String playerPath = "domains." + GeneralUtil.getKeyFromPlayer(player) + ".claims";
+    List<String> claims = config.getStringList(playerPath);
+    claims.removeIf(claim -> claim.equals(GeneralUtil.getKeyFromChunk(chunk)));
+    config.set(playerPath, claims);
+
+    DomainUtil.saveDomainConfig(config);
+    ChatUtil.sendSuccessMessage(player, "Claim unclaimed.");
+  }
 
 }

@@ -11,6 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
+import cc.altoya.settlements.Util.ItemUtil;
 
 public class EventBreakStructureBlock implements Listener {
     @EventHandler
@@ -67,7 +68,7 @@ public class EventBreakStructureBlock implements Listener {
     private static void handleWood(BlockBreakEvent event, Block block, Player player, boolean serverCalled) {
         Material currentMaterial = block.getType();
         event.setCancelled(true);
-        Material resource = BuildUtil.getResourceFromBlock(currentMaterial);
+        Material resource = ItemUtil.getResourceFromBlock(currentMaterial);
         BuildUtil.editResources(player, block.getChunk(), resource, 1);
         if (!serverCalled) {
             ChatUtil.sendSuccessBar(player, "Resources now at " + BuildUtil.getResourcesFromStructure(block.getChunk(), resource));
@@ -85,7 +86,7 @@ public class EventBreakStructureBlock implements Listener {
     private static void handleOre(BlockBreakEvent event, Block block, Player player, boolean serverCalled) {
         Material currentMaterial = block.getType();
         event.setCancelled(true);
-        Material resource = BuildUtil.getResourceFromBlock(currentMaterial);
+        Material resource = ItemUtil.getResourceFromBlock(currentMaterial);
         BuildUtil.editResources(player, block.getChunk(), resource, 1);
         if (!serverCalled) {
             ChatUtil.sendSuccessBar(player, "Resources now at " + BuildUtil.getResourcesFromStructure(block.getChunk(), resource));
@@ -103,7 +104,7 @@ public class EventBreakStructureBlock implements Listener {
     private static void handlePlants(BlockBreakEvent event, Block block, Player player, boolean serverCalled) {
         Material currentMaterial = block.getType();
         event.setCancelled(true);
-        Material resource = BuildUtil.getResourceFromBlock(currentMaterial);
+        Material resource = ItemUtil.getResourceFromBlock(currentMaterial);
         BuildUtil.editResources(player, block.getChunk(), resource, 1);
         if (!serverCalled) {
             ChatUtil.sendSuccessBar(player, "Resources now at " + BuildUtil.getResourcesFromStructure(block.getChunk(), resource));

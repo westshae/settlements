@@ -17,6 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
+import cc.altoya.settlements.Util.ItemUtil;
 
 public class EventInteractStructure implements Listener {
 
@@ -69,7 +70,7 @@ public class EventInteractStructure implements Listener {
         Material currentMaterial = block.getType();
         BlockData data = block.getBlockData();
         event.setCancelled(true);
-        Material resource = BuildUtil.getResourceFromBlock(currentMaterial);
+        Material resource = ItemUtil.getResourceFromBlock(currentMaterial);
         BuildUtil.editResources(player, block.getChunk(), resource, 1);
         BuildUtil.editSupplies(player, block.getChunk(), supply, -1);
         if (!serverCalled) {

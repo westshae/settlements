@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import cc.altoya.settlements.Build.BuildUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
+import cc.altoya.settlements.Util.ItemUtil;
 
 public class CommandSave {
     public static boolean handle(Player sender, String[] args) {
@@ -45,7 +46,7 @@ public class CommandSave {
         int y2 = secondBlock.getY();
         int z2 = secondBlock.getZ();
 
-        List<Material> resourceBlockList = BuildUtil.getAllResourceBlocks(firstBlock.getChunk());
+        List<Material> resourceBlockList = ItemUtil.getAllResourceBlocks(firstBlock.getChunk());
 
         List<String> resourceBlocksInChunk = new ArrayList<String>();
 
