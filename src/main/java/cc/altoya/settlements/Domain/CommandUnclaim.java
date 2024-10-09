@@ -6,6 +6,7 @@ import org.bukkit.Chunk;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.Build.BuildUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -26,6 +27,10 @@ public class CommandUnclaim {
     }
     if (!DomainUtil.doesPlayerOwnChunk(player, chunk)) {
       ChatUtil.sendErrorMessage(player, "You aren't the owner of this claim.");
+      return;
+    }
+    if(BuildUtil.isChunkStructure(chunk)){
+      ChatUtil.sendErrorMessage(player, "This chunk is a structure, remove it first before unclaiming.");
       return;
     }
     config.set("domains.claimed_tiles." + GeneralUtil.getKeyFromChunk(chunk), null);
