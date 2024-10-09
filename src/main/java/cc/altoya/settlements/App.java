@@ -13,6 +13,7 @@ import cc.altoya.settlements.Build.BuildTabCompleter;
 import cc.altoya.settlements.Build.EventInteractStructure;
 import cc.altoya.settlements.Build.EventBreakStructureBlock;
 import cc.altoya.settlements.Build.MainBuild;
+import cc.altoya.settlements.Build.ScheduledCleanUp;
 import cc.altoya.settlements.Build.ScheduledWorker;
 import cc.altoya.settlements.Domain.DomainTabCompleter;
 import cc.altoya.settlements.Domain.EventProtectBlocks;
@@ -45,7 +46,8 @@ public class App extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EventInteractStructure(), this);
 
         //Register runnables
-        this.getServer().getScheduler().runTaskTimer(this, ScheduledWorker.getRunnable(), 0L, 100L);
+        this.getServer().getScheduler().runTaskTimer(this, ScheduledWorker.getRunnable(), 200L, 100L);//Wait 200 ticks (10s) then run every 100 ticks (5s)
+        this.getServer().getScheduler().runTask(this, ScheduledCleanUp.getRunnable());//Run instantly, once.
     }
 
     private void initializeConfig() {

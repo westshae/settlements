@@ -122,40 +122,7 @@ public class CommandNew {
 
         List<String> blocks = blueprintConfig.getStringList("blueprints." + blueprintName + ".blocks");
 
-        new BukkitRunnable() {
-            int index = 0;
-
-            @Override
-            public void run() {
-                int blocksProcessed = 0;
-
-                while (index < blocks.size() && blocksProcessed < 1) {
-                    String blockString = blocks.get(index);
-                    Block block = BlueprintUtil.turnStringIntoBlock(blockString);
-
-                    if (block != null) {
-                        Location relativeLocation = block.getLocation(); 
-                        Location nonRelativeLocation = BlueprintUtil.getNonRelativeLocation(buildFirstBlock, relativeLocation);
-
-                        BuildUtil.placeBlockForStructure(player, nonRelativeLocation, block.getType(), block.getBlockData());
-
-                        blocksProcessed++;
-                    } else {
-                        ChatUtil.sendErrorMessage(player, "Error converting block from string: " + blockString);
-                    }
-                    index++;
-                }
-
-                // If there are more blocks to process, schedule the next run after a brief
-                // pause
-                if (index < blocks.size()) {
-                    // Pause for 1 tick (50 milliseconds) to allow server to process other tasks
-                    this.runTaskLater(GeneralUtil.getPlugin(), 1); // Replace MyPlugin with your plugin instance class
-                } else {
-                    this.cancel(); // Stop the runnable if all blocks have been processed
-                }
-            }
-        }.runTaskTimer(GeneralUtil.getPlugin(), 0, 1); // Start immediately and run every tick
+        BuildUtil.placeBlocksFromStringList(blocks, buildFirstBlock);
 
         ChatUtil.sendSuccessMessage(player, "Successfully generated structure from blueprint: " + blueprintName);
     }

@@ -93,16 +93,13 @@ public class ScheduledWorker {
                                     return;
                                 }
 
-                                // Make the villager jump
-                                villager.setVelocity(villager.getVelocity().setY(1));
-
                                 // Spawn particles around the villager
                                 nonRelativeRandomBlock.getWorld().spawnParticle(Particle.HEART,
                                         villager.getLocation().clone().add(0, 2, 0), 10);
 
                                 timeElapsed++;
                             }
-                        }.runTaskTimer(GeneralUtil.getPlugin(), 0, 20);
+                        }.runTaskTimer(GeneralUtil.getPlugin(), 500, 20);
                     }
 
                 }
