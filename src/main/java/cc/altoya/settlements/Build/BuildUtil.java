@@ -11,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -213,29 +212,29 @@ public class BuildUtil {
 
   public static boolean isBuildAreaEmpty(Player player, String blueprintName) {
     Chunk chunk = player.getLocation().getChunk();
-    FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
 
     int playerHeight = player.getLocation().getBlockY();
 
-    Block firstBlock = chunk.getBlock(0, playerHeight, 0);
+    Block newFirstBlock = chunk.getBlock(0, playerHeight, 0);
+    Block newSecondBlock = BlueprintUtil.getRelativeSecondBlock(newFirstBlock, blueprintName);
 
-    String secondBlockKey = blueprintConfig.getString("blueprints." + blueprintName + ".second");
-    Block blueprintSecondBlock = BlueprintUtil.turnStringIntoBlock(secondBlockKey);
+    // Get the coordinates of the first and second blocks
+    int minX = Math.min(newFirstBlock.getX(), newSecondBlock.getX());
+    int minY = Math.min(newFirstBlock.getY(), newSecondBlock.getY());
+    int minZ = Math.min(newFirstBlock.getZ(), newSecondBlock.getZ());
+    int maxX = Math.max(newFirstBlock.getX(), newSecondBlock.getX());
+    int maxY = Math.max(newFirstBlock.getY(), newSecondBlock.getY());
+    int maxZ = Math.max(newFirstBlock.getZ(), newSecondBlock.getZ());
 
-    Location nonRelativeSecondLocation = BlueprintUtil.getNonRelativeLocation(firstBlock,
-        blueprintSecondBlock.getLocation());
-    Block secondBlock = chunk.getWorld().getBlockAt(nonRelativeSecondLocation.getBlockX(),
-        nonRelativeSecondLocation.getBlockY(), nonRelativeSecondLocation.getBlockZ());
-
-    // Check if all blocks between the two points are air
-    for (int x = firstBlock.getX() ; x <= secondBlock.getX(); x++) {
-      for (int y = firstBlock.getY(); y <= secondBlock.getY(); y++) {
-        for (int z = firstBlock.getZ(); z <= secondBlock.getZ(); z++) {
+    for (int x = minX; x <= maxX; x++) {
+      for (int y = minY; y <= maxY; y++) {
+        for (int z = minZ; z <= maxZ; z++) {
           Block block = chunk.getWorld().getBlockAt(x, y, z);
+
           if (block.getType() != Material.AIR) {
             ChatUtil.sendErrorMessage(player, "The area you wish you place your structure isn't empty.");
-            ChatUtil.sendErrorMessage(player, "Use /build plot to see the outline. Clear between Y=" + firstBlock.getY() + " and Y="
-                + secondBlock.getY() + " within the particles.");
+            ChatUtil.sendErrorMessage(player, "Use /build plot to see the outline. Clear between Y=" + minY + " and Y="
+                + maxY + " within the particles.");
 
             return false; // Found a block that is not air
           }

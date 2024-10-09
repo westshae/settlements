@@ -113,10 +113,32 @@ public class BlueprintUtil {
         return config.getInt("blueprints." + blueprintName + ".version");
     }
 
-
     public static void placeBlockWithoutBlueprintData(Location location, Material material, BlockData blockData) {
         Block block = location.getBlock();
         block.setType(material, false);
         block.setBlockData(blockData, false);
+    }
+
+    public static Block getRelativeSecondBlock(Block firstBlock, String blueprintName){
+        FileConfiguration config = getBlueprintConfig();
+        if (!doesBlueprintExist(blueprintName)) {
+            return null;
+        }
+        String firstBlockKey = config.getString("blueprints." + blueprintName + ".first");
+        String secondBlockKey = config.getString("blueprints." + blueprintName + ".second");
+        Block blueprintFirstBlock = BlueprintUtil.turnStringIntoBlock(firstBlockKey);
+        Block blueprintSecondBlock = BlueprintUtil.turnStringIntoBlock(secondBlockKey);
+    
+        int offsetX = blueprintSecondBlock.getX() - blueprintFirstBlock.getX();
+        int offsetY = blueprintSecondBlock.getY() - blueprintFirstBlock.getY();
+        int offsetZ = blueprintSecondBlock.getZ() - blueprintFirstBlock.getZ();
+    
+        // Create a new location for the second block based on the new base location
+        Location newSecondBlockLocation = new Location(
+            firstBlock.getWorld(),
+            firstBlock.getX() + offsetX,
+            firstBlock.getY() + offsetY,
+            firstBlock.getZ() + offsetZ);
+        return newSecondBlockLocation.getBlock();
     }
 }

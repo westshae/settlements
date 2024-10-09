@@ -3,7 +3,6 @@ package cc.altoya.settlements.Build;
 import java.util.List;
 
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
@@ -114,22 +113,13 @@ public class CommandNew {
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".version", version);
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".playerHeight", playerHeight);
 
-    FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
-
-    Block nonRelativeFirstBlock = chunk.getBlock(0, playerHeight, 0);
-
-    String secondBlockKey = blueprintConfig.getString("blueprints." + blueprintName + ".second");
-    Block blueprintSecondBlock = BlueprintUtil.turnStringIntoBlock(secondBlockKey);
-
-    Location nonRelativeSecondLocation = BlueprintUtil.getNonRelativeLocation(nonRelativeFirstBlock,
-        blueprintSecondBlock.getLocation());
-    Block nonRelativeSecondBlock = chunk.getWorld().getBlockAt(nonRelativeSecondLocation.getBlockX(),
-        nonRelativeSecondLocation.getBlockY(), nonRelativeSecondLocation.getBlockZ());
+    Block newFirstBlock = chunk.getBlock(0, playerHeight, 0);
+    Block newSecondBlock = BlueprintUtil.getRelativeSecondBlock(newFirstBlock, blueprintName);
 
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".first",
-        BlueprintUtil.turnBlockIntoString(nonRelativeFirstBlock, nonRelativeFirstBlock.getLocation()));
+        BlueprintUtil.turnBlockIntoString(newFirstBlock, newFirstBlock.getLocation()));
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".second",
-        BlueprintUtil.turnBlockIntoString(nonRelativeSecondBlock, nonRelativeSecondLocation));
+        BlueprintUtil.turnBlockIntoString(newSecondBlock, newSecondBlock.getLocation()));
 
     BuildUtil.saveBuildConfig(buildConfig);
 
