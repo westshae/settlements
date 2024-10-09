@@ -23,17 +23,24 @@ public class ItemUtil {
 
     ItemMeta meta = item.getItemMeta();
     PersistentDataContainer data = meta.getPersistentDataContainer();
-    NamespacedKey key = new NamespacedKey(GeneralUtil.getPlugin(), "resource_item");
+    NamespacedKey key = new NamespacedKey(GeneralUtil.getPlugin(), "settlements_resource_item");
 
     return data.get(key, PersistentDataType.STRING);
   }
 
-  public static void givePlayerCustomItem(Player player, Material material, int amount, String metadata) {
+  public static boolean isItemCustom(ItemStack item){
+    if(!item.hasItemMeta()){
+      return false;
+    }
+    String metadata = getItemPersistentValue(item);
+    return metadata.equals(item.getType().toString());
+  }
+
+  public static void givePlayerCustomItem(Player player, Material material, int amount) {
     ItemStack item = new ItemStack(material);
-    ChatUtil.sendErrorMessage(player, item.getType().toString());
     ItemMeta meta = item.getItemMeta();
 
-    NamespacedKey key = new NamespacedKey(GeneralUtil.getPlugin(), "settlements");
+    NamespacedKey key = new NamespacedKey(GeneralUtil.getPlugin(), "settlements_resource_item");
     PersistentDataContainer data = meta.getPersistentDataContainer();
 
     meta.setDisplayName("" + ChatColor.YELLOW + ChatColor.MAGIC + "O" + ChatColor.RESET + ChatColor.YELLOW
@@ -42,7 +49,7 @@ public class ItemUtil {
     item.setAmount(amount);
     meta.addEnchant(Enchantment.UNBREAKING, 1, true);
     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-    data.set(key, PersistentDataType.STRING, metadata);
+    data.set(key, PersistentDataType.STRING, material.toString());
     meta.setLore(
         List.of(
             getMaterialLore(material),

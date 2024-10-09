@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
+import cc.altoya.settlements.Util.ItemUtil;
 
 public class CommandNew {
     public static boolean handle(Player sender, String[] args) {
@@ -57,12 +58,15 @@ public class CommandNew {
                 if(item.getAmount() < amount){
                     continue;
                 }
+                if(!ItemUtil.isItemCustom(item)){
+                    continue;
+                }
                 tookResources = true;
                 item.setAmount(item.getAmount() - amount);
                 break;
             }
             if(!tookResources){
-                ChatUtil.sendErrorMessage(player, "You don't have the right amount of: " + resource.toString() + ". You need " + amount);
+                ChatUtil.sendErrorMessage(player, "You don't have the right amount of: " + resource.toString() + ". You need " + amount + ", which must be a server-made resource.");
                 return false;
             }
         }

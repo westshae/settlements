@@ -34,7 +34,7 @@ public class CommandCollect {
             }
             BuildUtil.editResources(player, chunk, material, -resourceAmount);
 
-            ItemUtil.givePlayerCustomItem(player, material, resourceAmount, material + "_resource_item");
+            ItemUtil.givePlayerCustomItem(player, material, resourceAmount);
 
             ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " " + material);
         }

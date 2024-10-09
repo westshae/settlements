@@ -27,7 +27,7 @@ public class CommandTransform {
       ChatUtil.sendErrorMessage(player, "There are no custom items for " + hand.getType());
       return;
     }
-    ItemUtil.givePlayerCustomItem(player, hand.getType(), hand.getAmount(), "_resource_item");
+    ItemUtil.givePlayerCustomItem(player, hand.getType(), hand.getAmount());
     hand.setAmount(0);
     ChatUtil.sendSuccessMessage(player, "Your item has been changed into custom resources.");
   }

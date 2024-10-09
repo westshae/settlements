@@ -21,7 +21,7 @@ public class CommandGiveAll {
   private static void giveOneOfEach(Player player, int amount) {
     List<Material> materials = ItemUtil.getAllResourceMaterials();
     for (Material material : materials) {
-      ItemUtil.givePlayerCustomItem(player, material, amount, material + "_resource_item");
+      ItemUtil.givePlayerCustomItem(player, material, amount);
     }
     ChatUtil.sendSuccessMessage(player, "You've been given " + amount + " of each type of resource.");
   }
