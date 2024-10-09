@@ -36,7 +36,7 @@ public class CommandCollect {
 
             ItemUtil.givePlayerCustomItem(player, material, resourceAmount);
 
-            ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " " + material);
+            ChatUtil.sendSuccessMessage(player, "You have collected " + resourceAmount + " " + ItemUtil.formatItemId(material.toString()));
         }
     }
 }

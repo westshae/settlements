@@ -2,7 +2,10 @@ package cc.altoya.settlements.Build;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -183,4 +186,28 @@ public class BuildUtil {
     }.runTaskTimer(GeneralUtil.getPlugin(), 0, 1); // Start immediately and run every tick
 
   }
+
+  public static List<String> getPlayerBuilds(Player player) {
+    FileConfiguration config = BuildUtil.getBuildConfig();
+    List<String> playerBuilds = new ArrayList<>();
+    UUID playerUUID = player.getUniqueId();
+
+    // Get all keys under "builds"
+    Set<String> buildsKeys = config.getConfigurationSection("builds").getKeys(false);
+    
+    // Iterate through each build key
+    for (String key : buildsKeys) {
+        // Get the owner's UUID as a string
+        String ownerUUIDString = config.getString("builds." + key + ".owner");
+
+        // Check if the owner matches the player's UUID
+        if (ownerUUIDString != null && ownerUUIDString.equals(playerUUID.toString())) {
+            // Add the key to the list if it matches
+            playerBuilds.add(key);
+        }
+    }
+    
+    return playerBuilds;
+}
+
 }

@@ -1,6 +1,7 @@
 package cc.altoya.settlements.Util;
 
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -11,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.HashMap;
 import java.util.List;
 
 import net.md_5.bungee.api.ChatColor;
@@ -37,16 +39,15 @@ public class ItemUtil {
   }
 
   public static void givePlayerCustomItem(Player player, Material material, int amount) {
+    // Create the item and its metadata
     ItemStack item = new ItemStack(material);
     ItemMeta meta = item.getItemMeta();
-
     NamespacedKey key = new NamespacedKey(GeneralUtil.getPlugin(), "settlements_resource_item");
     PersistentDataContainer data = meta.getPersistentDataContainer();
 
+    // Set item meta properties
     meta.setDisplayName("" + ChatColor.YELLOW + ChatColor.MAGIC + "O" + ChatColor.RESET + ChatColor.YELLOW
-        + ChatColor.BOLD + formatItemId(material.toString()) + ChatColor.RESET + ChatColor.YELLOW + ChatColor.MAGIC
-        + "O");
-    item.setAmount(amount);
+        + ChatColor.BOLD + formatItemId(material.toString()) + ChatColor.RESET + ChatColor.YELLOW + ChatColor.MAGIC + "O");
     meta.addEnchant(Enchantment.UNBREAKING, 1, true);
     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
     data.set(key, PersistentDataType.STRING, material.toString());
@@ -57,8 +58,30 @@ public class ItemUtil {
             "" + ChatColor.GRAY + ChatColor.BOLD + "Resource Item"));
     item.setItemMeta(meta);
 
-    player.getInventory().addItem(item);
-  }
+    // Check for available space in the player's inventory
+    while (amount > 0) {
+        int stackSize = Math.min(amount, 64); // Maximum stack size is 64
+        ItemStack stack = item.clone(); // Clone the item to avoid modifying the original
+        stack.setAmount(stackSize); // Set the stack size
+
+        // Try to add the item to the player's inventory
+        HashMap<Integer, ItemStack> excess = player.getInventory().addItem(stack);
+
+        // Decrease the total amount by the stack size
+        amount -= stackSize;
+
+        // If there's any excess, drop those items on the ground
+        if (!excess.isEmpty()) {
+            for (ItemStack excessItem : excess.values()) {
+                // Get the location where the player is standing
+                Location location = player.getLocation();
+                // Drop the excess item at the player's location
+                player.getWorld().dropItemNaturally(location, excessItem);
+            }
+        }
+    }
+}
+
 
   public static List<Material> getAllResourceBlocks(Chunk chunk) {
     return List.of(Material.COAL_ORE, Material.IRON_ORE, Material.WHEAT, Material.SUGAR_CANE, Material.PUMPKIN,

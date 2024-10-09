@@ -46,6 +46,26 @@ public class GeneralUtil {
     return "x" + chunkX + "z" + chunkZ;
   }
 
+  public static Chunk getChunkFromKey(String key) {
+    // Check if the key starts with "x" and contains "z"
+    if (key.startsWith("x") && key.contains("z")) {
+        // Extract the substring for chunkX and chunkZ
+        String[] parts = key.split("z");
+        String chunkXStr = parts[0].substring(1); // Remove the "x" prefix
+        String chunkZStr = parts[1]; // Get the chunkZ part
+
+        // Parse the chunk coordinates to integers
+        int chunkX = Integer.parseInt(chunkXStr);
+        int chunkZ = Integer.parseInt(chunkZStr);
+
+        // Create and return the Chunk object (assuming you have a way to create a Chunk)
+        return Bukkit.getWorlds().get(0).getChunkAt(chunkX, chunkZ);
+    }
+    
+    throw new IllegalArgumentException("Invalid key format: " + key);
+}
+
+
   public static String getKeyFromPlayer(Player player) {
     return player.getUniqueId().toString();
   }

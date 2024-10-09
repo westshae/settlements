@@ -31,6 +31,8 @@ public class CommandHelp {
             "/build help", "The command you're looking at right now"
         );
 
+        commands.put("/build collectall", "/Build collect, for every single structure you own.");
+
         ChatUtil.sendCommandHelpMessage(player, "/build", commands);
     }
 }
