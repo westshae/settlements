@@ -14,7 +14,7 @@ public class ChatUtil {
   }
 
   private static String formatErrorMessage(String message){
-    return getBoxedString("!!", ChatColor.RED) + ChatColor.RED + message;
+    return getBoxedString("!!!", ChatColor.RED) + ChatColor.RED + message;
   }
 
   private static String formatSuccessMessage(String message){
