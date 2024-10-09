@@ -60,6 +60,9 @@ public class CommandNew {
       return false;
     }
     FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
+    if(!blueprintConfig.contains("blueprints." + blueprintName + ".cost")){
+      return true;
+    }
     ConfigurationSection section = blueprintConfig.getConfigurationSection("blueprints." + blueprintName + ".cost");
 
     for (String key : section.getKeys(false)) {
