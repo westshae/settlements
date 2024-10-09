@@ -30,6 +30,7 @@ public class ItemUtil {
 
   public static void givePlayerCustomItem(Player player, Material material, int amount, String metadata) {
     ItemStack item = new ItemStack(material);
+    ChatUtil.sendErrorMessage(player, item.getType().toString());
     ItemMeta meta = item.getItemMeta();
 
     NamespacedKey key = new NamespacedKey(GeneralUtil.getPlugin(), "settlements");
@@ -84,7 +85,7 @@ public class ItemUtil {
     }
   }
 
-  public static List<Material> getAllResourceMaterials(Chunk chunk) {
+  public static List<Material> getAllResourceMaterials() {
     return List.of(Material.COAL, Material.IRON_INGOT, Material.WHEAT, Material.SUGAR, Material.PUMPKIN,
         Material.MELON_SLICE, Material.REDSTONE_LAMP, Material.OAK_PLANKS);
   }

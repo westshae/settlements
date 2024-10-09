@@ -26,7 +26,7 @@ public class CommandCollect {
             return;
         }
 
-        List<Material> materials = ItemUtil.getAllResourceMaterials(chunk);
+        List<Material> materials = ItemUtil.getAllResourceMaterials();
         for (Material material : materials) {
             Integer resourceAmount = BuildUtil.getResourcesFromStructure(chunk, material);
             if (resourceAmount == 0) {
