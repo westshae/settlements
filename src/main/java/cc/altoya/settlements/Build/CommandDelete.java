@@ -54,8 +54,8 @@ public class CommandDelete {
                     if (block != null) {
                         Location relativeLocation = block.getLocation(); 
                         Location nonRelativeLocation = BlueprintUtil.getNonRelativeLocation(buildFirstBlock, relativeLocation);
-
-                        nonRelativeLocation.getBlock().setType(Material.AIR);
+                        Block nonRelativeBlock = nonRelativeLocation.getBlock();
+                        nonRelativeBlock.setType(Material.AIR, false);
 
                         blocksProcessed++;
                     } else {
