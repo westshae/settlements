@@ -25,6 +25,9 @@ public class CommandNew {
         "/build new {blueprintName}")) {
       return true;
     }
+    if(!BuildUtil.isBuildAreaEmpty(sender, args[1])){
+      return true;
+    }
     if (!chunkNotClaimedOrStructure(sender)) {
       return true;
     }

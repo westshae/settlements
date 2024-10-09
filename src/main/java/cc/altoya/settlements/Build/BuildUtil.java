@@ -194,20 +194,61 @@ public class BuildUtil {
 
     // Get all keys under "builds"
     Set<String> buildsKeys = config.getConfigurationSection("builds").getKeys(false);
-    
+
     // Iterate through each build key
     for (String key : buildsKeys) {
-        // Get the owner's UUID as a string
-        String ownerUUIDString = config.getString("builds." + key + ".owner");
+      // Get the owner's UUID as a string
+      String ownerUUIDString = config.getString("builds." + key + ".owner");
 
-        // Check if the owner matches the player's UUID
-        if (ownerUUIDString != null && ownerUUIDString.equals(playerUUID.toString())) {
-            // Add the key to the list if it matches
-            playerBuilds.add(key);
+      // Check if the owner matches the player's UUID
+      if (ownerUUIDString != null && ownerUUIDString.equals(playerUUID.toString())) {
+        // Add the key to the list if it matches
+        playerBuilds.add(key);
+      }
+    }
+
+    return playerBuilds;
+  }
+
+  public static boolean isBuildAreaEmpty(Player player, String blueprintName) {
+    Chunk chunk = player.getLocation().getChunk();
+    FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
+
+    int playerHeight = player.getLocation().getBlockY();
+    Block nonRelativeFirstBlock = chunk.getBlock(0, playerHeight, 0);
+
+    String secondBlockKey = blueprintConfig.getString("blueprints." + blueprintName + ".second");
+    Block blueprintSecondBlock = BlueprintUtil.turnStringIntoBlock(secondBlockKey);
+
+    Location nonRelativeSecondLocation = BlueprintUtil.getNonRelativeLocation(nonRelativeFirstBlock,
+        blueprintSecondBlock.getLocation());
+    Block nonRelativeSecondBlock = chunk.getWorld().getBlockAt(nonRelativeSecondLocation.getBlockX(),
+        nonRelativeSecondLocation.getBlockY(), nonRelativeSecondLocation.getBlockZ());
+
+    // Get the coordinates of the first and second blocks
+    int minX = Math.min(nonRelativeFirstBlock.getX(), nonRelativeSecondBlock.getX());
+    int minY = Math.min(nonRelativeFirstBlock.getY(), nonRelativeSecondBlock.getY());
+    int minZ = Math.min(nonRelativeFirstBlock.getZ(), nonRelativeSecondBlock.getZ());
+    int maxX = Math.max(nonRelativeFirstBlock.getX(), nonRelativeSecondBlock.getX());
+    int maxY = Math.max(nonRelativeFirstBlock.getY(), nonRelativeSecondBlock.getY());
+    int maxZ = Math.max(nonRelativeFirstBlock.getZ(), nonRelativeSecondBlock.getZ());
+
+    // Check if all blocks between the two points are air
+    for (int x = minX; x <= maxX; x++) {
+        for (int y = minY; y <= maxY; y++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                Block block = chunk.getWorld().getBlockAt(x, y, z);
+                if (block.getType() != Material.AIR) {
+                  ChatUtil.sendErrorMessage(player, "The area you wish you place your structure isn't empty.");
+                  ChatUtil.sendErrorMessage(player, "Use /build plot to see the outline. Clear between Y=" + minY + " and Y=" + maxY + " within the particles.");
+
+                    return false; // Found a block that is not air
+                }
+            }
         }
     }
-    
-    return playerBuilds;
+
+    return true; // All blocks in the area are air
 }
 
 }
