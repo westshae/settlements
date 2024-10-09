@@ -235,20 +235,21 @@ public class BuildUtil {
 
     // Check if all blocks between the two points are air
     for (int x = minX; x <= maxX; x++) {
-        for (int y = minY; y <= maxY; y++) {
-            for (int z = minZ; z <= maxZ; z++) {
-                Block block = chunk.getWorld().getBlockAt(x, y, z);
-                if (block.getType() != Material.AIR) {
-                  ChatUtil.sendErrorMessage(player, "The area you wish you place your structure isn't empty.");
-                  ChatUtil.sendErrorMessage(player, "Use /build plot to see the outline. Clear between Y=" + minY + " and Y=" + maxY + " within the particles.");
+      for (int y = minY; y <= maxY; y++) {
+        for (int z = minZ; z <= maxZ; z++) {
+          Block block = chunk.getWorld().getBlockAt(x, y, z);
+          if (block.getType() != Material.AIR) {
+            ChatUtil.sendErrorMessage(player, "The area you wish you place your structure isn't empty.");
+            ChatUtil.sendErrorMessage(player, "Use /build plot to see the outline. Clear between Y=" + minY + " and Y="
+                + maxY + " within the particles.");
 
-                    return false; // Found a block that is not air
-                }
-            }
+            return false; // Found a block that is not air
+          }
         }
+      }
     }
 
     return true; // All blocks in the area are air
-}
+  }
 
 }

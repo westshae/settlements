@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,7 +21,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.joml.Random;
 
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
-import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
 public class ScheduledWorker {
