@@ -4,9 +4,12 @@ import java.util.List;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
@@ -19,8 +22,51 @@ public class CommandNew {
                 "/build new {blueprintName}")) {
             return true;
         }
+        if(!takePlayerCosts(sender, args[1])){
+            return true;
+        }
         setBuildConfig(sender, args[1]);
         generateBuildingFromBlueprint(sender, args[1]);
+        return true;
+    }
+
+    public static boolean takePlayerCosts(Player player, String blueprintName){
+        if (!BlueprintUtil.doesBlueprintExist(blueprintName)) {
+            ChatUtil.sendErrorMessage(player, "This blueprint doesn't exist.");
+            return false;
+        }
+        FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
+        ConfigurationSection section = blueprintConfig.getConfigurationSection("blueprints." + blueprintName + ".cost");
+
+        for(String key : section.getKeys(false)){
+            Material resource = Material.getMaterial(key);
+            Integer amount = Integer.parseInt(section.getString(key));
+            if(!player.getInventory().contains(resource)){
+                ChatUtil.sendErrorMessage(player, "You're missing the following resource: " + resource.toString());
+                return false;
+            }
+
+            boolean tookResources = false;
+            for(ItemStack item : player.getInventory().getContents()){
+                if(item == null){
+                    continue;
+                }
+                if(!item.getType().equals(resource)){
+                    continue;
+                }
+                if(item.getAmount() < amount){
+                    continue;
+                }
+                tookResources = true;
+                item.setAmount(item.getAmount() - amount);
+                break;
+            }
+            if(!tookResources){
+                ChatUtil.sendErrorMessage(player, "You don't have the right amount of: " + resource.toString() + ". You need " + amount);
+                return false;
+            }
+        }
+
         return true;
     }
 
