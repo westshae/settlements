@@ -63,7 +63,9 @@ public class EventInteractStructure implements Listener {
     private static void handleInteractables(PlayerInteractEvent event, Block block, Player player, Material supply,
             boolean serverCalled) {
         if (BuildUtil.getSuppliesFromStructure(block.getChunk(), supply) <= 0) {
-            ChatUtil.sendErrorBar(player, "You are out of supplies. Type: " + supply.toString());
+            if(!serverCalled){
+                ChatUtil.sendErrorBar(player, "You are out of supplies. Type: " + supply.toString());
+            }
             event.setCancelled(true);
             return;
         }

@@ -37,6 +37,7 @@ public class CommandHelp {
                 "/blueprint cost {blueprintName} {amount}",
                 "Sets the blueprints resource cost for the item you are holding.",
                 "/blueprint help", "The command you're looking at right now");
+        commands.put("/blueprint teleport {blueprintName}", "Teleports you to the blueprint's firstblock");
 
         ChatUtil.sendCommandHelpMessage(player, "/blueprint", commands);
     }
