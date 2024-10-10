@@ -68,7 +68,7 @@ public class CommandNew {
       Material resource = Material.getMaterial(key);
       Integer amount = Integer.parseInt(section.getString(key));
       if (!player.getInventory().contains(resource)) {
-        ChatUtil.sendErrorMessage(player, "You're missing the following resource: " + resource.toString());
+        ChatUtil.sendErrorMessage(player, "You're missing the following resource: " + ItemUtil.formatItemId(resource.toString()));
         return false;
       }
 
@@ -91,7 +91,7 @@ public class CommandNew {
         break;
       }
       if (!tookResources) {
-        ChatUtil.sendErrorMessage(player, "You don't have the right amount of: " + resource.toString()
+        ChatUtil.sendErrorMessage(player, "You don't have the right amount of: " + ItemUtil.formatItemId(resource.toString())
             + ". You need " + amount + ", which must be a server-made resource.");
         return false;
       }
