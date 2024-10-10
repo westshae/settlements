@@ -12,6 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Pose;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -62,23 +63,24 @@ public class ScheduledWorker {
               randomBlock.getLocation());
 
           if (isNearbyAndOnline) {
-            int yIncrease = 0;
-            if (!nonRelativeRandomBlock.getBlock().isPassable()) {
-              yIncrease = 1;
-            }
 
             Villager villager = (Villager) nonRelativeRandomBlock.getWorld().spawnEntity(
-                nonRelativeRandomBlock.clone().add(0.5, yIncrease, 0.5),
+                originBlock.getLocation(),
                 EntityType.VILLAGER);
-            villager.setAI(false);
             villager.setInvulnerable(true);
             new BukkitRunnable() {
               @Override
               public void run() {
+                villager.getPathfinder().moveTo(nonRelativeRandomBlock);
+              }
+            }.runTaskTimer(GeneralUtil.getPlugin(), 1, 20);
+            new BukkitRunnable() {
+              @Override
+              public void run() {
+
                 villager.remove();
               }
             }.runTaskLater(GeneralUtil.getPlugin(), 100);
-
           }
 
           new BukkitRunnable() {
