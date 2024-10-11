@@ -2,6 +2,7 @@ package cc.altoya.settlements.Blueprint;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -31,12 +32,14 @@ public class BlueprintUtil {
         int relativeX = block.getX() - origin.getX();
         int relativeY = block.getY() - origin.getY();
         int relativeZ = block.getZ() - origin.getZ();
-    
+
         return new Location(origin.getWorld(), relativeX, relativeY, relativeZ);
     }
 
-    public static Location getNonRelativeLocation(Block origin, Location relativeLocation){
-        return origin.getRelative(relativeLocation.getBlockX(), relativeLocation.getBlockY(), relativeLocation.getBlockZ()).getLocation();
+    public static Location getNonRelativeLocation(Block origin, Location relativeLocation) {
+        return origin
+                .getRelative(relativeLocation.getBlockX(), relativeLocation.getBlockY(), relativeLocation.getBlockZ())
+                .getLocation();
     }
 
     public static boolean doesBlueprintExist(String name) {
@@ -119,7 +122,7 @@ public class BlueprintUtil {
         block.setBlockData(blockData, false);
     }
 
-    public static Block getRelativeSecondBlock(Block firstBlock, String blueprintName){
+    public static Block getRelativeSecondBlock(Block firstBlock, String blueprintName) {
         FileConfiguration config = getBlueprintConfig();
         if (!doesBlueprintExist(blueprintName)) {
             return null;
@@ -128,25 +131,25 @@ public class BlueprintUtil {
         String secondBlockKey = config.getString("blueprints." + blueprintName + ".second");
         Block blueprintFirstBlock = BlueprintUtil.turnStringIntoBlock(firstBlockKey);
         Block blueprintSecondBlock = BlueprintUtil.turnStringIntoBlock(secondBlockKey);
-    
+
         int offsetX = blueprintSecondBlock.getX() - blueprintFirstBlock.getX();
         int offsetY = blueprintSecondBlock.getY() - blueprintFirstBlock.getY();
         int offsetZ = blueprintSecondBlock.getZ() - blueprintFirstBlock.getZ();
-    
+
         // Create a new location for the second block based on the new base location
         Location newSecondBlockLocation = new Location(
-            firstBlock.getWorld(),
-            firstBlock.getX() + offsetX,
-            firstBlock.getY() + offsetY,
-            firstBlock.getZ() + offsetZ);
+                firstBlock.getWorld(),
+                firstBlock.getX() + offsetX,
+                firstBlock.getY() + offsetY,
+                firstBlock.getZ() + offsetZ);
         return newSecondBlockLocation.getBlock();
     }
 
-    public static String getUpgradedBlueprintName(String originalBlueStringName){
+    public static String getUpgradedBlueprintName(String originalBlueStringName) {
         Integer currentVersion = BlueprintUtil.getVersion(originalBlueStringName);
 
         int lastIndexOfV = originalBlueStringName.lastIndexOf('v');
-        
+
         // If 'V' is found, get the substring up to and including the last 'V'
         if (lastIndexOfV != -1) {
 
@@ -154,5 +157,27 @@ public class BlueprintUtil {
         }
 
         return originalBlueStringName + "v" + Integer.toString(currentVersion + 1);
+    }
+
+    public static HashMap<String, String> getBlueprintCommands() {
+        HashMap<String, String> commands = new HashMap<>();
+        commands.put("/blueprint create {blueprintName}", "The first command to create a blueprint.");
+        commands.put("/blueprint first {blueprintName}",
+                "Sets the blueprint's chunk [0, ~, 0] point based on the block you're looking at.");
+        commands.put("/blueprint second {blueprintName}",
+                "Sets the blueprint's chunk [15, ~, 15] point based on the block you're looking at.");
+        commands.put("/blueprint save {blueprintName}",
+                "Gets all blocks between the first/second point, then converts each block to a string form for future generation.");
+        commands.put("/blueprint dupe {blueprintName}",
+                "Places down all the blocks from the blueprint specified, without any data, to be used for a new blueprint.");
+        commands.put("/blueprint upgrade {baseBlueprintName} {version}",
+                "Creates a new blueprint named {original}v{version}, and creates a dupe of the previous blueprint.");
+        commands.put("/blueprint delete {blueprintName}", "Deletes the blueprint provided.");
+        commands.put("/blueprint housing {blueprintName} {amount}", "Sets the blueprint's housing count.");
+        commands.put("/blueprint cost {blueprintName} {amount}",
+                "Sets the blueprint's resource cost for the item you are holding.");
+        commands.put("/blueprint help", "The command you're looking at right now.");
+        commands.put("/blueprint teleport {blueprintName}", "Teleports you to the blueprint's firstblock.");
+        return commands;
     }
 }

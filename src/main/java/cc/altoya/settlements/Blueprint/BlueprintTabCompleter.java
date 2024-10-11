@@ -6,84 +6,48 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BlueprintTabCompleter implements TabCompleter {
-
-    private final List<String> subCommands = Arrays.asList("create", "first", "second", "dupe", "save", "upgrade", "housing",
-            "cost", "teleport", "help");
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!(sender instanceof Player)) {
             return null;
         }
-        List<String> completions = new ArrayList<>();
 
+        List<String> commandsUnformatted = List.copyOf(BlueprintUtil.getBlueprintCommands().keySet());
+
+        List<String[]> commands = new ArrayList<String[]>();
+
+        for(String commandUnformatted : commandsUnformatted){
+            commands.add(commandUnformatted.split(" "));
+        }
+
+        List<String> completions = new ArrayList<>();
         if (args.length == 1) {
-            for (String subCommand : subCommands) {
-                if (subCommand.startsWith(args[0].toLowerCase())) {
-                    completions.add(subCommand);
+            for (String[] commandSplit : commands) {
+                if (commandSplit[1].toLowerCase().startsWith(args[0].toLowerCase())) {
+                    completions.add(commandSplit[1].toLowerCase());
                 }
             }
             return completions;
-        } else if (args.length == 2) {
-            String subCommand = args[0].toLowerCase();
-            switch (subCommand) {
-                case "create":
-                    completions.add("{blueprintName}");
+        } else{
+            int commandIndex = -1;
+            int currentIndex = 0;
+            for (String[] commandSplit : commands) {
+                if(commandSplit[1].toLowerCase().equals(args[0].toLowerCase())){
+                    commandIndex = currentIndex;
                     break;
-                case "first":
-                    completions.add("{blueprintName}");
-                    break;
-                case "second":
-                    completions.add("{blueprintName}");
-                    break;
-                case "save":
-                    completions.add("{blueprintName}");
-                    break;
-                case "dupe":
-                    completions.add("{blueprintName}");
-                    break;
-                case "upgrade":
-                    completions.add("{originalBlueprintName}");
-                    break;
-                case "delete":
-                    completions.add("{blueprintName}");
-                    break;
-                case "housing":
-                    completions.add("{blueprintName}");
-                    break;
-                case "cost":
-                    completions.add("{blueprintName}");
-                    break;
-                case "teleport":
-                    completions.add("{blueprintName}");
-                    break;
+                }
+                currentIndex++;
+            }
 
-                default:
-                    break;
+            if(args.length < commands.get(commandIndex).length){
+                completions.add(commands.get(commandIndex)[args.length]);
+                return completions;
             }
-            return completions;
-        } else if (args.length == 3) {
-            String subCommand = args[0].toLowerCase();
-            switch (subCommand) {
-                case "housing":
-                    completions.add("{amount}");
-                    break;
-                case "cost":
-                    completions.add("{amount}");
-                    break;
-                case "upgrade":
-                    completions.add("{version}");
-                    break;
-                default:
-                    break;
-            }
-            return completions;
         }
-
         return null;
     }
 }

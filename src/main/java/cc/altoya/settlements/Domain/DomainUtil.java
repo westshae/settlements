@@ -9,6 +9,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 public class DomainUtil {
@@ -45,5 +46,14 @@ public class DomainUtil {
   public static boolean isAllianceChatMode(Player player) {
     FileConfiguration config = getDomainConfig();
     return config.getBoolean("domains." + GeneralUtil.getKeyFromPlayer(player) + ".allianceChat");
+  }
+
+  public static HashMap<String, String> getDomainCommands() {
+    HashMap<String, String> commands = new HashMap<>();
+    commands.put("/domain claim", "Claims the chunk you're currently in.");
+    commands.put("/domain unclaim", "Unclaims the chunk you're currently in.");
+    commands.put("/domain list", "Lists all your claimed chunks.");
+    commands.put("/domain help", "The command you're looking at right now.");
+    return commands;
   }
 }
