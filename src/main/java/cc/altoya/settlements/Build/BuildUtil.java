@@ -431,12 +431,22 @@ public class BuildUtil {
     BuildUtil.generateBuildingFromBlueprint(player, nextBlueprintName);
   }
 
+  public static void sendChunkInfo(Player player, Chunk chunk){
+    ChatUtil.sendSuccessMessage(player, "Chunk X" + chunk.getX() + ":Y" + chunk.getZ() + " Information.");
+    String blueprintName = BuildUtil.getStructureBlueprintName(chunk);
+    ChatUtil.sendSuccessMessage(player, "Structure Blueprint: " + (blueprintName != null ? blueprintName : "N/A"));
+    String structureOwner = BuildUtil.getStructureOwner(chunk);
+    String ownerName = GeneralUtil.getPlayerNameFromStringUuid(structureOwner);
+    ChatUtil.sendSuccessMessage(player, "Structure Owner: " + (ownerName != null ? ownerName : "N/A"));
+  }
+
   public static HashMap<String, String> getBuildCommands() {
     HashMap<String, String> commands = new HashMap<>();
     commands.put("/build delete", "Deletes any structure within the chunk you are in.");
     commands.put("/build new {blueprintName}", "Generates a structure in the chunk you are in.");
     commands.put("/build refresh", "Deletes then builds the structure of the chunk you are in.");
     commands.put("/build collect", "Collects resources from the structure of the chunk you are in.");
+    commands.put("/build info", "Sends you information about the chunk you are in.");
     commands.put("/build plot",
         "Shows you where the bottom level of the structure will begin to generate to allow you to terraform.");
     commands.put("/build upgrade", "Upgrades your structure to the next level.");

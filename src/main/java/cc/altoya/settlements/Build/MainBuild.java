@@ -39,6 +39,8 @@ public class MainBuild implements CommandExecutor {
                 return CommandHire.handle((Player) sender, args);
             case "supply":
                 return CommandSupply.handle((Player) sender, args);
+            case "info":
+                return CommandInfo.handle((Player) sender, args);
             case "help":
                 return CommandHelp.handle((Player) sender, args);
         }
