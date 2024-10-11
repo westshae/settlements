@@ -6,45 +6,47 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class AllianceTabCompleter implements TabCompleter {
-
-    private final List<String> subCommands = Arrays.asList("create","delete","invite","kick","join", "leave","info","chat","help");
-
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (!(sender instanceof Player)) {
             return null;
         }
 
+        List<String> commandsUnformatted = List.copyOf(AllianceUtil.getAllianceCommands().keySet());
+
+        List<String[]> commands = new ArrayList<String[]>();
+
+        for(String commandUnformatted : commandsUnformatted){
+            commands.add(commandUnformatted.split(" "));
+        }
+
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
-            for (String subCommand : subCommands) {
-                if (subCommand.startsWith(args[0].toLowerCase())) {
-                    completions.add(subCommand);
+            for (String[] commandSplit : commands) {
+                if (commandSplit[1].toLowerCase().startsWith(args[0].toLowerCase())) {
+                    completions.add(commandSplit[1].toLowerCase());
                 }
             }
             return completions;
-        }else if (args.length == 2) {
-            String subCommand = args[0].toLowerCase();
-            switch (subCommand) {
-                case "create":
-                    completions.add("{allianceName}");
+        } else{
+            int commandIndex = -1;
+            int currentIndex = 0;
+            for (String[] commandSplit : commands) {
+                if(commandSplit[1].toLowerCase().equals(args[0].toLowerCase())){
+                    commandIndex = currentIndex;
                     break;
-                case "invite":
-                    completions.add("{username}");
-                    break;
-                case "join":
-                    completions.add("{allianceName}");
-                    break;
-                default:
-                    break;
+                }
+                currentIndex++;
             }
-            return completions;
-        }
 
+            if(args.length < commands.get(commandIndex).length){
+                completions.add(commands.get(commandIndex)[args.length]);
+                return completions;
+            }
+        }
         return null;
     }
 }

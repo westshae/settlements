@@ -16,12 +16,12 @@ public class CommandChat {
     }
 
     private static void toggleAllianceChat(Player player) {
-        if (!AllianceUtil.isPlayerInAlliance(player)) {
+        if (!AllianceUtil.isPlayerMember(player)) {
             ChatUtil.sendErrorMessage(player, "You must be in an alliance to run this command");
             return;
         }
 
-        AllianceUtil.setAllianceChatEnabled(player, !AllianceUtil.isAllianceChatEnabled(player));
-        ChatUtil.sendSuccessMessage(player, "Alliance chat has now been " + (AllianceUtil.isAllianceChatEnabled(player) ? "disabled." : "enabled."));
+        AllianceUtil.setChatEnabled(player, !AllianceUtil.isChatEnabled(player));
+        ChatUtil.sendSuccessMessage(player, "Alliance chat has now been " + (AllianceUtil.isChatEnabled(player) ? "disabled." : "enabled."));
     }
 }

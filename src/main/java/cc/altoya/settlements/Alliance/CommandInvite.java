@@ -19,7 +19,7 @@ public class CommandInvite {
 
     private static void invitePlayerToAlliance(Player allianceLeader, String inviteeName) {
 
-        if (!AllianceUtil.isPlayerInAlliance(allianceLeader)) {
+        if (!AllianceUtil.isPlayerMember(allianceLeader)) {
             ChatUtil.sendErrorMessage(allianceLeader, "You aren't in an alliance.");
             return;
         }
@@ -37,9 +37,10 @@ public class CommandInvite {
             ChatUtil.sendErrorMessage(allianceLeader, "You can't invite yourself.");
             return;
         }
-        AllianceUtil.invitePlayerToAlliance(allianceLeader, invitee);
+        String allianceName = AllianceUtil.getPlayerAllianceName(allianceLeader);
+        AllianceUtil.addInvite(allianceName, invitee);
         ChatUtil.sendSuccessMessage(allianceLeader, "Invite successfully sent.");
-        ChatUtil.sendSuccessMessage(invitee, "You've been invited to " + AllianceUtil.getPlayerAlliance(allianceLeader));
+        ChatUtil.sendSuccessMessage(invitee, "You've been invited to " + allianceName);
     }
 
 }

@@ -16,11 +16,11 @@ public class CommandJoin {
 
     private static void joinAlliance(Player player, String allianceName) {
 
-        if (AllianceUtil.isPlayerInAlliance(player)) {
+        if (AllianceUtil.isPlayerMember(player)) {
             ChatUtil.sendErrorMessage(player, "You are already in an alliance.");
             return;
         }
-        if (!AllianceUtil.doesAllianceExist(allianceName)) {
+        if (!AllianceUtil.exists(allianceName)) {
             ChatUtil.sendErrorMessage(player, "This alliance doesn't exist.");
             return;
         }
@@ -29,10 +29,10 @@ public class CommandJoin {
             return;
         }
 
-        AllianceUtil.acceptAllianceInvite(player, allianceName);
+        AllianceUtil.removeInvite(allianceName, player);
+        AllianceUtil.addMember(player, allianceName);
 
         ChatUtil.sendSuccessMessage(player, "You've joined the alliance.");
-        AllianceUtil.sendMessageToAlliance(allianceName, player.displayName() + " has joined the alliance.");
+        AllianceUtil.sendMessage(allianceName, player.displayName() + " has joined the alliance.");
     }
-
 }

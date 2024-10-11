@@ -20,13 +20,13 @@ public class CommandInfo {
     }
 
     private static void printAllianceInfo(Player player) {
-        if (!AllianceUtil.isPlayerInAlliance(player)) {
+        if (!AllianceUtil.isPlayerMember(player)) {
             ChatUtil.sendErrorMessage(player, "You must be in an alliance to run this command.");
             return;
         }
-        String allianceName = AllianceUtil.getPlayerAlliance(player);
+        String allianceName = AllianceUtil.getPlayerAllianceName(player);
         ChatUtil.sendSuccessMessage(player, allianceName + " info.");
-        List<String> alliancePlayers = AllianceUtil.getAlliancePlayers(allianceName);
+        List<String> alliancePlayers = AllianceUtil.getMembers(allianceName);
         alliancePlayers.forEach((playerUuid) -> {
             UUID uuid = UUID.fromString(playerUuid);
             Player currentPlayer = Bukkit.getPlayer(uuid);

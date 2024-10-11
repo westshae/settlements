@@ -16,7 +16,7 @@ public class CommandDelete {
     }
 
     private static void deleteAlliance(Player player) {
-        if (!AllianceUtil.isPlayerInAlliance(player)) {
+        if (!AllianceUtil.isPlayerMember(player)) {
             ChatUtil.sendErrorMessage(player, "You aren't in an alliance.");
             return;
         }
@@ -24,7 +24,7 @@ public class CommandDelete {
             ChatUtil.sendErrorMessage(player, "You aren't the leader of this alliance.");
             return;
         }
-        AllianceUtil.deleteAlliance(player);
+        AllianceUtil.delete(player);
         ChatUtil.sendSuccessMessage(player, "Alliance has been deleted.");
     }
 

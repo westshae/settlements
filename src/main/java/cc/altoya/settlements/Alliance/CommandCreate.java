@@ -16,16 +16,16 @@ public class CommandCreate {
     }
 
     private static void createAlliance(Player player, String allianceName) {
-        if (AllianceUtil.isPlayerInAlliance(player)) {
+        if (AllianceUtil.isPlayerMember(player)) {
             ChatUtil.sendErrorMessage(player, "You are already in an alliance.");
             return;
         }
-        if (AllianceUtil.doesAllianceExist(allianceName)) {
+        if (AllianceUtil.exists(allianceName)) {
             ChatUtil.sendErrorMessage(player, "This alliance already exists.");
             return;
         }
 
-        AllianceUtil.createAlliance(player, allianceName);
+        AllianceUtil.create(player, allianceName);
     
         ChatUtil.sendSuccessMessage(player, "Alliance successfully created.");
         return;

@@ -18,7 +18,7 @@ public class MainAlliance implements CommandExecutor{
         }
 
         if (args.length == 0) {
-            ChatUtil.sendErrorMessage((Player) sender, "Usage: /alliance <create|delete|invite|kick|join|leave|info|chat|help>");
+            ChatUtil.sendErrorMessage((Player) sender, "Requires more arguments. Use /alliance help");
             return true;
         }
 

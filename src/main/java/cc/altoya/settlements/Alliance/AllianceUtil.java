@@ -3,6 +3,7 @@ package cc.altoya.settlements.Alliance;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,39 +30,39 @@ public class AllianceUtil {
         }
     }
 
-    public static boolean isPlayerInAlliance(Player player) {
+    public static boolean isPlayerMember(Player player) {
         FileConfiguration domainConfig = DomainUtil.getDomainConfig();
         return domainConfig.contains("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance");
     }
 
-    public static boolean doesAllianceExist(String name) {
+    public static boolean exists(String name) {
         FileConfiguration allianceConfig = getAllianceConfig();
         return allianceConfig.contains("alliances." + name);
     }
 
-    public static String getPlayerAlliance(Player player) {
+    public static String getPlayerAllianceName(Player player) {
         FileConfiguration domainConfig = DomainUtil.getDomainConfig();
         return domainConfig.getString("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance");
     }
 
     public static boolean isPlayerOwner(Player player) {
         FileConfiguration allianceConfig = getAllianceConfig();
-        String allianceName = getPlayerAlliance(player);
+        String allianceName = getPlayerAllianceName(player);
         String allianceOwnerUuid = allianceConfig.getString("alliances." + allianceName + ".owner");
         return GeneralUtil.getKeyFromPlayer(player).equals(allianceOwnerUuid);
     }
 
-    public static boolean isAllianceChatEnabled(Player player) {
+    public static boolean isChatEnabled(Player player) {
         FileConfiguration domainConfig = DomainUtil.getDomainConfig();
 
         return domainConfig.getBoolean("domains." + player.getUniqueId().toString() + ".allianceChat");
     }
 
-    public static void setAllianceChatEnabled(Player player, boolean toggle) {
+    public static void setChatEnabled(Player player, boolean toggle) {
         FileConfiguration domainConfig = DomainUtil.getDomainConfig();
 
         domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".allianceChat",
-                !isAllianceChatEnabled(player));
+                !isChatEnabled(player));
         DomainUtil.saveDomainConfig(domainConfig);
     }
 
@@ -71,13 +72,13 @@ public class AllianceUtil {
         return invites.contains(GeneralUtil.getKeyFromPlayer(player));
     }
 
-    public static List<String> getAlliancePlayers(String allianceName) {
+    public static List<String> getMembers(String allianceName) {
         FileConfiguration allianceConfig = getAllianceConfig();
 
         return allianceConfig.getStringList("alliances." + allianceName + ".players");
     }
 
-    public static void createAlliance(Player player, String allianceName) {
+    public static void create(Player player, String allianceName) {
         FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
         FileConfiguration domainConfig = DomainUtil.getDomainConfig();
 
@@ -92,20 +93,18 @@ public class AllianceUtil {
         AllianceUtil.saveAllianceConfig(allianceConfig);
     }
 
-    public static void deleteAlliance(Player player){
+    public static void delete(Player player) {
         FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
         FileConfiguration domainConfig = DomainUtil.getDomainConfig();
 
-        allianceConfig.set("alliances." + AllianceUtil.getPlayerAlliance(player), null);
+        allianceConfig.set("alliances." + AllianceUtil.getPlayerAllianceName(player), null);
         domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance", null);
         AllianceUtil.saveAllianceConfig(allianceConfig);
         DomainUtil.saveDomainConfig(domainConfig);
     }
 
-    public static void invitePlayerToAlliance(Player allianceLeader, Player invitee){
+    public static void addInvite(String allianceName, Player invitee) {
         FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
-
-        String allianceName = AllianceUtil.getPlayerAlliance(allianceLeader);
 
         List<String> allianceInvites = allianceConfig.getStringList("alliances." + allianceName + ".invites");
         allianceInvites.add(GeneralUtil.getKeyFromPlayer(invitee));
@@ -114,28 +113,67 @@ public class AllianceUtil {
         AllianceUtil.saveAllianceConfig(allianceConfig);
     }
 
-    public static void acceptAllianceInvite(Player player, String allianceName){
+    public static void removeInvite(String allianceName, Player player) {
         FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
-        FileConfiguration domainConfig = DomainUtil.getDomainConfig();
+
         List<String> allianceInvites = allianceConfig.getStringList("alliances." + allianceName + ".invites");
         allianceInvites.removeIf((playerUuid) -> playerUuid.equals(GeneralUtil.getKeyFromPlayer(player)));
         allianceConfig.set("alliances." + allianceName + ".invites", allianceInvites);
 
+        saveAllianceConfig(allianceConfig);
+    }
+
+    public static void addMember(Player player, String allianceName) {
+        FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
+        FileConfiguration domainConfig = DomainUtil.getDomainConfig();
+
         List<String> alliancePlayers = allianceConfig.getStringList("alliances." + allianceName + ".players");
 
-        ChatUtil.sendSuccessMessage(player, "You've joined the alliance.");
-        alliancePlayers.forEach((playerUuid) -> {
-            ChatUtil.sendSuccessMessage(Bukkit.getPlayer(UUID.fromString(playerUuid)),
-                    player.displayName() + " has joined the alliance.");
-        });
-
         alliancePlayers.add(GeneralUtil.getKeyFromPlayer(player));
-        allianceConfig.set("alliances." + allianceName + ".players", alliancePlayers);
 
+        allianceConfig.set("alliances." + allianceName + ".players", alliancePlayers);
         domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance", allianceName);
 
         AllianceUtil.saveAllianceConfig(allianceConfig);
         DomainUtil.saveDomainConfig(domainConfig);
-
     }
+
+    public static void removeMember(Player player, String allianceName) {
+        FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
+        FileConfiguration domainConfig = DomainUtil.getDomainConfig();
+
+        List<String> alliancePlayers = allianceConfig.getStringList("alliances." + allianceName + ".players");
+        alliancePlayers.removeIf((playerUuid) -> playerUuid.equals(GeneralUtil.getKeyFromPlayer(player)));
+        allianceConfig.set("alliances." + allianceName + ".invites", alliancePlayers);
+
+        allianceConfig.set("alliances." + allianceName + ".players", alliancePlayers);
+        domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance", null);
+
+        AllianceUtil.saveAllianceConfig(allianceConfig);
+        DomainUtil.saveDomainConfig(domainConfig);
+    }
+
+    public static void sendMessage(String allianceName, String message) {
+        FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
+
+        List<String> alliancePlayers = allianceConfig.getStringList("alliances." + allianceName + ".players");
+
+        alliancePlayers.forEach((playerUuid) -> {
+            ChatUtil.sendSuccessMessage(Bukkit.getPlayer(UUID.fromString(playerUuid)), message);
+        });
+    }
+
+    public static HashMap<String, String> getAllianceCommands() {
+        HashMap<String, String> commands = new HashMap<>();
+        commands.put("/alliance create {allianceName}", "The first command to create an alliance.");
+        commands.put("/alliance delete", "The command to delete your alliance.");
+        commands.put("/alliance info", "Prints out information about the alliance. Eg players, name, wealth.");
+        commands.put("/alliance invite {username}", "Extends an invitation to the player specified.");
+        commands.put("/alliance join {allianceName}", "Allows you to join an alliance if you've been invited.");
+        commands.put("/alliance leave", "Allows you to leave your alliance.");
+        commands.put("/alliance help", "The command you're looking at right now.");
+
+        return commands;
+    }
+
 }
