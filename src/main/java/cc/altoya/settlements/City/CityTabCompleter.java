@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Domain;
+package cc.altoya.settlements.City;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DomainTabCompleter implements TabCompleter {
+public class CityTabCompleter implements TabCompleter {
     
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -16,7 +16,7 @@ public class DomainTabCompleter implements TabCompleter {
             return null;
         }
 
-        List<String> commandsUnformatted = List.copyOf(DomainUtil.getDomainCommands().keySet());
+        List<String> commandsUnformatted = List.copyOf(CityUtil.getDomainCommands().keySet());
 
         List<String[]> commands = new ArrayList<String[]>();
 

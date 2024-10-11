@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.City.CityUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -20,11 +21,11 @@ public class CommandInfo {
     }
 
     private static void printAllianceInfo(Player player) {
-        if (!AllianceUtil.isPlayerMember(player)) {
+        if (!CityUtil.isPlayerMember(player)) {
             ChatUtil.sendErrorMessage(player, "You must be in an alliance to run this command.");
             return;
         }
-        String allianceName = AllianceUtil.getPlayerAllianceName(player);
+        String allianceName = CityUtil.getPlayerAllianceName(player);
         ChatUtil.sendSuccessMessage(player, allianceName + " info.");
         List<String> alliancePlayers = AllianceUtil.getMembers(allianceName);
         alliancePlayers.forEach((playerUuid) -> {

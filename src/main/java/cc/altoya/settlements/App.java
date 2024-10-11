@@ -15,10 +15,10 @@ import cc.altoya.settlements.Build.EventBreakStructureBlock;
 import cc.altoya.settlements.Build.MainBuild;
 import cc.altoya.settlements.Build.ScheduledCleanUp;
 import cc.altoya.settlements.Build.ScheduledWorker;
-import cc.altoya.settlements.Domain.DomainTabCompleter;
-import cc.altoya.settlements.Domain.EventProtectBlocks;
-import cc.altoya.settlements.Domain.EventProtectEntities;
-import cc.altoya.settlements.Domain.MainDomain;
+import cc.altoya.settlements.City.CityTabCompleter;
+import cc.altoya.settlements.City.EventProtectBlocks;
+import cc.altoya.settlements.City.EventProtectEntities;
+import cc.altoya.settlements.City.MainCity;
 
 
 public class App extends JavaPlugin {
@@ -27,13 +27,13 @@ public class App extends JavaPlugin {
         initializeConfig();
 
         // Register commands
-        this.getCommand("domain").setExecutor(new MainDomain());
+        this.getCommand("city").setExecutor(new MainCity());
         this.getCommand("alliance").setExecutor(new MainAlliance());
         this.getCommand("build").setExecutor(new MainBuild());
         this.getCommand("blueprint").setExecutor(new MainBlueprint());
 
         //Register tab completers
-        this.getCommand("domain").setTabCompleter(new DomainTabCompleter());
+        this.getCommand("city").setTabCompleter(new CityTabCompleter());
         this.getCommand("alliance").setTabCompleter(new AllianceTabCompleter());
         this.getCommand("build").setTabCompleter(new BuildTabCompleter());
         this.getCommand("blueprint").setTabCompleter(new BlueprintTabCompleter());

@@ -2,6 +2,7 @@ package cc.altoya.settlements.Alliance;
 
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.City.CityUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -15,11 +16,11 @@ public class CommandLeave {
     }
 
     private static void leaveAlliance(Player player) {
-        if (!AllianceUtil.isPlayerMember(player)) {
+        if (!CityUtil.isPlayerMember(player)) {
             ChatUtil.sendErrorMessage(player, "You aren't in an alliance.");
             return;
         }
-        String playerAllianceName = AllianceUtil.getPlayerAllianceName(player);
+        String playerAllianceName = CityUtil.getPlayerAllianceName(player);
 
         AllianceUtil.removeMember(player, playerAllianceName);
 

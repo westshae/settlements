@@ -2,6 +2,7 @@ package cc.altoya.settlements.Alliance;
 
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.City.CityUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -16,7 +17,7 @@ public class CommandDelete {
     }
 
     private static void deleteAlliance(Player player) {
-        if (!AllianceUtil.isPlayerMember(player)) {
+        if (!CityUtil.isPlayerMember(player)) {
             ChatUtil.sendErrorMessage(player, "You aren't in an alliance.");
             return;
         }

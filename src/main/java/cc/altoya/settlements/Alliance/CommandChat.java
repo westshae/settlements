@@ -2,6 +2,7 @@ package cc.altoya.settlements.Alliance;
 
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.City.CityUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -16,12 +17,12 @@ public class CommandChat {
     }
 
     private static void toggleAllianceChat(Player player) {
-        if (!AllianceUtil.isPlayerMember(player)) {
+        if (!CityUtil.isPlayerMember(player)) {
             ChatUtil.sendErrorMessage(player, "You must be in an alliance to run this command");
             return;
         }
 
-        AllianceUtil.setChatEnabled(player, !AllianceUtil.isChatEnabled(player));
-        ChatUtil.sendSuccessMessage(player, "Alliance chat has now been " + (AllianceUtil.isChatEnabled(player) ? "disabled." : "enabled."));
+        CityUtil.setAllianceChatEnabled(player, !CityUtil.isChatEnabled(player));
+        ChatUtil.sendSuccessMessage(player, "Alliance chat has now been " + (CityUtil.isChatEnabled(player) ? "disabled." : "enabled."));
     }
 }

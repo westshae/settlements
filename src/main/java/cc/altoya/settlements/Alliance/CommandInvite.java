@@ -4,6 +4,7 @@ package cc.altoya.settlements.Alliance;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.City.CityUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -19,7 +20,7 @@ public class CommandInvite {
 
     private static void invitePlayerToAlliance(Player allianceLeader, String inviteeName) {
 
-        if (!AllianceUtil.isPlayerMember(allianceLeader)) {
+        if (!CityUtil.isPlayerMember(allianceLeader)) {
             ChatUtil.sendErrorMessage(allianceLeader, "You aren't in an alliance.");
             return;
         }
@@ -37,7 +38,7 @@ public class CommandInvite {
             ChatUtil.sendErrorMessage(allianceLeader, "You can't invite yourself.");
             return;
         }
-        String allianceName = AllianceUtil.getPlayerAllianceName(allianceLeader);
+        String allianceName = CityUtil.getPlayerAllianceName(allianceLeader);
         AllianceUtil.addInvite(allianceName, invitee);
         ChatUtil.sendSuccessMessage(allianceLeader, "Invite successfully sent.");
         ChatUtil.sendSuccessMessage(invitee, "You've been invited to " + allianceName);

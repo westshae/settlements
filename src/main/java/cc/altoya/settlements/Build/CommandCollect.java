@@ -5,7 +5,8 @@ import java.util.List;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import cc.altoya.settlements.Domain.DomainUtil;
+
+import cc.altoya.settlements.City.CityUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 import cc.altoya.settlements.Util.ItemUtil;
@@ -21,7 +22,7 @@ public class CommandCollect {
     }
 
     private static void collectResources(Player player, Chunk chunk) {
-        if (!DomainUtil.doesPlayerOwnChunk(player, chunk)) {
+        if (!CityUtil.doesPlayerOwnChunk(player, chunk)) {
             ChatUtil.sendErrorMessage(player, "You don't own this structure");
             return;
         }

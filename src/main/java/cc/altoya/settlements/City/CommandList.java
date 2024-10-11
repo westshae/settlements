@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Domain;
+package cc.altoya.settlements.City;
 
 import java.util.List;
 
@@ -17,9 +17,9 @@ public class CommandList {
     }
 
     private static void sendPlayerOwnedChunks(Player player){
-        List<String> chunks = DomainUtil.getPlayersChunks(player);
+        List<String> chunks = CityUtil.getPlayersChunks(player);
         if(chunks.size() == 0){
-            ChatUtil.sendErrorMessage(player, "No claimed chunks. Try using /domain claim");
+            ChatUtil.sendErrorMessage(player, "No claimed chunks. Try using /city claim");
             return;
         }
         ChatUtil.sendSuccessMessage(player, "Claimed Chunks:");

@@ -251,7 +251,6 @@ public class BuildUtil {
     commands.put("/build giveall {amount}", "Gives the executer x amount of all custom resources.");
     commands.put("/build transform", "Transforms the item in your hand to its custom version, if it exists.");
     commands.put("/build help", "The command you're looking at right now.");
-    commands.put("/build collectall", "/Build collect, for every single structure you own.");
     commands.put("/build supply",
         "Take the item in your hand, and supplies it to the structure of the chunk you're in.");
     return commands;

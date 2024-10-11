@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Domain;
+package cc.altoya.settlements.City;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -7,10 +7,10 @@ import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Util.ChatUtil;
 
-public class MainDomain implements CommandExecutor {
+public class MainCity implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase("domain")) {
+        if (!command.getName().equalsIgnoreCase("city")) {
             return true;
         }
         if (!(sender instanceof Player)) {
@@ -18,7 +18,7 @@ public class MainDomain implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            ChatUtil.sendErrorMessage((Player) sender, "Usage: /domain <claim|unclaim|list|help>");
+            ChatUtil.sendErrorMessage((Player) sender, "Requires more arguments. Use /city help");
             return true;
         }
 
@@ -29,6 +29,8 @@ public class MainDomain implements CommandExecutor {
                 return CommandUnclaim.handle((Player) sender, args);
             case "list":
                 return CommandList.handle((Player) sender, args);
+            case "collectall":
+                return CommandCollectAll.handle((Player) sender, args);
             case "help":
                 return CommandHelp.handle((Player) sender, args);
         }

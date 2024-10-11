@@ -11,8 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
-import cc.altoya.settlements.Domain.CommandClaim;
-import cc.altoya.settlements.Domain.DomainUtil;
+import cc.altoya.settlements.City.CityUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 import cc.altoya.settlements.Util.ItemUtil;
@@ -42,12 +41,12 @@ public class CommandNew {
       ChatUtil.sendErrorMessage(player, "This chunk is already a structure");
       return false;
     }
-    if (DomainUtil.isChunkClaimed(chunk) && !DomainUtil.doesPlayerOwnChunk(player, chunk)) {
+    if (CityUtil.isChunkClaimed(chunk) && !CityUtil.doesPlayerOwnChunk(player, chunk)) {
       ChatUtil.sendErrorMessage(player, "This chunk is owned by someone else.");
       return false;
     }
-    if (!DomainUtil.isChunkClaimed(chunk)) {
-      CommandClaim.addPlayerChunk(player, chunk);
+    if (!CityUtil.isChunkClaimed(chunk)) {
+      CityUtil.claimChunk(player, chunk);
     }
     return true;
   }

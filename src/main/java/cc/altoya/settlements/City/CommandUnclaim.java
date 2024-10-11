@@ -1,9 +1,6 @@
-package cc.altoya.settlements.Domain;
-
-import java.util.List;
+package cc.altoya.settlements.City;
 
 import org.bukkit.Chunk;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Build.BuildUtil;
@@ -20,12 +17,11 @@ public class CommandUnclaim {
   }
 
   private static void removePlayerChunk(Player player, Chunk chunk) {
-    FileConfiguration config = DomainUtil.getDomainConfig();
-    if (!DomainUtil.isChunkClaimed(chunk)) {
+    if (!CityUtil.isChunkClaimed(chunk)) {
       ChatUtil.sendErrorMessage(player, "This chunk isn't claimed.");
       return;
     }
-    if (!DomainUtil.doesPlayerOwnChunk(player, chunk)) {
+    if (!CityUtil.doesPlayerOwnChunk(player, chunk)) {
       ChatUtil.sendErrorMessage(player, "You aren't the owner of this claim.");
       return;
     }
@@ -33,13 +29,8 @@ public class CommandUnclaim {
       ChatUtil.sendErrorMessage(player, "This chunk is a structure, remove it first before unclaiming.");
       return;
     }
-    config.set("domains.claimed_tiles." + GeneralUtil.getKeyFromChunk(chunk), null);
-    String playerPath = "domains." + GeneralUtil.getKeyFromPlayer(player) + ".claims";
-    List<String> claims = config.getStringList(playerPath);
-    claims.removeIf(claim -> claim.equals(GeneralUtil.getKeyFromChunk(chunk)));
-    config.set(playerPath, claims);
 
-    DomainUtil.saveDomainConfig(config);
+    CityUtil.unclaimChunk(player, chunk);
     ChatUtil.sendSuccessMessage(player, "Claim unclaimed.");
   }
 

@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Build;
+package cc.altoya.settlements.City;
 
 import java.util.List;
 
@@ -6,6 +6,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.Build.BuildUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 import cc.altoya.settlements.Util.ItemUtil;

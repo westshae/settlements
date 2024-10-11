@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Domain;
+package cc.altoya.settlements.City;
 
 import org.bukkit.Chunk;
 import org.bukkit.entity.EntityType;
@@ -15,10 +15,10 @@ public class EventProtectEntities implements Listener {
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Chunk chunk = event.getRightClicked().getLocation().getChunk();
         Player player = event.getPlayer();
-        if (!DomainUtil.isChunkClaimed(chunk)) {
+        if (!CityUtil.isChunkClaimed(chunk)) {
             return;
         }
-        if (!DomainUtil.doesPlayerOwnChunk(player, chunk)) {
+        if (!CityUtil.doesPlayerOwnChunk(player, chunk)) {
             ChatUtil.sendErrorMessage(player, "This chunk is claimed, and you don't have access.");
             event.setCancelled(true);
             return;
@@ -33,7 +33,7 @@ public class EventProtectEntities implements Listener {
         }
 
 
-        if (!DomainUtil.isChunkClaimed(chunk)) {
+        if (!CityUtil.isChunkClaimed(chunk)) {
             return;
         }
         Player player = (Player) event.getDamager();
@@ -42,7 +42,7 @@ public class EventProtectEntities implements Listener {
             event.setCancelled(true);
             return;
         }
-        if (!DomainUtil.doesPlayerOwnChunk(player, chunk)) {
+        if (!CityUtil.doesPlayerOwnChunk(player, chunk)) {
             ChatUtil.sendErrorMessage(player, "This chunk is claimed, and you don't have access.");
             event.setCancelled(true);
             return;

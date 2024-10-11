@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.City.CommandCollectAll;
 import cc.altoya.settlements.Util.ChatUtil;
 
 public class MainBuild implements CommandExecutor {
@@ -41,8 +42,6 @@ public class MainBuild implements CommandExecutor {
                 return CommandGiveAll.handle((Player) sender, args);
             case "transform":
                 return CommandTransform.handle((Player) sender, args);
-            case "collectall":
-                return CommandCollectAll.handle((Player) sender, args);
             case "supply":
                 return CommandSupply.handle((Player) sender, args);
             case "help":

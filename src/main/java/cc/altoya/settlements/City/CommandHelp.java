@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Domain;
+package cc.altoya.settlements.City;
 
 import org.bukkit.entity.Player;
 
@@ -16,6 +16,6 @@ public class CommandHelp {
     }
 
     private static void help(Player player) {
-        ChatUtil.sendCommandHelpMessage(player, "/domain", DomainUtil.getDomainCommands());
+        ChatUtil.sendCommandHelpMessage(player, "/domain", CityUtil.getDomainCommands());
     }
 }
