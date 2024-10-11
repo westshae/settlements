@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.ConfigurationSection;
@@ -35,12 +36,12 @@ public class BlueprintUtil {
         }
     }
 
-    public static void sendPlayerBlueprintList(Player player){
+    public static void sendPlayerBlueprintList(Player player) {
         FileConfiguration config = getBlueprintConfig();
 
         ChatUtil.sendSuccessMessage(player, "Available Blueprints: ");
         List<String> blueprintNames = List.copyOf(config.getKeys(false));
-        for(String blueprintName : blueprintNames){
+        for (String blueprintName : blueprintNames) {
             ChatUtil.sendSuccessMessage(player, blueprintName);
         }
     }
@@ -243,14 +244,14 @@ public class BlueprintUtil {
         BlueprintUtil.saveBlueprintConfig(config);
     }
 
-    public static Block getFirstBlock(String blueprintName){
+    public static Block getFirstBlock(String blueprintName) {
         FileConfiguration config = BlueprintUtil.getBlueprintConfig();
 
         String firstPointKey = config.getString("blueprints." + blueprintName + ".first");
         return BlueprintUtil.turnStringIntoBlock(firstPointKey);
     }
 
-    public static Block getSecondBlock(String blueprintName){
+    public static Block getSecondBlock(String blueprintName) {
         FileConfiguration config = BlueprintUtil.getBlueprintConfig();
 
         String secondPointKey = config.getString("blueprints." + blueprintName + ".second");
@@ -262,7 +263,6 @@ public class BlueprintUtil {
 
         Block firstBlock = getFirstBlock(blueprintName);
         Block secondBlock = getSecondBlock(blueprintName);
-
 
         int x1 = firstBlock.getX();
         int y1 = firstBlock.getY();
@@ -299,14 +299,14 @@ public class BlueprintUtil {
         BlueprintUtil.saveBlueprintConfig(config);
     }
 
-    public static void teleportPlayerToBlueprint(Player player, String blueprintName){
+    public static void teleportPlayerToBlueprint(Player player, String blueprintName) {
         Block firstBlock = getFirstBlock(blueprintName);
 
         Location teleportLocation = firstBlock.getLocation().clone().add(0, 2, 0);
         player.teleport(teleportLocation);
     }
 
-    public static void createUpgradeBlueprint(Player player, String blueprintName, int version){
+    public static void createUpgradeBlueprint(Player player, String blueprintName, int version) {
         String currentBlueprintName = blueprintName + "v" + version;
 
         FileConfiguration config = BlueprintUtil.getBlueprintConfig();
@@ -318,7 +318,7 @@ public class BlueprintUtil {
         BuildUtil.generateBuildingFromBlueprint(player, currentBlueprintName);
     }
 
-    public static ConfigurationSection getBlueprintCosts(String blueprintName){
+    public static ConfigurationSection getBlueprintCosts(String blueprintName) {
         FileConfiguration blueprintConfig = getBlueprintConfig();
         return blueprintConfig.getConfigurationSection("blueprints." + blueprintName + ".cost");
     }

@@ -31,11 +31,8 @@ public class ScheduledCleanUp {
         }
 
         for (String key : chunkKeys) {
-          String blockString = buildsConfig.getString("builds." + key + ".first");
-          Block block = BlueprintUtil.turnStringIntoBlock(blockString);
-          Chunk chunk = block.getLocation().getChunk();
-
-          String blueprintName = BuildUtil.getStructureBlueprintName(chunk);
+          String blueprintName = BuildUtil.getStructureBlueprintName(GeneralUtil.getChunkFromKey(key));
+          Block firstBlock = BlueprintUtil.getFirstBlock(blueprintName);
 
           if (!BlueprintUtil.doesBlueprintExist(blueprintName)) {
             return;
@@ -43,13 +40,10 @@ public class ScheduledCleanUp {
 
           FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
 
-          String buildFirstKey = buildsConfig.getString("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".first");
-          Block buildFirstBlock = BlueprintUtil.turnStringIntoBlock(buildFirstKey);
-
           List<String> resourceBlocks = blueprintConfig
               .getStringList("blueprints." + blueprintName + ".resourceBlocks");
 
-          BuildUtil.placeBlocksFromStringList(resourceBlocks, buildFirstBlock);
+          BuildUtil.placeBlocksFromStringList(resourceBlocks, firstBlock);
         }
       }
     };
