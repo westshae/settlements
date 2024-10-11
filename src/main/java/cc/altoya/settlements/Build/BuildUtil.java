@@ -174,16 +174,13 @@ public class BuildUtil {
           index++;
         }
 
-        // If there are more blocks to process, schedule the next run after a brief
-        // pause
         if (index < blocks.size()) {
-          // Pause for 1 tick (50 milliseconds) to allow server to process other tasks
-          this.runTaskLater(GeneralUtil.getPlugin(), 1); // Replace MyPlugin with your plugin instance class
+          this.runTaskLater(GeneralUtil.getPlugin(), 1);
         } else {
-          this.cancel(); // Stop the runnable if all blocks have been processed
+          this.cancel();
         }
       }
-    }.runTaskTimer(GeneralUtil.getPlugin(), 0, 1); // Start immediately and run every tick
+    }.runTaskTimer(GeneralUtil.getPlugin(), 0, 1);
 
   }
 
@@ -192,17 +189,12 @@ public class BuildUtil {
     List<String> playerBuilds = new ArrayList<>();
     UUID playerUUID = player.getUniqueId();
 
-    // Get all keys under "builds"
     Set<String> buildsKeys = config.getConfigurationSection("builds").getKeys(false);
 
-    // Iterate through each build key
     for (String key : buildsKeys) {
-      // Get the owner's UUID as a string
       String ownerUUIDString = config.getString("builds." + key + ".owner");
 
-      // Check if the owner matches the player's UUID
       if (ownerUUIDString != null && ownerUUIDString.equals(playerUUID.toString())) {
-        // Add the key to the list if it matches
         playerBuilds.add(key);
       }
     }
@@ -236,13 +228,13 @@ public class BuildUtil {
             ChatUtil.sendErrorMessage(player, "Use /build plot to see the outline. Clear between Y=" + minY + " and Y="
                 + maxY + " within the particles.");
 
-            return false; // Found a block that is not air
+            return false;
           }
         }
       }
     }
 
-    return true; // All blocks in the area are air
+    return true;
   }
 
 }

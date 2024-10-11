@@ -11,7 +11,7 @@ import java.util.List;
 
 public class BlueprintTabCompleter implements TabCompleter {
 
-    private final List<String> subCommands = Arrays.asList("create", "first", "second", "save", "upgrade", "housing",
+    private final List<String> subCommands = Arrays.asList("create", "first", "second", "dupe", "save", "upgrade", "housing",
             "cost", "teleport", "help");
 
     @Override

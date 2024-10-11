@@ -12,18 +12,19 @@ public class CommandUpgrade {
                 "/build upgrade")) {
             return true;
         }
-        setupStructureUpgrade(sender);
+        Chunk chunk = sender.getLocation().getChunk();
+        String currentBlueprintName = BuildUtil.getStructureBlueprintName(chunk);
+        String nextBlueprintName = BlueprintUtil.getUpgradedBlueprintName(currentBlueprintName);
+
+        if (!CommandNew.takePlayerCosts(sender, nextBlueprintName)) {
+            return true;
+        }
+        setupStructureUpgrade(sender, nextBlueprintName);
         return true;
     }
 
-    public static void setupStructureUpgrade(Player player) {
+    public static void setupStructureUpgrade(Player player, String nextBlueprintName) {
         Chunk chunk = player.getLocation().getChunk();
-
-        String currentBlueprintName = BuildUtil.getStructureBlueprintName(chunk);
-        Integer currentVersion = BlueprintUtil.getVersion(currentBlueprintName);
-
-        String nextBlueprintName = currentBlueprintName + "v" + Integer.toString(currentVersion + 1);
-
         BuildUtil.setBlueprintName(chunk, player, nextBlueprintName);
         CommandDelete.deleteStructure(player);
         CommandNew.generateBuildingFromBlueprint(player, nextBlueprintName);

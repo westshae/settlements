@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import cc.altoya.settlements.Build.BuildUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
 public class BlueprintUtil {
@@ -140,5 +141,19 @@ public class BlueprintUtil {
             firstBlock.getY() + offsetY,
             firstBlock.getZ() + offsetZ);
         return newSecondBlockLocation.getBlock();
+    }
+
+    public static String getUpgradedBlueprintName(String originalBlueStringName){
+        Integer currentVersion = BlueprintUtil.getVersion(originalBlueStringName);
+
+        int lastIndexOfV = originalBlueStringName.lastIndexOf('v');
+        
+        // If 'V' is found, get the substring up to and including the last 'V'
+        if (lastIndexOfV != -1) {
+
+            originalBlueStringName = originalBlueStringName.substring(0, lastIndexOfV + 1);
+        }
+
+        return originalBlueStringName + "v" + Integer.toString(currentVersion + 1);
     }
 }
