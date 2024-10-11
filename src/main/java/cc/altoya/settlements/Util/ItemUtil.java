@@ -15,6 +15,7 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.HashMap;
 import java.util.List;
 
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatColor;
 
 public class ItemUtil {
@@ -46,16 +47,15 @@ public class ItemUtil {
     PersistentDataContainer data = meta.getPersistentDataContainer();
 
     // Set item meta properties
-    meta.setDisplayName("" + ChatColor.YELLOW + ChatColor.MAGIC + "O" + ChatColor.RESET + ChatColor.YELLOW
-        + ChatColor.BOLD + formatItemId(material.toString()) + ChatColor.RESET + ChatColor.YELLOW + ChatColor.MAGIC + "O");
+    meta.displayName(Component.text("" + ChatColor.YELLOW + ChatColor.MAGIC + "O" + ChatColor.RESET + ChatColor.YELLOW
+        + ChatColor.BOLD + formatItemId(material.toString()) + ChatColor.RESET + ChatColor.YELLOW + ChatColor.MAGIC + "O"));
     meta.addEnchant(Enchantment.UNBREAKING, 1, true);
     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
     data.set(key, PersistentDataType.STRING, material.toString());
-    meta.setLore(
-        List.of(
-            getMaterialLore(material),
-            "",
-            "" + ChatColor.GRAY + ChatColor.BOLD + "Resource Item"));
+    meta.lore(List.of(
+      Component.text(getMaterialLore(material)),
+      Component.text(""),
+      Component.text("" + ChatColor.GRAY + ChatColor.BOLD + "Resource Item")));
     item.setItemMeta(meta);
 
     // Check for available space in the player's inventory

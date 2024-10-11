@@ -30,7 +30,7 @@ public class CommandInfo {
         alliancePlayers.forEach((playerUuid) -> {
             UUID uuid = UUID.fromString(playerUuid);
             Player currentPlayer = Bukkit.getPlayer(uuid);
-            ChatUtil.sendSuccessMessage(player, currentPlayer.getDisplayName());
+            ChatUtil.sendSuccessMessage(player, currentPlayer.displayName().toString());
         });
     }
 

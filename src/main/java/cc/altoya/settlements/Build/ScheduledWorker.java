@@ -22,7 +22,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.joml.Random;
 
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
-import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
 public class ScheduledWorker {

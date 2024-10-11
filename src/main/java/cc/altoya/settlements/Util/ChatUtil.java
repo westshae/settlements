@@ -4,9 +4,8 @@ import java.util.Map;
 
 import org.bukkit.entity.Player;
 
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 
 public class ChatUtil {
   private static String getBoxedString(String middleText, ChatColor color){
@@ -23,24 +22,24 @@ public class ChatUtil {
 
 
   public static void sendErrorMessage(Player player, String message) {
-    player.sendMessage(formatErrorMessage(message));
+    player.sendMessage(Component.text(formatErrorMessage(message)));
   }
 
   public static void sendErrorBar(Player player, String message){
-    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(formatErrorMessage(message)));
+    player.sendActionBar(Component.text(formatErrorMessage(message)));
   }
 
   public static void sendSuccessMessage(Player player, String message) {
-    player.sendMessage(formatSuccessMessage(message));
+    player.sendMessage(Component.text(formatSuccessMessage(message)));
   }
 
   public static void sendSuccessBar(Player player, String message){
-    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(formatSuccessMessage(message)));
+    player.sendActionBar(Component.text(formatSuccessMessage(message)));
   }
 
   public static void sendAllianceMessage(Player player, String allianceName, String message) {
     String formattedMessage =  getBoxedString(allianceName, ChatColor.AQUA) + ChatColor.AQUA + message;
-    player.sendMessage(formattedMessage);
+    player.sendMessage(Component.text(formattedMessage));
   }
 
   public static void sendCommandHelpMessage(Player player, String command, Map<String, String> commands) {

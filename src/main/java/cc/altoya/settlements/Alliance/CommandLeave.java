@@ -38,7 +38,7 @@ public class CommandLeave {
         ChatUtil.sendSuccessMessage(player, "You've left the alliance.");
         alliancePlayers.forEach((playerUuid) -> {
             ChatUtil.sendSuccessMessage(Bukkit.getPlayer(UUID.fromString(playerUuid)),
-                    player.getDisplayName() + " has left the alliance.");
+                    player.displayName() + " has left the alliance.");
         });
         domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance", null);
 

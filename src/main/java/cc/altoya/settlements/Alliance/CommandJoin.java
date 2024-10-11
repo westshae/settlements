@@ -46,7 +46,7 @@ public class CommandJoin {
         ChatUtil.sendSuccessMessage(player, "You've joined the alliance.");
         alliancePlayers.forEach((playerUuid) -> {
             ChatUtil.sendSuccessMessage(Bukkit.getPlayer(UUID.fromString(playerUuid)),
-                    player.getDisplayName() + " has joined the alliance.");
+                    player.displayName() + " has joined the alliance.");
         });
 
         alliancePlayers.add(GeneralUtil.getKeyFromPlayer(player));

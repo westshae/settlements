@@ -1,9 +1,6 @@
 package cc.altoya.settlements.Build;
 
-import java.util.List;
-
 import org.bukkit.Chunk;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -51,7 +48,6 @@ public class CommandSupply {
       ChatUtil.sendErrorMessage(player, "This isn't a server-resource.");
       return;
     }
-    Integer currentSupplies = BuildUtil.getSuppliesFromStructure(chunk, item.getType());
     BuildUtil.editSupplies(player, chunk, item.getType(), amountToSupply);
     ChatUtil.sendSuccessMessage(player,
         "You put " + amountToSupply + " of " + item.getType() + " into the chest.");
