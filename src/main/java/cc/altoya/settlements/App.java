@@ -12,6 +12,7 @@ import cc.altoya.settlements.Blueprint.MainBlueprint;
 import cc.altoya.settlements.Build.BuildTabCompleter;
 import cc.altoya.settlements.Build.EventInteractStructure;
 import cc.altoya.settlements.Build.EventBreakStructureBlock;
+import cc.altoya.settlements.Build.EventEnterStructureChunk;
 import cc.altoya.settlements.Build.MainBuild;
 import cc.altoya.settlements.Build.ScheduledCleanUp;
 import cc.altoya.settlements.Build.ScheduledWorker;
@@ -50,6 +51,7 @@ public class App extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EventBreakStructureBlock(), this);
         this.getServer().getPluginManager().registerEvents(new EventInteractStructure(), this);
         this.getServer().getPluginManager().registerEvents(new EventGriefPrevention(), this);
+        this.getServer().getPluginManager().registerEvents(new EventEnterStructureChunk(), this);
 
         //Register runnables
         this.getServer().getScheduler().runTaskTimer(this, ScheduledWorker.getRunnable(), 200L, 100L);//Wait 200 ticks (10s) then run every 100 ticks (5s)

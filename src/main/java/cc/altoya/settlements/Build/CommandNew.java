@@ -49,12 +49,14 @@ public class CommandNew {
 
     ConfigurationSection costs = BlueprintUtil.getBlueprintCosts(blueprintName);
 
-    if (!ItemUtil.hasCosts(player, costs)) {
+    if (costs != null && !ItemUtil.hasCosts(player, costs)) {
       ChatUtil.sendErrorMessage(player, "You're missing the resources required for this structure.");
       return;
     }
 
-    ItemUtil.removeItems(player, costs);
+    if(costs != null){
+      ItemUtil.removeItems(player, costs);
+    }
 
     BuildUtil.setBuildConfig(player, blueprintName);
 
