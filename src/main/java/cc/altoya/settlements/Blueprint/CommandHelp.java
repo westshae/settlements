@@ -28,7 +28,7 @@ public class CommandHelp {
                 "Gets all blocks between the first/second point, then converts each block to a string form for future generation.",
                 "/blueprint dupe {blueprintName}",
                 "Places down all the blocks from the blueprint specified, without any data, to be used for a new blueprint.",
-                "/blueprint upgrade {baseBlueprintName}",
+                "/blueprint upgrade {baseBlueprintName} {version}",
                 "Creates a new blueprint named {original}v{version#}, with a version of {version#}, and creates a dupe of the previous blueprint.",
                 "/blueprint delete {blueprintName}",
                 "Deletes the blueprint provided.",

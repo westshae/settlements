@@ -75,6 +75,9 @@ public class BlueprintTabCompleter implements TabCompleter {
                 case "cost":
                     completions.add("{amount}");
                     break;
+                case "upgrade":
+                    completions.add("{version}");
+                    break;
 
                 default:
                     break;
