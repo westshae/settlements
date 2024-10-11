@@ -5,6 +5,8 @@ import org.bukkit.entity.Enderman;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFormEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 
 public class EventGriefPrevention implements Listener {
@@ -29,4 +31,16 @@ public class EventGriefPrevention implements Listener {
       event.setCancelled(true);
     }
   }
+
+  @EventHandler
+  public void onMobSpawn(CreatureSpawnEvent event) {
+    if (!CityUtil.isChunkClaimed(event.getLocation().getChunk())) {
+      return;
+    }
+
+    if (event.getSpawnReason() == SpawnReason.NATURAL) {
+      event.setCancelled(true);
+    }
+  }
+
 }
