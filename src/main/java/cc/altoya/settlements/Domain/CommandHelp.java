@@ -1,6 +1,6 @@
 package cc.altoya.settlements.Domain;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
@@ -17,13 +17,12 @@ public class CommandHelp {
         return true;
     }
 
-    private static void help(Player player){
-        Map<String, String> commands = Map.of(
-            "/domain claim", "Claims the chunk you're currently in.",
-            "/domain unclaim", "Unclaims the chunk you're currently in.",
-            "/domain list", "Lists all your claimed chunks.",
-            "/domain help", "The command you're looking at right now."
-        );
+    private static void help(Player player) {
+        HashMap<String, String> commands = new HashMap<>();
+        commands.put("/domain claim", "Claims the chunk you're currently in.");
+        commands.put("/domain unclaim", "Unclaims the chunk you're currently in.");
+        commands.put("/domain list", "Lists all your claimed chunks.");
+        commands.put("/domain help", "The command you're looking at right now.");
 
         ChatUtil.sendCommandHelpMessage(player, "/domain", commands);
     }

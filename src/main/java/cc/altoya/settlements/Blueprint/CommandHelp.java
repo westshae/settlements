@@ -1,6 +1,6 @@
 package cc.altoya.settlements.Blueprint;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
@@ -18,27 +18,24 @@ public class CommandHelp {
     }
 
     private static void help(Player player) {
-        Map<String, String> commands = Map.of(
-                "/blueprint create {blueprintName}", "The first command to create a blueprint.",
-                "/blueprint first {blueprintName}",
-                "Sets the blueprints chunk [0, ~, 0] point based on the block you're looking at.",
-                "/blueprint second {blueprintName}",
-                "Sets the blueprints chunk [15, ~, 15] point based on the block you're looking at.",
-                "/blueprint save {blueprintName}",
-                "Gets all blocks between the first/second point, then converts each block to a string form for future generation.",
-                "/blueprint dupe {blueprintName}",
-                "Places down all the blocks from the blueprint specified, without any data, to be used for a new blueprint.",
-                "/blueprint upgrade {baseBlueprintName} {version}",
-                "Creates a new blueprint named {original}v{version#}, with a version of {version#}, and creates a dupe of the previous blueprint.",
-                "/blueprint delete {blueprintName}",
-                "Deletes the blueprint provided.",
-                "/blueprint housing {blueprintName} {amount}",
-                "Sets the blueprints housing count.",
-                "/blueprint cost {blueprintName} {amount}",
-                "Sets the blueprints resource cost for the item you are holding.",
-                "/blueprint help", "The command you're looking at right now");
-        commands.put("/blueprint teleport {blueprintName}", "Teleports you to the blueprint's firstblock");
-
+        HashMap<String, String> commands = new HashMap<>();
+        commands.put("/blueprint create {blueprintName}", "The first command to create a blueprint.");
+        commands.put("/blueprint first {blueprintName}",
+                "Sets the blueprint's chunk [0, ~, 0] point based on the block you're looking at.");
+        commands.put("/blueprint second {blueprintName}",
+                "Sets the blueprint's chunk [15, ~, 15] point based on the block you're looking at.");
+        commands.put("/blueprint save {blueprintName}",
+                "Gets all blocks between the first/second point, then converts each block to a string form for future generation.");
+        commands.put("/blueprint dupe {blueprintName}",
+                "Places down all the blocks from the blueprint specified, without any data, to be used for a new blueprint.");
+        commands.put("/blueprint upgrade {baseBlueprintName} {version}",
+                "Creates a new blueprint named {original}v{version}, and creates a dupe of the previous blueprint.");
+        commands.put("/blueprint delete {blueprintName}", "Deletes the blueprint provided.");
+        commands.put("/blueprint housing {blueprintName} {amount}", "Sets the blueprint's housing count.");
+        commands.put("/blueprint cost {blueprintName} {amount}",
+                "Sets the blueprint's resource cost for the item you are holding.");
+        commands.put("/blueprint help", "The command you're looking at right now.");
+        commands.put("/blueprint teleport {blueprintName}", "Teleports you to the blueprint's firstblock.");
         ChatUtil.sendCommandHelpMessage(player, "/blueprint", commands);
     }
 }
