@@ -3,16 +3,12 @@ package cc.altoya.settlements.Build;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import cc.altoya.settlements.Util.ChatUtil;
@@ -48,8 +44,6 @@ public class EventInteractStructure implements Listener {
                 break;
             case STONE_BUTTON:
                 handleInteractables(event, block, player, Material.COAL, serverCalled);
-                break;
-            case CHEST:
                 break;
             default:
                 if (!serverCalled) {
@@ -92,29 +86,5 @@ public class EventInteractStructure implements Listener {
             }
         }.runTaskLater(GeneralUtil.getPlugin(), 100L);
 
-    }
-
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
-        Chunk chestChunk = event.getInventory().getLocation().getBlock().getChunk();
-        if (!BuildUtil.isChunkStructure(chestChunk)) {
-            return;
-        }
-
-        if (event.getInventory().getType() == InventoryType.CHEST) {
-            Player player = (Player) event.getWhoClicked();
-            ItemStack item = event.getCurrentItem();
-
-            if (!BuildUtil.isValidSupplyType(item.getType())) {
-                ChatUtil.sendErrorMessage(player, "This isn't a valid supplies type.");
-                return;
-            }
-
-            BuildUtil.editSupplies(player, chestChunk, item.getType(), item.getAmount());
-            ChatUtil.sendSuccessMessage(player,
-                    "You put " + item.getAmount() + " of " + item.getType() + " into the chest.");
-            item.setAmount(0);
-
-        }
     }
 }
