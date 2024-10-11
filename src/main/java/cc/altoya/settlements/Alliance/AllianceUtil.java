@@ -2,6 +2,7 @@ package cc.altoya.settlements.Alliance;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -54,10 +55,11 @@ public class AllianceUtil {
         return domainConfig.getBoolean("domains." + player.getUniqueId().toString() + ".allianceChat");
     }
 
-    public static void setAllianceChatEnabled(Player player, boolean toggle){
+    public static void setAllianceChatEnabled(Player player, boolean toggle) {
         FileConfiguration domainConfig = DomainUtil.getDomainConfig();
 
-        domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".allianceChat", !isAllianceChatEnabled(player));
+        domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".allianceChat",
+                !isAllianceChatEnabled(player));
         DomainUtil.saveDomainConfig(domainConfig);
     }
 
@@ -71,5 +73,21 @@ public class AllianceUtil {
         FileConfiguration allianceConfig = getAllianceConfig();
 
         return allianceConfig.getStringList("alliances." + allianceName + ".players");
+    }
+
+    public static void createAlliance(Player player, String allianceName) {
+        FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
+        FileConfiguration domainConfig = DomainUtil.getDomainConfig();
+
+        domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance", allianceName);
+        allianceConfig.set("alliances." + allianceName + ".owner", GeneralUtil.getKeyFromPlayer(player));
+        List<String> alliancePlayers = new ArrayList<>();
+        alliancePlayers.add(GeneralUtil.getKeyFromPlayer(player));
+        allianceConfig.set("alliances." + allianceName + ".players", alliancePlayers);
+        allianceConfig.set("alliances." + allianceName + ".allianceChat", false);
+
+        DomainUtil.saveDomainConfig(domainConfig);
+        AllianceUtil.saveAllianceConfig(allianceConfig);
+
     }
 }
