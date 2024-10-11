@@ -5,11 +5,10 @@ api-version: 1.21.1
 description: Settlements plugin
 
 commands:
-  domain:
+  city:
     description: Domains
-    usage: /domain {subcommand} {var}
-    tab-completer: cc.altoya.settlements.Domain.DomainTabCompleter
-
+    usage: /city {subcommand} {var}
+    tab-completer: cc.altoya.settlements.City.CityTabCompleter
   alliance:
     description: Alliances
     usage: /alliance {subcommand} {var}
@@ -22,3 +21,7 @@ commands:
     description: Blueprint
     usage: /blueprint {subcommand} {var}
     tab-completer: cc.altoya.settlements.Blueprint.BlueprintTabCompleter
+  item:
+    description: Items
+    usage: /item {subcommand} {var}
+    tab-completer: cc.altoya.settlements.Item.ItemTabCompleter

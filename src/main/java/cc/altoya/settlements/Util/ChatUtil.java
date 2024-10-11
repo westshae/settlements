@@ -38,12 +38,12 @@ public class ChatUtil {
   }
 
   public static void sendAllianceMessage(Player player, String allianceName, String message) {
-    String formattedMessage =  getBoxedString(allianceName, ChatColor.AQUA) + ChatColor.AQUA + message;
+    String formattedMessage = getBoxedString(allianceName, ChatColor.AQUA) + ChatColor.AQUA + message;
     player.sendMessage(Component.text(formattedMessage));
   }
 
   public static void sendCommandHelpMessage(Player player, String command, Map<String, String> commands) {
-    String header = getBoxedString(command + "Help", ChatColor.AQUA);
+    String header = getBoxedString(command + " help", ChatColor.GREEN);
     player.sendMessage(header);
 
     for (Map.Entry<String, String> entry : commands.entrySet()) {
