@@ -75,13 +75,15 @@ public class ScheduledWorker {
 
             Block originBlock = BlueprintUtil.turnStringIntoBlock(originBlockKey);
 
+            Location spawnLocation = originBlock.getLocation().clone().add(2, 2, 2);
+
             Location nonRelativeRandomBlock = BlueprintUtil.getNonRelativeLocation(originBlock,
                 randomBlock.getLocation());
 
             if (isNearbyAndOnline) {
 
-              Villager villager = (Villager) nonRelativeRandomBlock.getWorld().spawnEntity(
-                  originBlock.getLocation(),
+              Villager villager = (Villager) originBlock.getWorld().spawnEntity(
+                spawnLocation,
                   EntityType.VILLAGER);
               villager.setInvulnerable(true);
               new BukkitRunnable() {
@@ -89,7 +91,7 @@ public class ScheduledWorker {
                 public void run() {
                   villager.getPathfinder().moveTo(nonRelativeRandomBlock);
                 }
-              }.runTaskTimer(GeneralUtil.getPlugin(), 1, 20);
+              }.runTaskTimer(GeneralUtil.getPlugin(), 1, 5);
               new BukkitRunnable() {
                 @Override
                 public void run() {
