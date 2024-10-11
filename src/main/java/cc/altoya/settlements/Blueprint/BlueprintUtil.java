@@ -35,6 +35,16 @@ public class BlueprintUtil {
         }
     }
 
+    public static void sendPlayerBlueprintList(Player player){
+        FileConfiguration config = getBlueprintConfig();
+
+        ChatUtil.sendSuccessMessage(player, "Available Blueprints: ");
+        List<String> blueprintNames = List.copyOf(config.getKeys(false));
+        for(String blueprintName : blueprintNames){
+            ChatUtil.sendSuccessMessage(player, blueprintName);
+        }
+    }
+
     public static Location getRelativeLocation(Block origin, Block block) {
         int relativeX = block.getX() - origin.getX();
         int relativeY = block.getY() - origin.getY();
@@ -325,6 +335,7 @@ public class BlueprintUtil {
         commands.put("/blueprint upgrade {baseBlueprintName} {version}",
                 "Creates a new blueprint named {original}v{version}, and creates a dupe of the previous blueprint.");
         commands.put("/blueprint delete {blueprintName}", "Deletes the blueprint provided.");
+        commands.put("/blueprint list", "Sends you a list of all available blueprints.");
         commands.put("/blueprint housing {blueprintName} {amount}", "Sets the blueprint's housing count.");
         commands.put("/blueprint cost {blueprintName} {amount}",
                 "Sets the blueprint's resource cost for the item you are holding.");
