@@ -1,9 +1,7 @@
 package cc.altoya.settlements.Alliance;
 
-import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Util.ChatUtil;
@@ -20,7 +18,6 @@ public class CommandInvite {
     }
 
     private static void invitePlayerToAlliance(Player allianceLeader, String inviteeName) {
-        FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
 
         if (!AllianceUtil.isPlayerInAlliance(allianceLeader)) {
             ChatUtil.sendErrorMessage(allianceLeader, "You aren't in an alliance.");
@@ -40,13 +37,9 @@ public class CommandInvite {
             ChatUtil.sendErrorMessage(allianceLeader, "You can't invite yourself.");
             return;
         }
-        String allianceName = AllianceUtil.getPlayerAlliance(allianceLeader);
-        List<String> allianceInvites = allianceConfig.getStringList("alliances." + allianceName + ".invites");
-        allianceInvites.add(GeneralUtil.getKeyFromPlayer(invitee));
-        allianceConfig.set("alliances." + allianceName + ".invites", allianceInvites);
-        AllianceUtil.saveAllianceConfig(allianceConfig);
+        AllianceUtil.invitePlayerToAlliance(allianceLeader, invitee);
         ChatUtil.sendSuccessMessage(allianceLeader, "Invite successfully sent.");
-        ChatUtil.sendSuccessMessage(invitee, "You've been invited to " + allianceName);
+        ChatUtil.sendSuccessMessage(invitee, "You've been invited to " + AllianceUtil.getPlayerAlliance(allianceLeader));
     }
 
 }

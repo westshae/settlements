@@ -88,6 +88,27 @@ public class AllianceUtil {
 
         DomainUtil.saveDomainConfig(domainConfig);
         AllianceUtil.saveAllianceConfig(allianceConfig);
+    }
 
+    public static void deleteAlliance(Player player){
+        FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
+        FileConfiguration domainConfig = DomainUtil.getDomainConfig();
+
+        allianceConfig.set("alliances." + AllianceUtil.getPlayerAlliance(player), null);
+        domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance", null);
+        AllianceUtil.saveAllianceConfig(allianceConfig);
+        DomainUtil.saveDomainConfig(domainConfig);
+    }
+
+    public static void invitePlayerToAlliance(Player allianceLeader, Player invitee){
+        FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
+
+        String allianceName = AllianceUtil.getPlayerAlliance(allianceLeader);
+
+        List<String> allianceInvites = allianceConfig.getStringList("alliances." + allianceName + ".invites");
+        allianceInvites.add(GeneralUtil.getKeyFromPlayer(invitee));
+
+        allianceConfig.set("alliances." + allianceName + ".invites", allianceInvites);
+        AllianceUtil.saveAllianceConfig(allianceConfig);
     }
 }
