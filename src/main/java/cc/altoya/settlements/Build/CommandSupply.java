@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import cc.altoya.settlements.City.CityUtil;
-import cc.altoya.settlements.Item.ItemUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -31,26 +30,14 @@ public class CommandSupply {
     }
 
     ItemStack item = player.getInventory().getItemInMainHand();
-    Integer amountToSupply = Integer.parseInt(amountToSupplyString);
-    if(amountToSupply < 0){
-      ChatUtil.sendErrorMessage(player, "You can't supply negative amounts.");
+    Integer amount = Integer.parseInt(amountToSupplyString);
+    if(!BuildUtil.validSupplyItem(item, amount)){
+      ChatUtil.sendErrorMessage(player, "This isn't a valid supply item/s");
       return;
     }
-    if(item.getAmount() < amountToSupply){
-      ChatUtil.sendErrorMessage(player, "You don't have " + amountToSupply + " to supply." );
-      return;
-    }
-    if (!BuildUtil.isValidSupplyType(item.getType())) {
-      ChatUtil.sendErrorMessage(player, "This isn't a valid supplies type.");
-      return;
-    }
-    if(!ItemUtil.isItemCustom(item)){
-      ChatUtil.sendErrorMessage(player, "This isn't a server-resource.");
-      return;
-    }
-    BuildUtil.editSupplies(player, chunk, item.getType(), amountToSupply);
+    
+    BuildUtil.removeSupplyItems(player, chunk, item, amount);
     ChatUtil.sendSuccessMessage(player,
-        "You put " + amountToSupply + " of " + item.getType() + " into the chest.");
-    item.setAmount(item.getAmount() - amountToSupply);
+        "Supplied successfully.");
   }
 }

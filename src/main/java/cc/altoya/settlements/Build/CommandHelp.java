@@ -16,7 +16,6 @@ public class CommandHelp {
     }
 
     private static void help(Player player) {
-
         ChatUtil.sendCommandHelpMessage(player, "/build", BuildUtil.getBuildCommands());
     }
 }

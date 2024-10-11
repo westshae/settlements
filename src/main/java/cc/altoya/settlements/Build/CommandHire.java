@@ -1,10 +1,8 @@
 package cc.altoya.settlements.Build;
 
 import org.bukkit.Chunk;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -24,22 +22,14 @@ public class CommandHire {
             ChatUtil.sendErrorMessage(player, "There is no structure in this chunk.");
             return;
         }   
-        FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
-        FileConfiguration buildConfig = BuildUtil.getBuildConfig();
-        String structureBlueprintName = BuildUtil.getStructureBlueprintName(chunk);
-
-        Integer housing = blueprintConfig.getInt("blueprints." + structureBlueprintName + ".housing");
-        Integer workerCount = buildConfig.getInt("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".workers");
-
-        if(housing == workerCount){
-            ChatUtil.sendErrorMessage(player, "You've maxed out the housing of this structure.");
+        if(!BuildUtil.hasHousingRoom(chunk)){
+            ChatUtil.sendErrorMessage(player, "You are out of housing.");
             return;
         }
 
-        buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".workers", workerCount + 1);
+        BuildUtil.hireWorker(player, chunk);
 
-        ChatUtil.sendSuccessMessage(player, "Structure now has " + (workerCount + 1) + " workers");
-        BuildUtil.saveBuildConfig(buildConfig);
+        ChatUtil.sendSuccessMessage(player, "A new worker has been hired.");
     }
 
 }

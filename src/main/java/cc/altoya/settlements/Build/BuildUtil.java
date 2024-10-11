@@ -12,10 +12,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
@@ -252,21 +255,21 @@ public class BuildUtil {
     }
   }
 
-  public static Block getFirstBlock(Chunk chunk){
+  public static Block getFirstBlock(Chunk chunk) {
     FileConfiguration buildConfig = BuildUtil.getBuildConfig();
 
     String buildFirstKey = buildConfig.getString("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".first");
     return BlueprintUtil.turnStringIntoBlock(buildFirstKey);
   }
 
-  public static void deleteData(Chunk chunk){
+  public static void deleteData(Chunk chunk) {
     FileConfiguration buildConfig = BuildUtil.getBuildConfig();
 
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk), null);
     saveBuildConfig(buildConfig);
   }
 
-  public static void deleteBlocks(Player player){
+  public static void deleteBlocks(Player player) {
     FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
 
     Chunk chunk = player.getLocation().getChunk();
@@ -277,36 +280,155 @@ public class BuildUtil {
     List<String> blocks = blueprintConfig.getStringList("blueprints." + blueprintName + ".blocks");
 
     new BukkitRunnable() {
-        int index = 0;
+      int index = 0;
 
-        @Override
-        public void run() {
-            int blocksProcessed = 0;
+      @Override
+      public void run() {
+        int blocksProcessed = 0;
 
-            while (index < blocks.size() && blocksProcessed < 1) {
-                String blockString = blocks.get(index);
-                Block block = BlueprintUtil.turnStringIntoBlock(blockString);
+        while (index < blocks.size() && blocksProcessed < 1) {
+          String blockString = blocks.get(index);
+          Block block = BlueprintUtil.turnStringIntoBlock(blockString);
 
-                if (block != null) {
-                    Location relativeLocation = block.getLocation(); 
-                    Location nonRelativeLocation = BlueprintUtil.getNonRelativeLocation(firstBlock, relativeLocation);
-                    Block nonRelativeBlock = nonRelativeLocation.getBlock();
-                    nonRelativeBlock.setType(Material.AIR, false);
+          if (block != null) {
+            Location relativeLocation = block.getLocation();
+            Location nonRelativeLocation = BlueprintUtil.getNonRelativeLocation(firstBlock, relativeLocation);
+            Block nonRelativeBlock = nonRelativeLocation.getBlock();
+            nonRelativeBlock.setType(Material.AIR, false);
 
-                    blocksProcessed++;
-                } else {
-                    ChatUtil.sendErrorMessage(player, "Error converting block from string: " + blockString);
-                }
-                index++;
-            }
-
-            if (index < blocks.size()) {
-                this.runTaskLater(GeneralUtil.getPlugin(), 1);
-            } else {
-                this.cancel();
-            }
+            blocksProcessed++;
+          } else {
+            ChatUtil.sendErrorMessage(player, "Error converting block from string: " + blockString);
+          }
+          index++;
         }
+
+        if (index < blocks.size()) {
+          this.runTaskLater(GeneralUtil.getPlugin(), 1);
+        } else {
+          this.cancel();
+        }
+      }
     }.runTaskTimer(GeneralUtil.getPlugin(), 0, 1);
+  }
+
+  public static boolean hasHousingRoom(Chunk chunk) {
+    FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
+    FileConfiguration buildConfig = BuildUtil.getBuildConfig();
+    String structureBlueprintName = BuildUtil.getStructureBlueprintName(chunk);
+
+    Integer housing = blueprintConfig.getInt("blueprints." + structureBlueprintName + ".housing");
+    Integer workerCount = buildConfig.getInt("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".workers");
+
+    return housing < workerCount;
+  }
+
+  public static void hireWorker(Player player, Chunk chunk) {
+    FileConfiguration buildConfig = BuildUtil.getBuildConfig();
+
+    Integer workerCount = buildConfig.getInt("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".workers");
+    buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".workers", workerCount + 1);
+
+    BuildUtil.saveBuildConfig(buildConfig);
+  }
+
+  public static void setBuildConfig(Player player, String blueprintName) {
+    Integer version = BlueprintUtil.getVersion(blueprintName);
+
+    FileConfiguration buildConfig = BuildUtil.getBuildConfig();
+
+    int playerHeight = player.getLocation().getBlockY();
+    Chunk chunk = player.getLocation().getChunk();
+    buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".owner",
+        GeneralUtil.getKeyFromPlayer(player));
+    buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".blueprintName", blueprintName);
+    buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".version", version);
+    buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".playerHeight", playerHeight);
+
+    Block newFirstBlock = chunk.getBlock(0, playerHeight, 0);
+    Block newSecondBlock = BlueprintUtil.getRelativeSecondBlock(newFirstBlock, blueprintName);
+
+    buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".first",
+        BlueprintUtil.turnBlockIntoString(newFirstBlock, newFirstBlock.getLocation()));
+    buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".second",
+        BlueprintUtil.turnBlockIntoString(newSecondBlock, newSecondBlock.getLocation()));
+
+    BuildUtil.saveBuildConfig(buildConfig);
+  }
+
+  public static void generateBuildingFromBlueprint(Player player, String blueprintName) {
+    Chunk chunk = player.getLocation().getChunk();
+
+    FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
+
+    Block buildFirstBlock = BuildUtil.getFirstBlock(chunk);
+
+    List<String> blocks = blueprintConfig.getStringList("blueprints." + blueprintName + ".blocks");
+
+    BuildUtil.placeBlocksFromStringList(blocks, buildFirstBlock);
+  }
+
+  public static void displayParticleChunkBorder(Chunk chunk, int yLevel) {
+    new BukkitRunnable() {
+      int ticksElapsed = 0;
+
+      @Override
+      public void run() {
+        if (ticksElapsed > 200) {
+          this.cancel();
+          return;
+        }
+
+        World world = chunk.getWorld();
+        int chunkX = chunk.getX() * 16;
+        int chunkZ = chunk.getZ() * 16;
+
+        Particle particleType = Particle.HAPPY_VILLAGER;
+        double particleOffset = 0.5;
+        int particleCount = 1;
+
+        for (int x = chunkX; x < chunkX + 16; x++) {
+          world.spawnParticle(particleType, x + particleOffset, yLevel, chunkZ + particleOffset, particleCount);
+          world.spawnParticle(particleType, x + particleOffset, yLevel, chunkZ + 15 + particleOffset, particleCount);
+        }
+
+        for (int z = chunkZ; z < chunkZ + 16; z++) {
+          world.spawnParticle(particleType, chunkX + particleOffset, yLevel, z + particleOffset, particleCount);
+          world.spawnParticle(particleType, chunkX + 15 + particleOffset, yLevel, z + particleOffset, particleCount);
+        }
+
+        ticksElapsed += 5;
+      }
+    }.runTaskTimer(GeneralUtil.getPlugin(), 0L, 5);
+  }
+
+  public static boolean validSupplyItem(ItemStack item, int amount){
+    if(amount < 0){
+      return false;
+    }
+    if(item.getAmount() < amount){
+      return false;
+    }
+    if (!BuildUtil.isValidSupplyType(item.getType())) {
+      return false;
+    }
+    if(!ItemUtil.isItemCustom(item)){
+      return false;
+    }
+
+    return true;
+  }
+
+  public static void removeSupplyItems(Player player, Chunk chunk, ItemStack item, int amount){
+    BuildUtil.editSupplies(player, chunk, item.getType(), amount);
+    item.setAmount(item.getAmount() - amount);
+  }
+
+  public static void upgradeStructure(Player player, String nextBlueprintName){
+    Chunk chunk = player.getLocation().getChunk();
+    BuildUtil.setBlueprintName(chunk, player, nextBlueprintName);
+    BuildUtil.deleteBlocks(player);
+    BuildUtil.generateBuildingFromBlueprint(player, nextBlueprintName);
   }
 
   public static HashMap<String, String> getBuildCommands() {

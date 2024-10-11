@@ -24,7 +24,7 @@ public class CommandRefresh {
         }
         String blueprintName = BuildUtil.getStructureBlueprintName(chunk);
 
-        CommandNew.generateBuildingFromBlueprint(player, blueprintName);
+        BuildUtil.generateBuildingFromBlueprint(player, blueprintName);
 
         ChatUtil.sendSuccessMessage(player, "Successessfully refreshed structure.");
     }

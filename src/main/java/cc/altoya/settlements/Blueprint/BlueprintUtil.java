@@ -11,9 +11,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.Build.BuildUtil;
 import cc.altoya.settlements.Build.CommandNew;
 import cc.altoya.settlements.Item.ItemUtil;
 import cc.altoya.settlements.Util.ChatUtil;
@@ -304,7 +306,12 @@ public class BlueprintUtil {
 
         BlueprintUtil.saveBlueprintConfig(config);
 
-        CommandNew.generateBuildingFromBlueprint(player, currentBlueprintName);
+        BuildUtil.generateBuildingFromBlueprint(player, currentBlueprintName);
+    }
+
+    public static ConfigurationSection getBlueprintCosts(String blueprintName){
+        FileConfiguration blueprintConfig = getBlueprintConfig();
+        return blueprintConfig.getConfigurationSection("blueprints." + blueprintName + ".cost");
     }
 
     public static HashMap<String, String> getBlueprintCommands() {

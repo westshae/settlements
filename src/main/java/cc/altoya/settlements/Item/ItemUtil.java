@@ -4,6 +4,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -33,8 +34,8 @@ public class ItemUtil {
     return data.get(key, PersistentDataType.STRING);
   }
 
-  public static boolean isItemCustom(ItemStack item){
-    if(!item.hasItemMeta()){
+  public static boolean isItemCustom(ItemStack item) {
+    if (!item.hasItemMeta()) {
       return false;
     }
     String metadata = getItemPersistentValue(item);
@@ -50,40 +51,98 @@ public class ItemUtil {
 
     // Set item meta properties
     meta.displayName(Component.text("" + ChatColor.YELLOW + ChatColor.MAGIC + "O" + ChatColor.RESET + ChatColor.YELLOW
-        + ChatColor.BOLD + formatItemId(material.toString()) + ChatColor.RESET + ChatColor.YELLOW + ChatColor.MAGIC + "O"));
+        + ChatColor.BOLD + formatItemId(material.toString()) + ChatColor.RESET + ChatColor.YELLOW + ChatColor.MAGIC
+        + "O"));
     meta.addEnchant(Enchantment.UNBREAKING, 1, true);
     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
     data.set(key, PersistentDataType.STRING, material.toString());
     meta.lore(List.of(
-      Component.text(getMaterialLore(material)),
-      Component.text(""),
-      Component.text("" + ChatColor.GRAY + ChatColor.BOLD + "Resource Item")));
+        Component.text(getMaterialLore(material)),
+        Component.text(""),
+        Component.text("" + ChatColor.GRAY + ChatColor.BOLD + "Resource Item")));
     item.setItemMeta(meta);
 
     // Check for available space in the player's inventory
     while (amount > 0) {
-        int stackSize = Math.min(amount, 64); // Maximum stack size is 64
-        ItemStack stack = item.clone(); // Clone the item to avoid modifying the original
-        stack.setAmount(stackSize); // Set the stack size
+      int stackSize = Math.min(amount, 64); // Maximum stack size is 64
+      ItemStack stack = item.clone(); // Clone the item to avoid modifying the original
+      stack.setAmount(stackSize); // Set the stack size
 
-        // Try to add the item to the player's inventory
-        HashMap<Integer, ItemStack> excess = player.getInventory().addItem(stack);
+      // Try to add the item to the player's inventory
+      HashMap<Integer, ItemStack> excess = player.getInventory().addItem(stack);
 
-        // Decrease the total amount by the stack size
-        amount -= stackSize;
+      // Decrease the total amount by the stack size
+      amount -= stackSize;
 
-        // If there's any excess, drop those items on the ground
-        if (!excess.isEmpty()) {
-            for (ItemStack excessItem : excess.values()) {
-                // Get the location where the player is standing
-                Location location = player.getLocation();
-                // Drop the excess item at the player's location
-                player.getWorld().dropItemNaturally(location, excessItem);
-            }
+      // If there's any excess, drop those items on the ground
+      if (!excess.isEmpty()) {
+        for (ItemStack excessItem : excess.values()) {
+          // Get the location where the player is standing
+          Location location = player.getLocation();
+          // Drop the excess item at the player's location
+          player.getWorld().dropItemNaturally(location, excessItem);
         }
+      }
     }
-}
+  }
 
+  public static boolean hasCosts(Player player, ConfigurationSection costs){
+    for (String key : costs.getKeys(false)) {
+      Material resource = Material.getMaterial(key);
+      Integer amount = Integer.parseInt(costs.getString(key));
+
+      if (!player.getInventory().contains(resource)) {
+        return false;
+      }
+
+      boolean tookResources = false;
+      for (ItemStack item : player.getInventory().getContents()) {
+        if (item == null) {
+          continue;
+        }
+        if (!item.getType().equals(resource)) {
+          continue;
+        }
+        if (item.getAmount() < amount) {
+          continue;
+        }
+        if (!ItemUtil.isItemCustom(item)) {
+          continue;
+        }
+        tookResources = true;
+        break;
+      }
+      if (!tookResources) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  public static void removeItems(Player player, ConfigurationSection costs) {
+    for (String key : costs.getKeys(false)) {
+      Material resource = Material.getMaterial(key);
+      Integer amount = Integer.parseInt(costs.getString(key));
+
+      for (ItemStack item : player.getInventory().getContents()) {
+        if (item == null) {
+          continue;
+        }
+        if (!item.getType().equals(resource)) {
+          continue;
+        }
+        if (item.getAmount() < amount) {
+          continue;
+        }
+        if (!ItemUtil.isItemCustom(item)) {
+          continue;
+        }
+        item.setAmount(item.getAmount() - amount);
+        break;
+      }
+    }
+  }
 
   public static List<Material> getAllResourceBlocks(Chunk chunk) {
     return List.of(Material.COAL_ORE, Material.IRON_ORE, Material.WHEAT, Material.SUGAR_CANE, Material.PUMPKIN,
@@ -162,17 +221,17 @@ public class ItemUtil {
     return formattedName.toString();
   }
 
-  public static void givePlayerEachResource(Player player, int amount){
+  public static void givePlayerEachResource(Player player, int amount) {
     List<Material> materials = ItemUtil.getAllResourceMaterials();
     for (Material material : materials) {
       ItemUtil.givePlayerCustomItem(player, material, amount);
     }
   }
 
-  public static void transformItems(Player player){
+  public static void transformItems(Player player) {
     List<Material> materials = ItemUtil.getAllResourceMaterials();
     ItemStack hand = player.getInventory().getItemInMainHand();
-    if(!materials.contains(hand.getType())){
+    if (!materials.contains(hand.getType())) {
       return;
     }
     ItemUtil.givePlayerCustomItem(player, hand.getType(), hand.getAmount());
