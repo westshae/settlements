@@ -15,9 +15,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Build.CommandNew;
+import cc.altoya.settlements.Item.ItemUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
-import cc.altoya.settlements.Util.ItemUtil;
 
 public class BlueprintUtil {
     public static FileConfiguration getBlueprintConfig() {

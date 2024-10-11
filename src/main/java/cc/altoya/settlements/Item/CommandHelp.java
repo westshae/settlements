@@ -1,4 +1,4 @@
-package cc.altoya.settlements.City;
+package cc.altoya.settlements.Item;
 
 import org.bukkit.entity.Player;
 
@@ -16,6 +16,6 @@ public class CommandHelp {
     }
 
     private static void help(Player player) {
-        ChatUtil.sendCommandHelpMessage(player, "/city", CityUtil.getCityCommands());
+        ChatUtil.sendCommandHelpMessage(player, "/item", ItemUtil.getItemCommands());
     }
 }

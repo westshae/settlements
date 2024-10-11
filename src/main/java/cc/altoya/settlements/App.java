@@ -19,6 +19,8 @@ import cc.altoya.settlements.City.CityTabCompleter;
 import cc.altoya.settlements.City.EventProtectBlocks;
 import cc.altoya.settlements.City.EventProtectEntities;
 import cc.altoya.settlements.City.MainCity;
+import cc.altoya.settlements.Item.ItemTabCompleter;
+import cc.altoya.settlements.Item.MainItem;
 
 
 public class App extends JavaPlugin {
@@ -31,12 +33,14 @@ public class App extends JavaPlugin {
         this.getCommand("alliance").setExecutor(new MainAlliance());
         this.getCommand("build").setExecutor(new MainBuild());
         this.getCommand("blueprint").setExecutor(new MainBlueprint());
+        this.getCommand("item").setExecutor(new MainItem());
 
         //Register tab completers
         this.getCommand("city").setTabCompleter(new CityTabCompleter());
         this.getCommand("alliance").setTabCompleter(new AllianceTabCompleter());
         this.getCommand("build").setTabCompleter(new BuildTabCompleter());
         this.getCommand("blueprint").setTabCompleter(new BlueprintTabCompleter());
+        this.getCommand("item").setTabCompleter(new ItemTabCompleter());
 
         //Register eventListeners
         this.getServer().getPluginManager().registerEvents(new EventProtectBlocks(), this);

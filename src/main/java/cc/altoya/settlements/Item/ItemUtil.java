@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Util;
+package cc.altoya.settlements.Item;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+
+import cc.altoya.settlements.Util.GeneralUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -159,4 +161,30 @@ public class ItemUtil {
 
     return formattedName.toString();
   }
+
+  public static void givePlayerEachResource(Player player, int amount){
+    List<Material> materials = ItemUtil.getAllResourceMaterials();
+    for (Material material : materials) {
+      ItemUtil.givePlayerCustomItem(player, material, amount);
+    }
+  }
+
+  public static void transformItems(Player player){
+    List<Material> materials = ItemUtil.getAllResourceMaterials();
+    ItemStack hand = player.getInventory().getItemInMainHand();
+    if(!materials.contains(hand.getType())){
+      return;
+    }
+    ItemUtil.givePlayerCustomItem(player, hand.getType(), hand.getAmount());
+    hand.setAmount(0);
+  }
+
+  public static HashMap<String, String> getItemCommands() {
+    HashMap<String, String> commands = new HashMap<>();
+    commands.put("/item giveall {amount}", "Gives the executer x amount of all custom resources.");
+    commands.put("/item transform", "Transforms the item in your hand to its custom version, if it exists.");
+    commands.put("/item help", "The command you're looking at right now.");
+    return commands;
+  }
+
 }

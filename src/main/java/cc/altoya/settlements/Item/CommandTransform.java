@@ -1,4 +1,4 @@
-package cc.altoya.settlements.Build;
+package cc.altoya.settlements.Item;
 
 import java.util.List;
 
@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
 
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
-import cc.altoya.settlements.Util.ItemUtil;
 
 public class CommandTransform {
   public static boolean handle(Player sender, String[] args) {
@@ -27,8 +26,7 @@ public class CommandTransform {
       ChatUtil.sendErrorMessage(player, "There are no custom items for " + hand.getType());
       return;
     }
-    ItemUtil.givePlayerCustomItem(player, hand.getType(), hand.getAmount());
-    hand.setAmount(0);
+    ItemUtil.transformItems(player);
     ChatUtil.sendSuccessMessage(player, "Your item has been changed into custom resources.");
   }
 }

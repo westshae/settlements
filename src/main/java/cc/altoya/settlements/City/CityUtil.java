@@ -103,7 +103,7 @@ public class CityUtil {
     CityUtil.saveCityConfig(domainConfig);
   }
 
-  public static HashMap<String, String> getDomainCommands() {
+  public static HashMap<String, String> getCityCommands() {
     HashMap<String, String> commands = new HashMap<>();
     commands.put("/city claim", "Claims the chunk you're currently in.");
     commands.put("/city unclaim", "Unclaims the chunk you're currently in.");

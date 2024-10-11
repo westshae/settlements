@@ -5,9 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import cc.altoya.settlements.City.CityUtil;
+import cc.altoya.settlements.Item.ItemUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
-import cc.altoya.settlements.Util.ItemUtil;
 
 public class CommandSupply {
   public static boolean handle(Player sender, String[] args) {

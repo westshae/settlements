@@ -9,9 +9,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import cc.altoya.settlements.Item.ItemUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
-import cc.altoya.settlements.Util.ItemUtil;
 
 public class EventBreakStructureBlock implements Listener {
     @EventHandler

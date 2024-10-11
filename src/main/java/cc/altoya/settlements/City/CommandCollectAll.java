@@ -7,9 +7,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Build.BuildUtil;
+import cc.altoya.settlements.Item.ItemUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
-import cc.altoya.settlements.Util.ItemUtil;
 
 public class CommandCollectAll {
   public static boolean handle(Player sender, String[] args) {

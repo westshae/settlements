@@ -19,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
+import cc.altoya.settlements.Item.ItemUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -238,6 +239,76 @@ public class BuildUtil {
     return true;
   }
 
+  public static void collectResources(Player player, Chunk chunk) {
+    List<Material> materials = ItemUtil.getAllResourceMaterials();
+    for (Material material : materials) {
+      Integer resourceAmount = BuildUtil.getResourcesFromStructure(chunk, material);
+      if (resourceAmount == 0) {
+        continue;
+      }
+      BuildUtil.editResources(player, chunk, material, -resourceAmount);
+
+      ItemUtil.givePlayerCustomItem(player, material, resourceAmount);
+    }
+  }
+
+  public static Block getFirstBlock(Chunk chunk){
+    FileConfiguration buildConfig = BuildUtil.getBuildConfig();
+
+    String buildFirstKey = buildConfig.getString("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".first");
+    return BlueprintUtil.turnStringIntoBlock(buildFirstKey);
+  }
+
+  public static void deleteData(Chunk chunk){
+    FileConfiguration buildConfig = BuildUtil.getBuildConfig();
+
+    buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk), null);
+    saveBuildConfig(buildConfig);
+  }
+
+  public static void deleteBlocks(Player player){
+    FileConfiguration blueprintConfig = BlueprintUtil.getBlueprintConfig();
+
+    Chunk chunk = player.getLocation().getChunk();
+    String blueprintName = BuildUtil.getStructureBlueprintName(chunk);
+
+    Block firstBlock = getFirstBlock(chunk);
+
+    List<String> blocks = blueprintConfig.getStringList("blueprints." + blueprintName + ".blocks");
+
+    new BukkitRunnable() {
+        int index = 0;
+
+        @Override
+        public void run() {
+            int blocksProcessed = 0;
+
+            while (index < blocks.size() && blocksProcessed < 1) {
+                String blockString = blocks.get(index);
+                Block block = BlueprintUtil.turnStringIntoBlock(blockString);
+
+                if (block != null) {
+                    Location relativeLocation = block.getLocation(); 
+                    Location nonRelativeLocation = BlueprintUtil.getNonRelativeLocation(firstBlock, relativeLocation);
+                    Block nonRelativeBlock = nonRelativeLocation.getBlock();
+                    nonRelativeBlock.setType(Material.AIR, false);
+
+                    blocksProcessed++;
+                } else {
+                    ChatUtil.sendErrorMessage(player, "Error converting block from string: " + blockString);
+                }
+                index++;
+            }
+
+            if (index < blocks.size()) {
+                this.runTaskLater(GeneralUtil.getPlugin(), 1);
+            } else {
+                this.cancel();
+            }
+        }
+    }.runTaskTimer(GeneralUtil.getPlugin(), 0, 1);
+  }
+
   public static HashMap<String, String> getBuildCommands() {
     HashMap<String, String> commands = new HashMap<>();
     commands.put("/build delete", "Deletes any structure within the chunk you are in.");
@@ -248,8 +319,6 @@ public class BuildUtil {
         "Shows you where the bottom level of the structure will begin to generate to allow you to terraform.");
     commands.put("/build upgrade", "Upgrades your structure to the next level.");
     commands.put("/build hire", "Hires a new worker.");
-    commands.put("/build giveall {amount}", "Gives the executer x amount of all custom resources.");
-    commands.put("/build transform", "Transforms the item in your hand to its custom version, if it exists.");
     commands.put("/build help", "The command you're looking at right now.");
     commands.put("/build supply",
         "Take the item in your hand, and supplies it to the structure of the chunk you're in.");

@@ -28,5 +28,4 @@ public class CommandUpgrade {
         CommandDelete.deleteStructure(player);
         CommandNew.generateBuildingFromBlueprint(player, nextBlueprintName);
     }
-
 }
