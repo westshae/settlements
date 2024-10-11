@@ -1,6 +1,5 @@
 package cc.altoya.settlements.Blueprint;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,17 +17,13 @@ public class CommandCost {
     }
 
     private static void setCost(Player player, String blueprintName, String amount) {
-        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
         if (!BlueprintUtil.doesBlueprintExist(blueprintName)) {
             ChatUtil.sendErrorMessage(player, "This blueprint doesn't exist.");
             return;
         }
         ItemStack item = player.getInventory().getItemInMainHand().clone();
-        item.setAmount(Integer.parseInt(amount));
-        config.set("blueprints." + blueprintName + ".cost." + item.getType(), Integer.parseInt(amount));
-
+        BlueprintUtil.setBlueprintCost(blueprintName, item.getType(), Integer.parseInt(amount));
         ChatUtil.sendSuccessMessage(player, "Blueprint cost for " + item.getType() + " set to " + amount);
-        BlueprintUtil.saveBlueprintConfig(config);
     }
 
 }

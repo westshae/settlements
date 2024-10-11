@@ -1,6 +1,5 @@
 package cc.altoya.settlements.Blueprint;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Util.ChatUtil;
@@ -16,17 +15,15 @@ public class CommandCreate {
         return true;
     }
 
-    private static void createBoilerplate(Player player, String name) {
-        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
-        if (BlueprintUtil.doesBlueprintExist(name)) {
+    private static void createBoilerplate(Player player, String blueprintName) {
+        if (BlueprintUtil.doesBlueprintExist(blueprintName)) {
             ChatUtil.sendErrorMessage(player, "A blueprint named this already exists.");
             return;
         }
-        config.set("blueprints." + name + ".version", 1);
-        config.set("blueprints." + name + ".housing", 0);
 
-        ChatUtil.sendSuccessMessage(player, "Blueprint boilerplate created.");
-        BlueprintUtil.saveBlueprintConfig(config);
+        BlueprintUtil.create(blueprintName);
+
+        ChatUtil.sendSuccessMessage(player, "Blueprint \"" + blueprintName + "\" created.");
     }
 
 }

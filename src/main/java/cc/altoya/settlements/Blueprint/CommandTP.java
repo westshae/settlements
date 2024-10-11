@@ -1,8 +1,5 @@
 package cc.altoya.settlements.Blueprint;
 
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Util.ChatUtil;
@@ -19,16 +16,11 @@ public class CommandTP {
     }
 
     private static void teleportPlayer(Player player, String blueprintName) {
-        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
         if (!BlueprintUtil.doesBlueprintExist(blueprintName)) {
             ChatUtil.sendErrorMessage(player, "This blueprint doesn't exist.");
             return;
         }
-        String firstBlockString = config.getString("blueprints." + blueprintName + ".first");
-        Block firstBlock = BlueprintUtil.turnStringIntoBlock(firstBlockString);
-
-        Location teleportLocation = firstBlock.getLocation().clone().add(0, 2, 0);
-        player.teleport(teleportLocation);
+        BlueprintUtil.teleportPlayerToBlueprint(player, blueprintName);
 
         ChatUtil.sendSuccessMessage(player, "Teleported Successfully.");
     }

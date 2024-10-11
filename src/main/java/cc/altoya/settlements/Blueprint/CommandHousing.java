@@ -1,6 +1,5 @@
 package cc.altoya.settlements.Blueprint;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Util.ChatUtil;
@@ -17,16 +16,13 @@ public class CommandHousing {
     }
 
     private static void setHousing(Player player, String blueprintName, String amount) {
-        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
         if (!BlueprintUtil.doesBlueprintExist(blueprintName)) {
             ChatUtil.sendErrorMessage(player, "This blueprint doesn't exist.");
             return;
         }
-        Integer amountInt = Integer.parseInt(amount);
-        config.set("blueprints." + blueprintName + ".housing", amountInt);
+        BlueprintUtil.setBlueprintHousing(blueprintName, Integer.parseInt(amount));
 
         ChatUtil.sendSuccessMessage(player, "Blueprint housing set to " + amount);
-        BlueprintUtil.saveBlueprintConfig(config);
     }
 
 }

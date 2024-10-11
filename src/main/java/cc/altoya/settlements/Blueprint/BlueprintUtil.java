@@ -3,6 +3,8 @@ package cc.altoya.settlements.Blueprint;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -10,8 +12,12 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.Build.CommandNew;
+import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
+import cc.altoya.settlements.Util.ItemUtil;
 
 public class BlueprintUtil {
     public static FileConfiguration getBlueprintConfig() {
@@ -159,6 +165,148 @@ public class BlueprintUtil {
         return originalBlueStringName + "v" + Integer.toString(currentVersion + 1);
     }
 
+    public static void setBlueprintCost(String blueprintName, Material itemMaterial, int amount) {
+        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
+
+        config.set("blueprints." + blueprintName + ".cost." + itemMaterial, amount);
+        BlueprintUtil.saveBlueprintConfig(config);
+    }
+
+    public static void setBlueprintHousing(String blueprintName, int amount) {
+        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
+
+        config.set("blueprints." + blueprintName + ".housing", amount);
+        BlueprintUtil.saveBlueprintConfig(config);
+    }
+
+    public static void create(String blueprintName) {
+        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
+
+        config.set("blueprints." + blueprintName + ".version", 1);
+        config.set("blueprints." + blueprintName + ".housing", 0);
+
+        BlueprintUtil.saveBlueprintConfig(config);
+    }
+
+    public static void delete(String blueprintName) {
+        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
+
+        config.set("blueprints." + blueprintName, null);
+
+        BlueprintUtil.saveBlueprintConfig(config);
+    }
+
+    public static void setFirstBlock(Player player, String blueprintName) {
+        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
+        Block targettedBlock = player.getTargetBlock(null, 10);
+
+        Block chunkZero = targettedBlock.getChunk().getBlock(0, targettedBlock.getY(), 0);
+        if (!chunkZero.equals(targettedBlock)) {
+            ChatUtil.sendErrorMessage(player, "The first block of a blueprint must be placed at a chunk's [0, ~, 0]");
+            return;
+        }
+        config.set("blueprints." + blueprintName + ".first",
+                BlueprintUtil.turnBlockIntoString(targettedBlock, targettedBlock.getLocation()));
+        BlueprintUtil.saveBlueprintConfig(config);
+    }
+
+    public static void setSecondBlock(Player player, String blueprintName) {
+        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
+
+        Block targettedBlock = player.getTargetBlock(null, 10);
+        Block firstPointBlock = BlueprintUtil
+                .turnStringIntoBlock(config.getString("blueprints." + blueprintName + ".first"));
+
+        Block chunksBlock = firstPointBlock.getChunk().getBlock(15, targettedBlock.getY(), 15);
+
+        Location relativeSecondLocation = BlueprintUtil.getRelativeLocation(firstPointBlock, targettedBlock);
+        BlueprintUtil.turnBlockIntoString(targettedBlock, relativeSecondLocation);
+
+        if (!targettedBlock.equals(chunksBlock)) {
+            ChatUtil.sendErrorMessage(player,
+                    "The second point of a blueprint must be placed at a chunk's [15, ~, 15]");
+            return;
+        }
+        config.set("blueprints." + blueprintName + ".second",
+                BlueprintUtil.turnBlockIntoString(targettedBlock, targettedBlock.getLocation()));
+        BlueprintUtil.saveBlueprintConfig(config);
+    }
+
+    public static Block getFirstBlock(String blueprintName){
+        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
+
+        String firstPointKey = config.getString("blueprints." + blueprintName + ".first");
+        return BlueprintUtil.turnStringIntoBlock(firstPointKey);
+    }
+
+    public static Block getSecondBlock(String blueprintName){
+        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
+
+        String secondPointKey = config.getString("blueprints." + blueprintName + ".second");
+        return BlueprintUtil.turnStringIntoBlock(secondPointKey);
+    }
+
+    public static void save(String blueprintName) {
+        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
+
+        Block firstBlock = getFirstBlock(blueprintName);
+        Block secondBlock = getSecondBlock(blueprintName);
+
+
+        int x1 = firstBlock.getX();
+        int y1 = firstBlock.getY();
+        int z1 = firstBlock.getZ();
+
+        int x2 = secondBlock.getX();
+        int y2 = secondBlock.getY();
+        int z2 = secondBlock.getZ();
+
+        List<Material> resourceBlockList = ItemUtil.getAllResourceBlocks(firstBlock.getChunk());
+
+        List<String> resourceBlocksInChunk = new ArrayList<String>();
+
+        List<String> blockList = new ArrayList<>();
+
+        for (int x = Math.min(x1, x2); x <= Math.max(x1, x2); x++) {
+            for (int y = Math.min(y1, y2); y <= Math.max(y1, y2); y++) {
+                for (int z = Math.min(z1, z2); z <= Math.max(z1, z2); z++) {
+                    Block block = firstBlock.getWorld().getBlockAt(x, y, z);
+                    if (block.getType() == Material.AIR) {
+                        continue;
+                    }
+                    Location relativeLocation = BlueprintUtil.getRelativeLocation(firstBlock, block);
+                    String blockString = BlueprintUtil.turnBlockIntoString(block, relativeLocation);
+                    if (resourceBlockList.contains(block.getType())) {
+                        resourceBlocksInChunk.add(blockString);
+                    }
+                    blockList.add(blockString);
+                }
+            }
+        }
+        config.set("blueprints." + blueprintName + ".blocks", blockList);
+        config.set("blueprints." + blueprintName + ".resourceBlocks", resourceBlocksInChunk);
+        BlueprintUtil.saveBlueprintConfig(config);
+    }
+
+    public static void teleportPlayerToBlueprint(Player player, String blueprintName){
+        Block firstBlock = getFirstBlock(blueprintName);
+
+        Location teleportLocation = firstBlock.getLocation().clone().add(0, 2, 0);
+        player.teleport(teleportLocation);
+    }
+
+    public static void createUpgradeBlueprint(Player player, String blueprintName, int version){
+        String currentBlueprintName = blueprintName + "v" + version;
+
+        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
+
+        config.set("blueprints." + currentBlueprintName + ".version", version);
+
+        BlueprintUtil.saveBlueprintConfig(config);
+
+        CommandNew.generateBuildingFromBlueprint(player, currentBlueprintName);
+    }
+
     public static HashMap<String, String> getBlueprintCommands() {
         HashMap<String, String> commands = new HashMap<>();
         commands.put("/blueprint create {blueprintName}", "The first command to create a blueprint.");
@@ -168,8 +316,6 @@ public class BlueprintUtil {
                 "Sets the blueprint's chunk [15, ~, 15] point based on the block you're looking at.");
         commands.put("/blueprint save {blueprintName}",
                 "Gets all blocks between the first/second point, then converts each block to a string form for future generation.");
-        commands.put("/blueprint dupe {blueprintName}",
-                "Places down all the blocks from the blueprint specified, without any data, to be used for a new blueprint.");
         commands.put("/blueprint upgrade {baseBlueprintName} {version}",
                 "Creates a new blueprint named {original}v{version}, and creates a dupe of the previous blueprint.");
         commands.put("/blueprint delete {blueprintName}", "Deletes the blueprint provided.");

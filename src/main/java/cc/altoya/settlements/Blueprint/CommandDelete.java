@@ -1,6 +1,5 @@
 package cc.altoya.settlements.Blueprint;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Util.ChatUtil;
@@ -16,16 +15,14 @@ public class CommandDelete {
         return true;
     }
 
-    private static void deleteBlueprint(Player player, String name) {
-        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
-        if (!BlueprintUtil.doesBlueprintExist(name)) {
+    private static void deleteBlueprint(Player player, String blueprintName) {
+        if (!BlueprintUtil.doesBlueprintExist(blueprintName)) {
             ChatUtil.sendErrorMessage(player, "This blueprint doesn't exist.");
             return;
         }
-        config.set("blueprints." + name, null);
+        BlueprintUtil.delete(blueprintName);
 
-        ChatUtil.sendSuccessMessage(player, "Blueprint deleted.");
-        BlueprintUtil.saveBlueprintConfig(config);
+        ChatUtil.sendSuccessMessage(player, "Blueprint \"" + blueprintName + "\"deleted.");
     }
 
 }
