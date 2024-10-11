@@ -10,7 +10,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import cc.altoya.settlements.Build.BuildUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
 public class BlueprintUtil {

@@ -3,11 +3,9 @@ package cc.altoya.settlements.Blueprint;
 import java.util.List;
 
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import cc.altoya.settlements.Build.BuildUtil;
 import cc.altoya.settlements.Util.ChatUtil;

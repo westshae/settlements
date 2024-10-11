@@ -96,7 +96,7 @@ public class BuildUtil {
   }
 
   public static List<Material> getValidSupplyTypes() {
-    return List.of(Material.COAL);
+    return List.of(Material.COAL, Material.WHEAT);
   }
 
   public static boolean isValidSupplyType(Material material) {

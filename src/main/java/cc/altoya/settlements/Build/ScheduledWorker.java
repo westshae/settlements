@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Pose;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -22,6 +22,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.joml.Random;
 
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
+import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
 public class ScheduledWorker {
@@ -36,12 +37,20 @@ public class ScheduledWorker {
         List<String> chunkKeys = new ArrayList<>(section.getKeys(false));
 
         for (String key : chunkKeys) {
+          Chunk chunk = GeneralUtil.getChunkFromKey(key);
+          Integer wheatAmount = BuildUtil.getSuppliesFromStructure(chunk, Material.WHEAT);
+
+          if(wheatAmount <= 0){
+            continue;
+          }
+
           String ownerUuid = buildsConfig.getString("builds." + key + ".owner");
-
           Player player = Bukkit.getPlayer(UUID.fromString(ownerUuid));
-          Chunk chunk = player.getLocation().getChunk();
 
-          boolean isNearbyAndOnline = key.equals(GeneralUtil.getKeyFromChunk(chunk)) && player.isOnline();
+          Location playerChunk = player.getLocation();
+          int distance = (int) playerChunk.distance(chunk.getBlock(0, player.getLocation().getBlockY(), 0).getLocation());          
+
+          boolean isNearbyAndOnline = player.isOnline() && distance < 50;
           String blueprintName = BuildUtil.getStructureBlueprintName(chunk);
 
           List<String> resourceBlocks = blueprintConfig
@@ -50,6 +59,8 @@ public class ScheduledWorker {
           if (resourceBlocks.size() == 0) {
             continue;
           }
+
+          BuildUtil.editSupplies(player, chunk, Material.WHEAT, -1);
 
           String randomResourceBlockKey = resourceBlocks.get(new Random().nextInt(resourceBlocks.size()));
 
@@ -77,7 +88,6 @@ public class ScheduledWorker {
             new BukkitRunnable() {
               @Override
               public void run() {
-
                 villager.remove();
               }
             }.runTaskLater(GeneralUtil.getPlugin(), 100);

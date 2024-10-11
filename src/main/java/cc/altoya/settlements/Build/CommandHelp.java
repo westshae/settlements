@@ -32,6 +32,7 @@ public class CommandHelp {
         );
 
         commands.put("/build collectall", "/Build collect, for every single structure you own.");
+        commands.put("/build supply", "Take the item in your hand, and supplies it to the structure of the chunk you're in.");
 
         ChatUtil.sendCommandHelpMessage(player, "/build", commands);
     }

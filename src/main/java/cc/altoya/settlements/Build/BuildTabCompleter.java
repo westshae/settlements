@@ -12,7 +12,7 @@ import java.util.List;
 public class BuildTabCompleter implements TabCompleter {
 
     private final List<String> subCommands = Arrays.asList("new", "delete", "refresh", "collect", "plot", "upgrade",
-            "workers", "giveall", "transform", "collectall", "help");
+            "workers", "giveall", "transform", "collectall", "supply", "help");
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -39,7 +39,9 @@ public class BuildTabCompleter implements TabCompleter {
                 case "giveall":
                     completions.add("{amount}");
                     break;
-
+                case "supply":
+                    completions.add("{amount}");
+                    break;
                 default:
                     break;
             }
