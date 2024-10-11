@@ -25,7 +25,7 @@ public class CommandHelp {
             "/build collect", "Collects resources from the structure of the chunk you are in.",
             "/build plot", "Shows you where the bottom level of the structure will begin to generate to allow you to terraform.",
             "/build upgrade", "Upgrades your structure to the next level.",
-            "/build workers {amount}", "Set workers of structure in your chunk.",
+            "/build hire", "Hires a new worker.",
             "/build giveall {amount}", "Gives the executer x amount of all custom resources.",
             "/build transform", "Transforms the item in your hand to its custom version, if it exists.",
             "/build help", "The command you're looking at right now"

@@ -39,8 +39,9 @@ public class ScheduledWorker {
         for (String key : chunkKeys) {
           Chunk chunk = GeneralUtil.getChunkFromKey(key);
           Integer wheatAmount = BuildUtil.getSuppliesFromStructure(chunk, Material.WHEAT);
+          Integer workerCount = buildsConfig.getInt("builds." + key + ".workers");
 
-          if(wheatAmount <= 0){
+          if (wheatAmount < workerCount) {
             continue;
           }
 
@@ -48,7 +49,8 @@ public class ScheduledWorker {
           Player player = Bukkit.getPlayer(UUID.fromString(ownerUuid));
 
           Location playerChunk = player.getLocation();
-          int distance = (int) playerChunk.distance(chunk.getBlock(0, player.getLocation().getBlockY(), 0).getLocation());          
+          int distance = (int) playerChunk
+              .distance(chunk.getBlock(0, player.getLocation().getBlockY(), 0).getLocation());
 
           boolean isNearbyAndOnline = player.isOnline() && distance < 50;
           String blueprintName = BuildUtil.getStructureBlueprintName(chunk);
@@ -60,64 +62,64 @@ public class ScheduledWorker {
             continue;
           }
 
-          if(new Random().nextInt(100) < 50){
-            BuildUtil.editSupplies(player, chunk, Material.WHEAT, -1);
+          if (new Random().nextInt(100) < 50) {
+            BuildUtil.editSupplies(player, chunk, Material.WHEAT, (-1 * workerCount));
           }
 
+          for (int i = 0; i < workerCount; i++) {
+            String randomResourceBlockKey = resourceBlocks.get(new Random().nextInt(resourceBlocks.size()));
 
-          String randomResourceBlockKey = resourceBlocks.get(new Random().nextInt(resourceBlocks.size()));
+            Block randomBlock = BlueprintUtil.turnStringIntoBlock(randomResourceBlockKey);
 
-          Block randomBlock = BlueprintUtil.turnStringIntoBlock(randomResourceBlockKey);
+            String originBlockKey = buildsConfig.getString("builds." + key + ".first");
 
-          String originBlockKey = buildsConfig.getString("builds." + key + ".first");
+            Block originBlock = BlueprintUtil.turnStringIntoBlock(originBlockKey);
 
-          Block originBlock = BlueprintUtil.turnStringIntoBlock(originBlockKey);
+            Location nonRelativeRandomBlock = BlueprintUtil.getNonRelativeLocation(originBlock,
+                randomBlock.getLocation());
 
-          Location nonRelativeRandomBlock = BlueprintUtil.getNonRelativeLocation(originBlock,
-              randomBlock.getLocation());
+            if (isNearbyAndOnline) {
 
-          if (isNearbyAndOnline) {
+              Villager villager = (Villager) nonRelativeRandomBlock.getWorld().spawnEntity(
+                  originBlock.getLocation(),
+                  EntityType.VILLAGER);
+              villager.setInvulnerable(true);
+              new BukkitRunnable() {
+                @Override
+                public void run() {
+                  villager.getPathfinder().moveTo(nonRelativeRandomBlock);
+                }
+              }.runTaskTimer(GeneralUtil.getPlugin(), 1, 20);
+              new BukkitRunnable() {
+                @Override
+                public void run() {
+                  villager.remove();
+                }
+              }.runTaskLater(GeneralUtil.getPlugin(), 100);
+            }
 
-            Villager villager = (Villager) nonRelativeRandomBlock.getWorld().spawnEntity(
-                originBlock.getLocation(),
-                EntityType.VILLAGER);
-            villager.setInvulnerable(true);
             new BukkitRunnable() {
+
               @Override
               public void run() {
-                villager.getPathfinder().moveTo(nonRelativeRandomBlock);
-              }
-            }.runTaskTimer(GeneralUtil.getPlugin(), 1, 20);
-            new BukkitRunnable() {
-              @Override
-              public void run() {
-                villager.remove();
+                cancel();
+                BlockBreakEvent breakEvent = new BlockBreakEvent(nonRelativeRandomBlock.getBlock(),
+                    player);
+                PlayerInteractEvent interactEvent = new PlayerInteractEvent(player,
+                    Action.RIGHT_CLICK_BLOCK, null, nonRelativeRandomBlock.getBlock(), null);
+                breakEvent.getBlock().setMetadata("serverCalled",
+                    new FixedMetadataValue(GeneralUtil.getPlugin(), true));
+                breakEvent.getBlock().setMetadata("serverCalled",
+                    new FixedMetadataValue(GeneralUtil.getPlugin(), true));
+
+                Bukkit.getPluginManager().callEvent(breakEvent);
+                Bukkit.getPluginManager().callEvent(interactEvent);
+
+                return;
+
               }
             }.runTaskLater(GeneralUtil.getPlugin(), 100);
           }
-
-          new BukkitRunnable() {
-
-            @Override
-            public void run() {
-              cancel();
-              BlockBreakEvent breakEvent = new BlockBreakEvent(nonRelativeRandomBlock.getBlock(),
-                  player);
-              PlayerInteractEvent interactEvent = new PlayerInteractEvent(player,
-                  Action.RIGHT_CLICK_BLOCK, null, nonRelativeRandomBlock.getBlock(), null);
-              breakEvent.getBlock().setMetadata("serverCalled",
-                  new FixedMetadataValue(GeneralUtil.getPlugin(), true));
-              breakEvent.getBlock().setMetadata("serverCalled",
-                  new FixedMetadataValue(GeneralUtil.getPlugin(), true));
-
-              Bukkit.getPluginManager().callEvent(breakEvent);
-              Bukkit.getPluginManager().callEvent(interactEvent);
-
-              return;
-
-            }
-          }.runTaskLater(GeneralUtil.getPlugin(), 100);
-
         }
       }
     };

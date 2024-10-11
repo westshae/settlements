@@ -78,7 +78,6 @@ public class BlueprintTabCompleter implements TabCompleter {
                 case "upgrade":
                     completions.add("{version}");
                     break;
-
                 default:
                     break;
             }
