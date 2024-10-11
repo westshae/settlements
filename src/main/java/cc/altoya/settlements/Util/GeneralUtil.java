@@ -11,14 +11,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class GeneralUtil {
-  public static boolean handlePermissionsAndArguments(Player player, String permissionRoot, String permissionChild,
-      String[] args, int requiredArgs, String commandString) {
-    if (!player.hasPermission(permissionRoot + "." + permissionChild)) {
+  public static boolean handlePermissionsAndArguments(Player player, String permissionChild,
+      String[] args, int requiredArgs) {
+    if (!player.hasPermission("settlements." + permissionChild)) {
       ChatUtil.sendErrorMessage(player, "You don't have permission to run this command.");
       return false;
     }
     if (args.length != requiredArgs) {
-      ChatUtil.sendErrorMessage(player, "This command requires " + requiredArgs + " arguments. " + commandString);
+      ChatUtil.sendErrorMessage(player, "This command requires " + requiredArgs + " arguments. Use /" + args[0] + " help");
       return false;
     }
 

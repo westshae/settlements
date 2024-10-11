@@ -8,7 +8,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandCreate {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2, "/blueprint create")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 2)) {
             return true;
         }
 

@@ -11,7 +11,7 @@ import cc.altoya.settlements.Util.ItemUtil;
 
 public class CommandSupply {
   public static boolean handle(Player sender, String[] args) {
-    if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2, "/build supply")) {
+    if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 2)) {
       return true;
     }
 

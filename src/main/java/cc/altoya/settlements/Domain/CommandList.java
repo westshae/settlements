@@ -9,7 +9,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandList {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/domain list")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 1)) {
             return true;
         }
         sendPlayerOwnedChunks(sender);

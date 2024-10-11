@@ -12,7 +12,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandUnclaim {
   public static boolean handle(Player sender, String[] args) {
-    if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/domain unclaim")) {
+    if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 1)) {
       return true;
     }
     removePlayerChunk(sender, sender.getLocation().getChunk());

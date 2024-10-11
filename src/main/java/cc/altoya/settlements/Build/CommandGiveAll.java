@@ -10,7 +10,7 @@ import cc.altoya.settlements.Util.ItemUtil;
 
 public class CommandGiveAll {
   public static boolean handle(Player sender, String[] args) {
-    if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2, "/build giveall")) {
+    if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 2)) {
       return true;
     }
 

@@ -8,8 +8,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandUpgrade {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1,
-                "/build upgrade")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 1)) {
             return true;
         }
         Chunk chunk = sender.getLocation().getChunk();

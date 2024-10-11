@@ -8,7 +8,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandHousing {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 3, "/blueprint housing")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 3)) {
             return true;
         }
 

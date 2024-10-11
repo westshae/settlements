@@ -48,6 +48,19 @@ public class AllianceUtil {
         return GeneralUtil.getKeyFromPlayer(player).equals(allianceOwnerUuid);
     }
 
+    public static boolean isAllianceChatEnabled(Player player) {
+        FileConfiguration domainConfig = DomainUtil.getDomainConfig();
+
+        return domainConfig.getBoolean("domains." + player.getUniqueId().toString() + ".allianceChat");
+    }
+
+    public static void setAllianceChatEnabled(Player player, boolean toggle){
+        FileConfiguration domainConfig = DomainUtil.getDomainConfig();
+
+        domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".allianceChat", !isAllianceChatEnabled(player));
+        DomainUtil.saveDomainConfig(domainConfig);
+    }
+
     public static boolean doesPlayerHaveInvite(Player player, String allianceName) {
         FileConfiguration allianceConfig = getAllianceConfig();
         List<String> invites = allianceConfig.getStringList("alliances." + allianceName + ".invites");

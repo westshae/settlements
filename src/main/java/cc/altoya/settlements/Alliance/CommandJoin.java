@@ -13,8 +13,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandJoin {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2,
-                "/alliance join {alliance}")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 2)) {
             return true;
         }
         joinAlliance(sender, args[1]);

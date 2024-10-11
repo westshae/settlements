@@ -13,7 +13,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandDupe {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2, "/blueprint dupe")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 2)) {
             return true;
         }
 

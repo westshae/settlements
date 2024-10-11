@@ -9,7 +9,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandFirst {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2, "/blueprint first")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 2)) {
             return true;
         }
 

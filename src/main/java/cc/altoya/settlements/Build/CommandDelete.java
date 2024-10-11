@@ -16,7 +16,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandDelete {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/build delete")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 1)) {
             return true;
         }
 

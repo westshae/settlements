@@ -8,14 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import cc.altoya.settlements.Domain.DomainUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 public class EventAllianceChat implements Listener {
     @EventHandler
     public void playerChatEvent(AsyncChatEvent event) {
-        if(!DomainUtil.isAllianceChatMode(event.getPlayer())){
+        if(!AllianceUtil.isAllianceChatEnabled(event.getPlayer())){
             return;
         }
         String allianceName = AllianceUtil.getPlayerAlliance(event.getPlayer());
@@ -26,7 +26,8 @@ public class EventAllianceChat implements Listener {
             if(!player.isOnline()){
                 return;
             }
-            ChatUtil.sendAllianceMessage(player, allianceName, event.message().toString());
+            String plainTextMessage = PlainTextComponentSerializer.plainText().serialize(event.message());
+            ChatUtil.sendAllianceMessage(player, allianceName, plainTextMessage);
         });
         event.setCancelled(true);
 

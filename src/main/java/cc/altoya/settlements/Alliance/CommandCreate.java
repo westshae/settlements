@@ -12,8 +12,7 @@ import java.util.ArrayList;
 
 public class CommandCreate {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2,
-                "/alliance create {name}")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 2)) {
             return true;
         }
 
@@ -37,6 +36,7 @@ public class CommandCreate {
         List<String> alliancePlayers = new ArrayList<>();
         alliancePlayers.add(GeneralUtil.getKeyFromPlayer(player));
         allianceConfig.set("alliances." + allianceName + ".players", alliancePlayers);
+        allianceConfig.set("alliances." + allianceName + ".allianceChat", false);
 
         DomainUtil.saveDomainConfig(domainConfig);
         AllianceUtil.saveAllianceConfig(allianceConfig);

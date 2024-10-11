@@ -10,7 +10,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandSecond {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2, "/blueprint second")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 2)) {
             return true;
         }
 

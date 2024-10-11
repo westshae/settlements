@@ -9,7 +9,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandPlot {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/build plot")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 1)) {
             return true;
         }
 

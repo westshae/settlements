@@ -19,8 +19,7 @@ import cc.altoya.settlements.Util.ItemUtil;
 
 public class CommandNew {
   public static boolean handle(Player sender, String[] args) {
-    if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 2,
-        "/build new {blueprintName}")) {
+    if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 2)) {
       return true;
     }
     if(!BuildUtil.isBuildAreaEmpty(sender, args[1])){

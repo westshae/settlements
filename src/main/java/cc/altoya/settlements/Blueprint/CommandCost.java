@@ -9,7 +9,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandCost {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 3, "/blueprint cost")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 3)) {
             return true;
         }
 

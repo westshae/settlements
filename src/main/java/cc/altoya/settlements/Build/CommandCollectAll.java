@@ -12,7 +12,7 @@ import cc.altoya.settlements.Util.ItemUtil;
 
 public class CommandCollectAll {
   public static boolean handle(Player sender, String[] args) {
-    if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/build collectall")) {
+    if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 1)) {
       return true;
     }
 

@@ -11,7 +11,7 @@ import cc.altoya.settlements.Util.GeneralUtil;
 
 public class CommandClaim {
     public static boolean handle(Player sender, String[] args) {
-        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", "child", args, 1, "/domain claim")) {
+        if (!GeneralUtil.handlePermissionsAndArguments(sender, "settlements", args, 1)) {
             return true;
         }
         addPlayerChunk(sender, sender.getLocation().getChunk());
