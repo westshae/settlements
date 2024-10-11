@@ -60,7 +60,10 @@ public class ScheduledWorker {
             continue;
           }
 
-          BuildUtil.editSupplies(player, chunk, Material.WHEAT, -1);
+          if(new Random().nextInt(100) < 50){
+            BuildUtil.editSupplies(player, chunk, Material.WHEAT, -1);
+          }
+
 
           String randomResourceBlockKey = resourceBlocks.get(new Random().nextInt(resourceBlocks.size()));
 
