@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Domain.DomainUtil;
+import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
 public class AllianceUtil {
@@ -110,5 +112,30 @@ public class AllianceUtil {
 
         allianceConfig.set("alliances." + allianceName + ".invites", allianceInvites);
         AllianceUtil.saveAllianceConfig(allianceConfig);
+    }
+
+    public static void acceptAllianceInvite(Player player, String allianceName){
+        FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
+        FileConfiguration domainConfig = DomainUtil.getDomainConfig();
+        List<String> allianceInvites = allianceConfig.getStringList("alliances." + allianceName + ".invites");
+        allianceInvites.removeIf((playerUuid) -> playerUuid.equals(GeneralUtil.getKeyFromPlayer(player)));
+        allianceConfig.set("alliances." + allianceName + ".invites", allianceInvites);
+
+        List<String> alliancePlayers = allianceConfig.getStringList("alliances." + allianceName + ".players");
+
+        ChatUtil.sendSuccessMessage(player, "You've joined the alliance.");
+        alliancePlayers.forEach((playerUuid) -> {
+            ChatUtil.sendSuccessMessage(Bukkit.getPlayer(UUID.fromString(playerUuid)),
+                    player.displayName() + " has joined the alliance.");
+        });
+
+        alliancePlayers.add(GeneralUtil.getKeyFromPlayer(player));
+        allianceConfig.set("alliances." + allianceName + ".players", alliancePlayers);
+
+        domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance", allianceName);
+
+        AllianceUtil.saveAllianceConfig(allianceConfig);
+        DomainUtil.saveDomainConfig(domainConfig);
+
     }
 }

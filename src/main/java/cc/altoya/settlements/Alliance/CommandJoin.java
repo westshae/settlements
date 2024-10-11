@@ -1,13 +1,7 @@
 package cc.altoya.settlements.Alliance;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import cc.altoya.settlements.Domain.DomainUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -21,8 +15,6 @@ public class CommandJoin {
     }
 
     private static void joinAlliance(Player player, String allianceName) {
-        FileConfiguration allianceConfig = AllianceUtil.getAllianceConfig();
-        FileConfiguration domainConfig = DomainUtil.getDomainConfig();
 
         if (AllianceUtil.isPlayerInAlliance(player)) {
             ChatUtil.sendErrorMessage(player, "You are already in an alliance.");
@@ -36,25 +28,11 @@ public class CommandJoin {
             ChatUtil.sendErrorMessage(player, "You don't have an invite.");
             return;
         }
-        List<String> allianceInvites = allianceConfig.getStringList("alliances." + allianceName + ".invites");
-        allianceInvites.removeIf((playerUuid) -> playerUuid.equals(GeneralUtil.getKeyFromPlayer(player)));
-        allianceConfig.set("alliances." + allianceName + ".invites", allianceInvites);
 
-        List<String> alliancePlayers = allianceConfig.getStringList("alliances." + allianceName + ".players");
+        AllianceUtil.acceptAllianceInvite(player, allianceName);
 
         ChatUtil.sendSuccessMessage(player, "You've joined the alliance.");
-        alliancePlayers.forEach((playerUuid) -> {
-            ChatUtil.sendSuccessMessage(Bukkit.getPlayer(UUID.fromString(playerUuid)),
-                    player.displayName() + " has joined the alliance.");
-        });
-
-        alliancePlayers.add(GeneralUtil.getKeyFromPlayer(player));
-        allianceConfig.set("alliances." + allianceName + ".players", alliancePlayers);
-
-        domainConfig.set("domains." + GeneralUtil.getKeyFromPlayer(player) + ".alliance", allianceName);
-
-        AllianceUtil.saveAllianceConfig(allianceConfig);
-        DomainUtil.saveDomainConfig(domainConfig);
+        AllianceUtil.sendMessageToAlliance(allianceName, player.displayName() + " has joined the alliance.");
     }
 
 }
