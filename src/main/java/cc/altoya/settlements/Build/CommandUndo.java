@@ -17,6 +17,7 @@ public class CommandUndo {
 
   public static void undoBuild(Player player) {
     BuildUtil.undoBuilding(player.getLocation().getChunk());
+    BuildUtil.deleteData(player.getChunk());
     ChatUtil.sendSuccessMessage(player, "Building undone.");
   }
 }
