@@ -41,6 +41,8 @@ public class MainBuild implements CommandExecutor {
                 return CommandSupply.handle((Player) sender, args);
             case "info":
                 return CommandInfo.handle((Player) sender, args);
+            case "undo":
+                return CommandUndo.handle((Player) sender, args);
             case "help":
                 return CommandHelp.handle((Player) sender, args);
         }

@@ -42,7 +42,7 @@ public class ScheduledCleanUp {
           List<String> resourceBlocks = blueprintConfig
               .getStringList("blueprints." + blueprintName + ".resourceBlocks");
 
-          BuildUtil.placeBlocksFromStringList(resourceBlocks, firstBlock);
+          BuildUtil.placeNonRelativeBlocksFromStringList(resourceBlocks, firstBlock, blueprintName);
         }
       }
     };

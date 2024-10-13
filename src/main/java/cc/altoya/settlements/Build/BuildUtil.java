@@ -156,8 +156,9 @@ public class BuildUtil {
     return config.getInt("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".resources." + material);
   }
 
-  public static void placeBlocksFromStringList(List<String> blocks, Block firstBlock) {
+  public static void placeNonRelativeBlocksFromStringList(List<String> blocks, Block firstBlock, String blueprintName) {
     new BukkitRunnable() {
+      List<String> removedBlocked = new ArrayList<String>();
       int index = 0;
 
       @Override
@@ -173,7 +174,40 @@ public class BuildUtil {
             Location nonRelativeLocation = BlueprintUtil.getNonRelativeLocation(firstBlock,
                 relativeLocation);
 
+            removedBlocked.add(BlueprintUtil.turnBlockIntoString(nonRelativeLocation.getBlock(), nonRelativeLocation));
+
             BuildUtil.placeBlockForStructure(nonRelativeLocation, block.getType(), block.getBlockData());
+
+            blocksProcessed++;
+          }
+          index++;
+        }
+
+        if (index < blocks.size()) {
+          this.runTaskLater(GeneralUtil.getPlugin(), 1);
+        } else {
+          BuildUtil.saveDeletedBlocksToBuild(removedBlocked, firstBlock.getChunk());
+          this.cancel();
+        }
+      }
+    }.runTaskTimer(GeneralUtil.getPlugin(), 0, 1);
+
+  }
+
+  public static void placeBlocksFromStringList(List<String> blocks) {
+    new BukkitRunnable() {
+      int index = 0;
+
+      @Override
+      public void run() {
+        int blocksProcessed = 0;
+
+        while (index < blocks.size() && blocksProcessed < 1) {
+          String blockString = blocks.get(index);
+          Block block = BlueprintUtil.turnStringIntoBlock(blockString);
+
+          if (block != null) {
+            BuildUtil.placeBlockForStructure(block.getLocation(), block.getType(), block.getBlockData());
 
             blocksProcessed++;
           }
@@ -188,6 +222,18 @@ public class BuildUtil {
       }
     }.runTaskTimer(GeneralUtil.getPlugin(), 0, 1);
 
+  }
+
+
+  public static void saveDeletedBlocksToBuild(List<String> deletedBlocksList, Chunk chunk){
+    FileConfiguration buildConfig = getBuildConfig();
+    buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".deletedBlocks", deletedBlocksList);
+    saveBuildConfig(buildConfig);
+  }
+
+  public static List<String> getDeletedBlocks(Chunk chunk){
+    FileConfiguration buildConfig = getBuildConfig();
+    return buildConfig.getStringList("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".deletedBlocks");
   }
 
   public static List<String> getPlayerBuilds(Player player) {
@@ -333,8 +379,15 @@ public class BuildUtil {
 
     List<String> blocks = blueprintConfig.getStringList("blueprints." + blueprintName + ".blocks");
 
-    BuildUtil.placeBlocksFromStringList(blocks, buildFirstBlock);
+    BuildUtil.placeNonRelativeBlocksFromStringList(blocks, buildFirstBlock, blueprintName);
   }
+
+  public static void undoBuilding(Chunk chunk) {
+    List<String> deletedBlocks = getDeletedBlocks(chunk);
+
+    BuildUtil.placeBlocksFromStringList(deletedBlocks);
+  }
+
 
   public static void displayParticleChunkBorder(Chunk chunk, int yLevel) {
     new BukkitRunnable() {
@@ -418,6 +471,7 @@ public class BuildUtil {
     commands.put("/build plot",
         "Shows you where the bottom level of the structure will begin to generate to allow you to terraform.");
     commands.put("/build upgrade", "Upgrades your structure to the next level.");
+    commands.put("/build undo", "Undoes building and restores the land to previous.");
     commands.put("/build hire", "Hires a new worker.");
     commands.put("/build help", "The command you're looking at right now.");
     commands.put("/build supply",
