@@ -29,16 +29,12 @@ public class MainBuild implements CommandExecutor {
                 return CommandDelete.handle((Player) sender, args);
             case "refresh":
                 return CommandRefresh.handle((Player) sender, args);
-            case "collect":
-                return CommandCollect.handle((Player) sender, args);
             case "plot":
                 return CommandPlot.handle((Player) sender, args);
             case "upgrade":
                 return CommandUpgrade.handle((Player) sender, args);
             case "hire":
                 return CommandHire.handle((Player) sender, args);
-            case "supply":
-                return CommandSupply.handle((Player) sender, args);
             case "info":
                 return CommandInfo.handle((Player) sender, args);
             case "undo":

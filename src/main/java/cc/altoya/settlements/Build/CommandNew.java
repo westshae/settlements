@@ -1,12 +1,10 @@
 package cc.altoya.settlements.Build;
 
 import org.bukkit.Chunk;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.City.CityUtil;
-import cc.altoya.settlements.Item.ItemUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -42,17 +40,6 @@ public class CommandNew {
     if (CityUtil.isChunkClaimed(chunk) && !CityUtil.doesPlayerOwnChunk(player, chunk)) {
       ChatUtil.sendErrorMessage(player, "This chunk is owned by someone else.");
       return;
-    }
-
-    ConfigurationSection costs = BlueprintUtil.getBlueprintCosts(blueprintName);
-
-    if (costs != null && !ItemUtil.hasCosts(player, costs)) {
-      ChatUtil.sendErrorMessage(player, "You're missing the resources required for this structure.");
-      return;
-    }
-
-    if(costs != null){
-      ItemUtil.removeItems(player, costs);
     }
 
     BuildUtil.setBuildConfig(player, blueprintName);

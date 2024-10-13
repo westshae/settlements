@@ -16,7 +16,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Build.BuildUtil;
-import cc.altoya.settlements.Item.ItemUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -271,7 +270,9 @@ public class BlueprintUtil {
         int y2 = secondBlock.getY();
         int z2 = secondBlock.getZ();
 
-        List<Material> resourceBlockList = ItemUtil.getAllResourceBlocks(firstBlock.getChunk());
+        // List<Material> resourceBlockList = ItemUtil.getAllResourceBlocks(firstBlock.getChunk());
+
+        //TODO IMPLEMENT A SYSTEM WHERE RESOURCE BLOCKS ARE BASED ON THE STRUCTURE TYPE. 
 
         List<String> resourceBlocksInChunk = new ArrayList<String>();
 
@@ -286,9 +287,9 @@ public class BlueprintUtil {
                     }
                     Location relativeLocation = BlueprintUtil.getRelativeLocation(firstBlock, block);
                     String blockString = BlueprintUtil.turnBlockIntoString(block, relativeLocation);
-                    if (resourceBlockList.contains(block.getType())) {
-                        resourceBlocksInChunk.add(blockString);
-                    }
+                    // if (resourceBlockList.contains(block.getType())) {
+                    //     resourceBlocksInChunk.add(blockString);
+                    // }
                     blockList.add(blockString);
                 }
             }

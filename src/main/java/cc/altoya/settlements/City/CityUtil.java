@@ -2,6 +2,7 @@ package cc.altoya.settlements.City;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -113,6 +114,14 @@ public class CityUtil {
             + ".level",
             currentLevel + 1);
     CityUtil.saveCityConfig(cityConfig);
+  }
+
+  public static void addResourceToCity(Player player, Material material, int amount){
+    FileConfiguration cityConfig = CityUtil.getCityConfig();
+    Integer resourceCount = cityConfig.getInt("cities." + GeneralUtil.getKeyFromPlayer(player) + ".resources." + material.toString());
+    cityConfig.set(
+        "cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + material.toString(), resourceCount + amount);
+    saveCityConfig(cityConfig);
   }
 
 

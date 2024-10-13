@@ -23,7 +23,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.City.CityUtil;
-import cc.altoya.settlements.Item.ItemUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -254,19 +253,6 @@ public class BuildUtil {
     return playerBuilds;
   }
 
-  public static void collectResources(Player player, Chunk chunk) {
-    List<Material> materials = ItemUtil.getAllResourceMaterials();
-    for (Material material : materials) {
-      Integer resourceAmount = BuildUtil.getResourcesFromStructure(chunk, material);
-      if (resourceAmount == 0) {
-        continue;
-      }
-      BuildUtil.editResources(player, chunk, material, -resourceAmount);
-
-      ItemUtil.givePlayerCustomItem(player, material, resourceAmount);
-    }
-  }
-
   public static Block getFirstBlock(Chunk chunk) {
     FileConfiguration buildConfig = BuildUtil.getBuildConfig();
 
@@ -423,23 +409,6 @@ public class BuildUtil {
     }.runTaskTimer(GeneralUtil.getPlugin(), 0L, 5);
   }
 
-  public static boolean validSupplyItem(ItemStack item, int amount){
-    if(amount < 0){
-      return false;
-    }
-    if(item.getAmount() < amount){
-      return false;
-    }
-    if (!BuildUtil.isValidSupplyType(item.getType())) {
-      return false;
-    }
-    if(!ItemUtil.isItemCustom(item)){
-      return false;
-    }
-
-    return true;
-  }
-
   public static void removeSupplyItems(Player player, Chunk chunk, ItemStack item, int amount){
     BuildUtil.editSupplies(player, chunk, item.getType(), amount);
     item.setAmount(item.getAmount() - amount);
@@ -466,7 +435,6 @@ public class BuildUtil {
     commands.put("/build delete", "Deletes any structure within the chunk you are in.");
     commands.put("/build new {blueprintName}", "Generates a structure in the chunk you are in.");
     commands.put("/build refresh", "Deletes then builds the structure of the chunk you are in.");
-    commands.put("/build collect", "Collects resources from the structure of the chunk you are in.");
     commands.put("/build info", "Sends you information about the chunk you are in.");
     commands.put("/build plot",
         "Shows you where the bottom level of the structure will begin to generate to allow you to terraform.");
@@ -474,8 +442,6 @@ public class BuildUtil {
     commands.put("/build undo", "Undoes building and restores the land to previous.");
     commands.put("/build hire", "Hires a new worker.");
     commands.put("/build help", "The command you're looking at right now.");
-    commands.put("/build supply",
-        "Take the item in your hand, and supplies it to the structure of the chunk you're in.");
     return commands;
   }
 }

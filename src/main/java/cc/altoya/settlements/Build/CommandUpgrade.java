@@ -1,11 +1,9 @@
 package cc.altoya.settlements.Build;
 
 import org.bukkit.Chunk;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
-import cc.altoya.settlements.Item.ItemUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -22,18 +20,6 @@ public class CommandUpgrade {
         Chunk chunk = player.getLocation().getChunk();
         String currentBlueprintName = BuildUtil.getStructureBlueprintName(chunk);
         String nextBlueprintName = BlueprintUtil.getUpgradedBlueprintName(currentBlueprintName);
-
-        ConfigurationSection costs = BlueprintUtil.getBlueprintCosts(nextBlueprintName);
-
-        if(costs != null && !ItemUtil.hasCosts(player, costs)){
-            ChatUtil.sendErrorMessage(player, "You don't have the resources required to upgrade.");
-            return;
-        }
-
-        if(costs != null){
-            ItemUtil.removeItems(player, costs);
-        }
-
 
         BuildUtil.upgradeStructure(player, nextBlueprintName);
 
