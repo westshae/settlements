@@ -53,18 +53,6 @@ public class CityUtil {
     CityUtil.saveCityConfig(config);
   }
 
-  public static void unclaimChunk(Player player, Chunk chunk) {
-    FileConfiguration config = CityUtil.getCityConfig();
-
-    config.set("cities.claimedTiles." + GeneralUtil.getKeyFromChunk(chunk), null);
-    String playerPath = "cities." + GeneralUtil.getKeyFromPlayer(player) + ".claims";
-    List<String> claims = config.getStringList(playerPath);
-    claims.removeIf(claim -> claim.equals(GeneralUtil.getKeyFromChunk(chunk)));
-    config.set(playerPath, claims);
-
-    CityUtil.saveCityConfig(config);
-  }
-
   public static void setPlayerAlliance(Player player, String allianceName) {
     FileConfiguration config = CityUtil.getCityConfig();
 
@@ -80,28 +68,53 @@ public class CityUtil {
   }
 
   public static boolean isPlayerMember(Player player) {
-    FileConfiguration domainConfig = CityUtil.getCityConfig();
-    return domainConfig.contains("cities." + GeneralUtil.getKeyFromPlayer(player) + ".alliance");
+    FileConfiguration cityConfig = CityUtil.getCityConfig();
+    return cityConfig.contains("cities." + GeneralUtil.getKeyFromPlayer(player) + ".alliance");
   }
 
   public static String getPlayerAllianceName(Player player) {
-    FileConfiguration domainConfig = CityUtil.getCityConfig();
-    return domainConfig.getString("cities." + GeneralUtil.getKeyFromPlayer(player) + ".alliance");
+    FileConfiguration cityConfig = CityUtil.getCityConfig();
+    return cityConfig.getString("cities." + GeneralUtil.getKeyFromPlayer(player) + ".alliance");
   }
 
   public static boolean isChatEnabled(Player player) {
-    FileConfiguration domainConfig = CityUtil.getCityConfig();
+    FileConfiguration cityConfig = CityUtil.getCityConfig();
 
-    return domainConfig.getBoolean("cities." + player.getUniqueId().toString() + ".allianceChat");
+    return cityConfig.getBoolean("cities." + player.getUniqueId().toString() + ".allianceChat");
   }
 
   public static void setAllianceChatEnabled(Player player, boolean toggle) {
-    FileConfiguration domainConfig = CityUtil.getCityConfig();
+    FileConfiguration cityConfig = CityUtil.getCityConfig();
 
-    domainConfig.set("cities." + GeneralUtil.getKeyFromPlayer(player) + ".allianceChat",
+    cityConfig.set("cities." + GeneralUtil.getKeyFromPlayer(player) + ".allianceChat",
         !isChatEnabled(player));
-    CityUtil.saveCityConfig(domainConfig);
+    CityUtil.saveCityConfig(cityConfig);
   }
+
+  public static void addStructureToCity(Player player, String blueprintName, Chunk chunk) {
+    FileConfiguration cityConfig = CityUtil.getCityConfig();
+    cityConfig.set(
+        "cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + GeneralUtil.getKeyFromChunk(chunk)
+            + ".type",
+        blueprintName);
+    cityConfig.set(
+        "cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + GeneralUtil.getKeyFromChunk(chunk)
+            + ".level",
+        1);
+    CityUtil.saveCityConfig(cityConfig);
+  }
+
+  public static void upgradeStructureInCity(Player player, String blueprintName, Chunk chunk) {
+    FileConfiguration cityConfig = CityUtil.getCityConfig();
+    Integer currentLevel = cityConfig.getInt("cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + GeneralUtil.getKeyFromChunk(chunk)
+            + ".level");
+    cityConfig.set(
+        "cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + GeneralUtil.getKeyFromChunk(chunk)
+            + ".level",
+            currentLevel + 1);
+    CityUtil.saveCityConfig(cityConfig);
+  }
+
 
   public static HashMap<String, String> getCityCommands() {
     HashMap<String, String> commands = new HashMap<>();

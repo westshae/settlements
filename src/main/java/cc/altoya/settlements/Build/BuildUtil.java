@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
+import cc.altoya.settlements.City.CityUtil;
 import cc.altoya.settlements.Item.ItemUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
@@ -207,41 +208,6 @@ public class BuildUtil {
     return playerBuilds;
   }
 
-  public static boolean isBuildAreaEmpty(Player player, String blueprintName) {
-    Chunk chunk = player.getLocation().getChunk();
-
-    int playerHeight = player.getLocation().getBlockY();
-
-    Block newFirstBlock = chunk.getBlock(0, playerHeight, 0);
-    Block newSecondBlock = BlueprintUtil.getRelativeSecondBlock(newFirstBlock, blueprintName);
-
-    // Get the coordinates of the first and second blocks
-    int minX = Math.min(newFirstBlock.getX(), newSecondBlock.getX());
-    int minY = Math.min(newFirstBlock.getY(), newSecondBlock.getY());
-    int minZ = Math.min(newFirstBlock.getZ(), newSecondBlock.getZ());
-    int maxX = Math.max(newFirstBlock.getX(), newSecondBlock.getX());
-    int maxY = Math.max(newFirstBlock.getY(), newSecondBlock.getY());
-    int maxZ = Math.max(newFirstBlock.getZ(), newSecondBlock.getZ());
-
-    for (int x = minX; x <= maxX; x++) {
-      for (int y = minY; y <= maxY; y++) {
-        for (int z = minZ; z <= maxZ; z++) {
-          Block block = chunk.getWorld().getBlockAt(x, y, z);
-
-          if (block.getType() != Material.AIR) {
-            ChatUtil.sendErrorMessage(player, "The area you wish you place your structure isn't empty.");
-            ChatUtil.sendErrorMessage(player, "Use /build plot to see the outline. Clear between Y=" + minY + " and Y="
-                + maxY + " within the particles.");
-
-            return false;
-          }
-        }
-      }
-    }
-
-    return true;
-  }
-
   public static void collectResources(Player player, Chunk chunk) {
     List<Material> materials = ItemUtil.getAllResourceMaterials();
     for (Material material : materials) {
@@ -345,7 +311,7 @@ public class BuildUtil {
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".version", version);
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".playerHeight", playerHeight);
 
-    Block newFirstBlock = chunk.getBlock(0, playerHeight, 0);
+    Block newFirstBlock = chunk.getBlock(0, playerHeight - 5, 0);
     Block newSecondBlock = BlueprintUtil.getRelativeSecondBlock(newFirstBlock, blueprintName);
 
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".first",
@@ -354,6 +320,8 @@ public class BuildUtil {
         BlueprintUtil.turnBlockIntoString(newSecondBlock, newSecondBlock.getLocation()));
 
     BuildUtil.saveBuildConfig(buildConfig);
+
+    CityUtil.addStructureToCity(player, blueprintName, chunk);
   }
 
   public static void generateBuildingFromBlueprint(Player player, String blueprintName) {

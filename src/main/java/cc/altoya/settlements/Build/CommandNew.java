@@ -28,11 +28,6 @@ public class CommandNew {
       return;
     }
 
-    if (!BuildUtil.isBuildAreaEmpty(player, blueprintName)) {
-      ChatUtil.sendErrorMessage(player, "The require required isn't empty of blocks.");
-      return;
-    }
-
     if (BuildUtil.isChunkStructure(chunk)) {
       ChatUtil.sendErrorMessage(player, "This chunk is already a structure");
       return;
