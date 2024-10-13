@@ -189,11 +189,12 @@ public class BlueprintUtil {
         BlueprintUtil.saveBlueprintConfig(config);
     }
 
-    public static void create(String blueprintName) {
+    public static void create(String blueprintName, Material material) {
         FileConfiguration config = BlueprintUtil.getBlueprintConfig();
 
         config.set("blueprints." + blueprintName + ".version", 1);
         config.set("blueprints." + blueprintName + ".housing", 0);
+        config.set("blueprints." + blueprintName + ".material", material.toString());
 
         BlueprintUtil.saveBlueprintConfig(config);
     }
@@ -322,6 +323,12 @@ public class BlueprintUtil {
         FileConfiguration blueprintConfig = getBlueprintConfig();
         return blueprintConfig.getConfigurationSection("blueprints." + blueprintName + ".cost");
     }
+
+    public static String getBlueprintMaterial(String blueprintName) {
+        FileConfiguration blueprintConfig = getBlueprintConfig();
+        return blueprintConfig.getString("blueprints." + blueprintName + ".material");
+    }
+
 
     public static HashMap<String, String> getBlueprintCommands() {
         HashMap<String, String> commands = new HashMap<>();

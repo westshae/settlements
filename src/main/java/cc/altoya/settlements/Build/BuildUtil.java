@@ -223,14 +223,13 @@ public class BuildUtil {
 
   }
 
-
-  public static void saveDeletedBlocksToBuild(List<String> deletedBlocksList, Chunk chunk){
+  public static void saveDeletedBlocksToBuild(List<String> deletedBlocksList, Chunk chunk) {
     FileConfiguration buildConfig = getBuildConfig();
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".deletedBlocks", deletedBlocksList);
     saveBuildConfig(buildConfig);
   }
 
-  public static List<String> getDeletedBlocks(Chunk chunk){
+  public static List<String> getDeletedBlocks(Chunk chunk) {
     FileConfiguration buildConfig = getBuildConfig();
     return buildConfig.getStringList("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".deletedBlocks");
   }
@@ -337,10 +336,14 @@ public class BuildUtil {
 
     int playerHeight = player.getLocation().getBlockY();
     Chunk chunk = player.getLocation().getChunk();
+    Material material = Material.getMaterial(BlueprintUtil.getBlueprintMaterial(blueprintName));
+
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".owner",
         GeneralUtil.getKeyFromPlayer(player));
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".blueprintName", blueprintName);
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".version", version);
+    buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".material",
+        material.toString());
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".playerHeight", playerHeight);
 
     Block newFirstBlock = chunk.getBlock(0, playerHeight - 5, 0);
@@ -353,7 +356,7 @@ public class BuildUtil {
 
     BuildUtil.saveBuildConfig(buildConfig);
 
-    CityUtil.addStructureToCity(player, blueprintName, chunk);
+    CityUtil.addStructureToCity(player, blueprintName, chunk, material);
   }
 
   public static void generateBuildingFromBlueprint(Player player, String blueprintName) {
@@ -373,7 +376,6 @@ public class BuildUtil {
 
     BuildUtil.placeBlocksFromStringList(deletedBlocks);
   }
-
 
   public static void displayParticleChunkBorder(Chunk chunk, int yLevel) {
     new BukkitRunnable() {
@@ -409,19 +411,19 @@ public class BuildUtil {
     }.runTaskTimer(GeneralUtil.getPlugin(), 0L, 5);
   }
 
-  public static void removeSupplyItems(Player player, Chunk chunk, ItemStack item, int amount){
+  public static void removeSupplyItems(Player player, Chunk chunk, ItemStack item, int amount) {
     BuildUtil.editSupplies(player, chunk, item.getType(), amount);
     item.setAmount(item.getAmount() - amount);
   }
 
-  public static void upgradeStructure(Player player, String nextBlueprintName){
+  public static void upgradeStructure(Player player, String nextBlueprintName) {
     Chunk chunk = player.getLocation().getChunk();
     BuildUtil.undoBuilding(chunk);
     BuildUtil.setBlueprintName(chunk, player, nextBlueprintName);
     BuildUtil.generateBuildingFromBlueprint(player, nextBlueprintName);
   }
 
-  public static void sendChunkInfo(Player player, Chunk chunk){
+  public static void sendChunkInfo(Player player, Chunk chunk) {
     ChatUtil.sendSuccessMessage(player, "Chunk X" + chunk.getX() + ":Y" + chunk.getZ() + " Information.");
     String blueprintName = BuildUtil.getStructureBlueprintName(chunk);
     ChatUtil.sendSuccessMessage(player, "Structure Blueprint: " + (blueprintName != null ? blueprintName : "N/A"));

@@ -1,5 +1,6 @@
 package cc.altoya.settlements.Blueprint;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Util.ChatUtil;
@@ -21,7 +22,9 @@ public class CommandCreate {
             return;
         }
 
-        BlueprintUtil.create(blueprintName);
+        Material material = player.getInventory().getItemInMainHand().getType();
+
+        BlueprintUtil.create(blueprintName, material);
 
         ChatUtil.sendSuccessMessage(player, "Blueprint \"" + blueprintName + "\" created.");
     }

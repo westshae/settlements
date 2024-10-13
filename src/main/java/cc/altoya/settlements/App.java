@@ -22,6 +22,7 @@ import cc.altoya.settlements.City.EventGriefPrevention;
 import cc.altoya.settlements.City.EventProtectBlocks;
 import cc.altoya.settlements.City.EventProtectEntities;
 import cc.altoya.settlements.City.MainCity;
+import cc.altoya.settlements.City.ScheduledCollection;
 
 
 public class App extends JavaPlugin {
@@ -54,6 +55,7 @@ public class App extends JavaPlugin {
         //Register runnables
         this.getServer().getScheduler().runTaskTimer(this, ScheduledWorker.getRunnable(), 200L, 300L);//Wait 200 ticks (10s) then run every 300 ticks (15s)
         this.getServer().getScheduler().runTask(this, ScheduledCleanUp.getRunnable());//Run instantly, once.
+        this.getServer().getScheduler().runTask(this, ScheduledCollection.getRunnable());//Run instantly, internally rerun.
     }
 
     private void initializeConfig() {

@@ -84,6 +84,11 @@ public class GeneralUtil {
     }
   }
 
+  public static Player getPlayerFromStringUuid(String uuidString) {
+    UUID uuid = UUID.fromString(uuidString);
+    return Bukkit.getServer().getPlayer(uuid);
+  }
+
   public static JavaPlugin getPlugin() {
     JavaPlugin plugin = (JavaPlugin) Bukkit.getPluginManager().getPlugin("settlements");
 

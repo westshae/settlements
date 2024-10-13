@@ -92,7 +92,7 @@ public class CityUtil {
     CityUtil.saveCityConfig(cityConfig);
   }
 
-  public static void addStructureToCity(Player player, String blueprintName, Chunk chunk) {
+  public static void addStructureToCity(Player player, String blueprintName, Chunk chunk, Material material) {
     FileConfiguration cityConfig = CityUtil.getCityConfig();
     cityConfig.set(
         "cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + GeneralUtil.getKeyFromChunk(chunk)
@@ -102,6 +102,11 @@ public class CityUtil {
         "cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + GeneralUtil.getKeyFromChunk(chunk)
             + ".level",
         1);
+        cityConfig.set(
+          "cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + GeneralUtil.getKeyFromChunk(chunk)
+              + ".material",
+          material.toString());
+  
     CityUtil.saveCityConfig(cityConfig);
   }
 
@@ -120,7 +125,7 @@ public class CityUtil {
     FileConfiguration cityConfig = CityUtil.getCityConfig();
     Integer resourceCount = cityConfig.getInt("cities." + GeneralUtil.getKeyFromPlayer(player) + ".resources." + material.toString());
     cityConfig.set(
-        "cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + material.toString(), resourceCount + amount);
+        "cities." + GeneralUtil.getKeyFromPlayer(player) + ".resources." + material.toString(), resourceCount + amount);
     saveCityConfig(cityConfig);
   }
 
