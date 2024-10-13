@@ -105,10 +105,8 @@ public class CityUtil {
 
   public static HashMap<String, String> getCityCommands() {
     HashMap<String, String> commands = new HashMap<>();
-    commands.put("/city claim", "Claims the chunk you're currently in.");
-    commands.put("/city unclaim", "Unclaims the chunk you're currently in.");
-    commands.put("/city collectall", "/Build collect, for every single structure you own.");
     commands.put("/city list", "Lists all your claimed chunks.");
+    commands.put("/city expand", "Expands your city claims by a random additional chunk.");
     commands.put("/city help", "The command you're looking at right now.");
     return commands;
   }

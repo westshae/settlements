@@ -23,14 +23,10 @@ public class MainCity implements CommandExecutor {
         }
 
         switch (args[0].toLowerCase()) {
-            case "claim":
-                return CommandClaim.handle((Player) sender, args);
-            case "unclaim":
-                return CommandUnclaim.handle((Player) sender, args);
             case "list":
                 return CommandList.handle((Player) sender, args);
-            case "collectall":
-                return CommandCollectAll.handle((Player) sender, args);
+            case "expand":
+                return CommandExpand.handle((Player) sender, args);
             case "help":
                 return CommandHelp.handle((Player) sender, args);
         }

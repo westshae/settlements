@@ -18,6 +18,7 @@ import cc.altoya.settlements.Build.MainBuild;
 import cc.altoya.settlements.Build.ScheduledCleanUp;
 import cc.altoya.settlements.Build.ScheduledWorker;
 import cc.altoya.settlements.City.CityTabCompleter;
+import cc.altoya.settlements.City.EventFoundCity;
 import cc.altoya.settlements.City.EventGriefPrevention;
 import cc.altoya.settlements.City.EventProtectBlocks;
 import cc.altoya.settlements.City.EventProtectEntities;
@@ -54,6 +55,7 @@ public class App extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EventGriefPrevention(), this);
         this.getServer().getPluginManager().registerEvents(new EventEnterStructureChunk(), this);
         this.getServer().getPluginManager().registerEvents(new EventAllianceOnJoin(), this);
+        this.getServer().getPluginManager().registerEvents(new EventFoundCity(), this);
 
         //Register runnables
         this.getServer().getScheduler().runTaskTimer(this, ScheduledWorker.getRunnable(), 200L, 300L);//Wait 200 ticks (10s) then run every 300 ticks (15s)
