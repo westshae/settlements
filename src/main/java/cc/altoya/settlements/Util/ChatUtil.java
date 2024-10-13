@@ -2,30 +2,31 @@ package cc.altoya.settlements.Util;
 
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 
 public class ChatUtil {
-  private static String getBoxedString(String middleText, ChatColor color){
-    return ChatColor.GRAY + "[" +  color + middleText + ChatColor.GRAY + "] ";
+  private static String getBoxedString(String middleText, ChatColor color) {
+    return ChatColor.GRAY + "[" + color + middleText + ChatColor.GRAY + "] ";
   }
 
-  private static String formatErrorMessage(String message){
+  private static String formatErrorMessage(String message) {
     return getBoxedString("!!!", ChatColor.RED) + ChatColor.RED + message;
   }
 
-  private static String formatSuccessMessage(String message){
+  private static String formatSuccessMessage(String message) {
     return getBoxedString("+", ChatColor.DARK_GREEN) + ChatColor.GREEN + message;
   }
-
 
   public static void sendErrorMessage(Player player, String message) {
     player.sendMessage(Component.text(formatErrorMessage(message)));
   }
 
-  public static void sendErrorBar(Player player, String message){
+  public static void sendErrorBar(Player player, String message) {
     player.sendActionBar(Component.text(formatErrorMessage(message)));
   }
 
@@ -33,7 +34,7 @@ public class ChatUtil {
     player.sendMessage(Component.text(formatSuccessMessage(message)));
   }
 
-  public static void sendSuccessBar(Player player, String message){
+  public static void sendSuccessBar(Player player, String message) {
     player.sendActionBar(Component.text(formatSuccessMessage(message)));
   }
 
@@ -52,6 +53,32 @@ public class ChatUtil {
 
       String commandMessage = ChatColor.GREEN + key + ": " + ChatColor.WHITE + value;
       player.sendMessage(commandMessage);
+    }
+  }
+
+  public static void sendAllPlayersAllianceJoin(Player player, String allianceName) {
+    ChatColor color = null;
+    switch (allianceName.toLowerCase()) {
+      case "red":
+        color = ChatColor.RED;
+        break;
+      case "blue":
+        color = ChatColor.BLUE;
+        break;
+      case "green":
+        color = ChatColor.GREEN;
+        break;
+      case "yellow":
+        color = ChatColor.YELLOW;
+        break;
+
+      default:
+        return;
+    }
+    String displayName = PlainTextComponentSerializer.plainText().serialize(player.displayName());
+    String message = "" + color + ChatColor.BOLD + displayName + " has joined the " + allianceName + " alliance!";
+    for (Player serverPlayer : Bukkit.getServer().getOnlinePlayers()) {
+      serverPlayer.sendMessage(message);
     }
   }
 }

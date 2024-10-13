@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

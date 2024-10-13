@@ -25,14 +25,6 @@ public class MainAlliance implements CommandExecutor{
         switch (args[0].toLowerCase()) {
             case "create":
                 return CommandCreate.handle((Player) sender, args);
-            case "delete": 
-                return CommandDelete.handle((Player) sender, args);
-            case "invite":
-                return CommandInvite.handle((Player) sender, args);
-            case "join":
-                return CommandJoin.handle((Player) sender, args);
-            case "leave":
-                return CommandLeave.handle((Player) sender, args);
             case "info":
                 return CommandInfo.handle((Player) sender, args);
             case "chat":

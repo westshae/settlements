@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import cc.altoya.settlements.Alliance.AllianceTabCompleter;
 import cc.altoya.settlements.Alliance.EventAllianceChat;
+import cc.altoya.settlements.Alliance.EventAllianceOnJoin;
 import cc.altoya.settlements.Alliance.MainAlliance;
 import cc.altoya.settlements.Blueprint.BlueprintTabCompleter;
 import cc.altoya.settlements.Blueprint.MainBlueprint;
@@ -52,9 +53,10 @@ public class App extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EventInteractStructure(), this);
         this.getServer().getPluginManager().registerEvents(new EventGriefPrevention(), this);
         this.getServer().getPluginManager().registerEvents(new EventEnterStructureChunk(), this);
+        this.getServer().getPluginManager().registerEvents(new EventAllianceOnJoin(), this);
 
         //Register runnables
-        this.getServer().getScheduler().runTaskTimer(this, ScheduledWorker.getRunnable(), 200L, 100L);//Wait 200 ticks (10s) then run every 100 ticks (5s)
+        this.getServer().getScheduler().runTaskTimer(this, ScheduledWorker.getRunnable(), 200L, 300L);//Wait 200 ticks (10s) then run every 300 ticks (15s)
         this.getServer().getScheduler().runTask(this, ScheduledCleanUp.getRunnable());//Run instantly, once.
     }
 

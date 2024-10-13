@@ -2,7 +2,6 @@ package cc.altoya.settlements.Alliance;
 
 import org.bukkit.entity.Player;
 
-import cc.altoya.settlements.City.CityUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -17,10 +16,6 @@ public class CommandCreate {
     }
 
     private static void createAlliance(Player player, String allianceName) {
-        if (CityUtil.isPlayerMember(player)) {
-            ChatUtil.sendErrorMessage(player, "You are already in an alliance.");
-            return;
-        }
         if (AllianceUtil.exists(allianceName)) {
             ChatUtil.sendErrorMessage(player, "This alliance already exists.");
             return;
