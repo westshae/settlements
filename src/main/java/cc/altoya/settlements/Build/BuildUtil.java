@@ -447,8 +447,8 @@ public class BuildUtil {
 
   public static void upgradeStructure(Player player, String nextBlueprintName){
     Chunk chunk = player.getLocation().getChunk();
+    BuildUtil.undoBuilding(chunk);
     BuildUtil.setBlueprintName(chunk, player, nextBlueprintName);
-    BuildUtil.deleteBlocks(player);
     BuildUtil.generateBuildingFromBlueprint(player, nextBlueprintName);
   }
 

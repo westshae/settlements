@@ -25,13 +25,16 @@ public class CommandUpgrade {
 
         ConfigurationSection costs = BlueprintUtil.getBlueprintCosts(nextBlueprintName);
 
-        if(!ItemUtil.hasCosts(player, costs)){
+        if(costs != null && !ItemUtil.hasCosts(player, costs)){
             ChatUtil.sendErrorMessage(player, "You don't have the resources required to upgrade.");
             return;
         }
 
+        if(costs != null){
+            ItemUtil.removeItems(player, costs);
+        }
 
-        ItemUtil.removeItems(player, costs);
+
         BuildUtil.upgradeStructure(player, nextBlueprintName);
 
         ChatUtil.sendSuccessMessage(player, "Structure upgraded successfully.");

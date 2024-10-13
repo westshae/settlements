@@ -33,13 +33,15 @@ public class CommandNew {
       return;
     }
 
-    if (CityUtil.isChunkClaimed(chunk) && !CityUtil.doesPlayerOwnChunk(player, chunk)) {
-      ChatUtil.sendErrorMessage(player, "This chunk is owned by someone else.");
+    if (!CityUtil.isChunkClaimed(chunk)) {
+      ChatUtil.sendErrorMessage(player, "This chunk isn't claimed. You can only build structures in claimed land.");
       return;
     }
 
-    if (!CityUtil.isChunkClaimed(chunk)) {
-      CityUtil.claimChunk(player, chunk);
+
+    if (CityUtil.isChunkClaimed(chunk) && !CityUtil.doesPlayerOwnChunk(player, chunk)) {
+      ChatUtil.sendErrorMessage(player, "This chunk is owned by someone else.");
+      return;
     }
 
     ConfigurationSection costs = BlueprintUtil.getBlueprintCosts(blueprintName);
