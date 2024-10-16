@@ -16,6 +16,7 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -427,6 +428,28 @@ public class BuildUtil {
     ChatUtil.sendSuccessMessage(player, "Structure Owner: " + (ownerName != null ? ownerName : "N/A"));
   }
 
+  public static void sendBuildCost(Player player, String blueprintName){
+    ConfigurationSection resourceSection = BlueprintUtil.getBlueprintCosts(blueprintName);
+    ChatUtil.sendSuccessMessage(player, blueprintName + " Resource Cost");
+
+    if (resourceSection == null) {
+        ChatUtil.sendSuccessMessage(player, "No costs required.");
+        return;
+    }
+
+    for (String materialName : resourceSection.getKeys(false)) {
+        Material material = Material.matchMaterial(materialName);
+        if (material == null) {
+            continue;
+        }
+
+        double amount = resourceSection.getDouble(materialName);
+
+        ChatUtil.sendSuccessMessage(player, materialName + ": " + amount);
+    }
+
+  }
+
   public static HashMap<String, String> getBuildCommands() {
     HashMap<String, String> commands = new HashMap<>();
     commands.put("/build delete", "Deletes any structure within the chunk you are in.");
@@ -437,6 +460,7 @@ public class BuildUtil {
         "Shows you where the bottom level of the structure will begin to generate to allow you to terraform.");
     commands.put("/build upgrade", "Upgrades your structure to the next level.");
     commands.put("/build undo", "Undoes building and restores the land to previous.");
+    commands.put("/build cost {blueprintName}", "Gets the resource cost for a build.");
     commands.put("/build help", "The command you're looking at right now.");
     return commands;
   }
