@@ -14,6 +14,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -116,10 +117,14 @@ public class CityUtil {
 
   public static void sendCityInfo(Player player) {
     String playerName = PlainTextComponentSerializer.plainText().serialize(player.displayName());
-    ChatUtil.sendSuccessMessage(player, playerName + "'s City.");
     int housingCount = CityUtil.getCityHousing(player);
-    ChatUtil.sendSuccessMessage(player, "Housing: " + housingCount);
-    ChatUtil.sendSuccessMessage(player, "See claims via /city list");
+
+    String header = playerName + "'s City.";
+    List<String> points = new ArrayList<String>();
+    points.add("Housing: " + housingCount);
+    points.add("See claims via /city list");
+
+    ChatUtil.sendPlayerListedMessage(player, header, points);
   }
 
   public static int getCityHousing(Player player) {
@@ -213,10 +218,13 @@ public class CityUtil {
     String cityKey = "cities." + GeneralUtil.getKeyFromPlayer(player) + ".resources";
     ConfigurationSection resourceSection = cityConfig.getConfigurationSection(cityKey);
     String playerName = PlainTextComponentSerializer.plainText().serialize(player.displayName());
-    ChatUtil.sendSuccessMessage(player, playerName + "'s City Resources");
+
+    String header = playerName + "'s City Resources";
+    List<String> points = new ArrayList<String>();
 
     if (resourceSection == null) {
-        ChatUtil.sendSuccessMessage(player, "No resources available.");
+        points.add("No resources available.");
+        ChatUtil.sendPlayerListedMessage(player, header, points);
         return;
     }
 
@@ -227,9 +235,9 @@ public class CityUtil {
         }
 
         double amount = resourceSection.getDouble(materialName);
-
-        ChatUtil.sendSuccessMessage(player, materialName + ": " + amount);
+        points.add(materialName + ": " + amount);
     }
+    ChatUtil.sendPlayerListedMessage(player, header, points);
   }
 
   public static HashMap<String, String> getCityCommands() {

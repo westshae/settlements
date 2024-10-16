@@ -420,20 +420,29 @@ public class BuildUtil {
   }
 
   public static void sendChunkInfo(Player player, Chunk chunk) {
-    ChatUtil.sendSuccessMessage(player, "Chunk X" + chunk.getX() + ":Y" + chunk.getZ() + " Information.");
+    String header = "Chunk X" + chunk.getX() + ":Y" + chunk.getZ() + " Information.";
+
     String blueprintName = BuildUtil.getStructureBlueprintName(chunk);
-    ChatUtil.sendSuccessMessage(player, "Structure Blueprint: " + (blueprintName != null ? blueprintName : "N/A"));
     String structureOwner = BuildUtil.getStructureOwner(chunk);
     String ownerName = GeneralUtil.getPlayerNameFromStringUuid(structureOwner);
-    ChatUtil.sendSuccessMessage(player, "Structure Owner: " + (ownerName != null ? ownerName : "N/A"));
+
+    List<String> points = new ArrayList<String>();
+
+    points.add("Structure Blueprint: " + (blueprintName != null ? blueprintName : "N/A"));
+    points.add("Structure Owner: " + (ownerName != null ? ownerName : "N/A"));
+
+    ChatUtil.sendPlayerListedMessage(player, header, points);
   }
 
   public static void sendBuildCost(Player player, String blueprintName){
     ConfigurationSection resourceSection = BlueprintUtil.getBlueprintCosts(blueprintName);
-    ChatUtil.sendSuccessMessage(player, blueprintName + " Resource Cost");
+    String header =  blueprintName + " Resource Cost";
+
+    List<String> points = new ArrayList<String>();
 
     if (resourceSection == null) {
-        ChatUtil.sendSuccessMessage(player, "No costs required.");
+        points.add("No costs required.");
+        ChatUtil.sendPlayerListedMessage(player, header, points);
         return;
     }
 
@@ -445,8 +454,9 @@ public class BuildUtil {
 
         double amount = resourceSection.getDouble(materialName);
 
-        ChatUtil.sendSuccessMessage(player, materialName + ": " + amount);
+        points.add(materialName + ": " + amount);
     }
+    ChatUtil.sendPlayerListedMessage(player, header, points);
 
   }
 

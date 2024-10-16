@@ -1,5 +1,6 @@
 package cc.altoya.settlements.Util;
 
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -53,6 +54,14 @@ public class ChatUtil {
 
       String commandMessage = ChatColor.GREEN + key + ": " + ChatColor.WHITE + value;
       player.sendMessage(commandMessage);
+    }
+  }
+
+  public static void sendPlayerListedMessage(Player player, String header, List<String> messages){
+    String headerFormatted = getBoxedString(header, ChatColor.GREEN);
+    player.sendMessage(headerFormatted);
+    for(String message: messages){
+      player.sendMessage(ChatColor.GRAY + "- " + ChatColor.GREEN + message);
     }
   }
 
