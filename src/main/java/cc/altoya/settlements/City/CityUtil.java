@@ -207,11 +207,37 @@ public class CityUtil {
     return resourceCount > needed;
   }
 
+  public static void sendCityResources(Player player){
+    FileConfiguration cityConfig = CityUtil.getCityConfig();
+
+    String cityKey = "cities." + GeneralUtil.getKeyFromPlayer(player) + ".resources";
+    ConfigurationSection resourceSection = cityConfig.getConfigurationSection(cityKey);
+    String playerName = PlainTextComponentSerializer.plainText().serialize(player.displayName());
+    ChatUtil.sendSuccessMessage(player, playerName + "'s City Resources");
+
+    if (resourceSection == null) {
+        ChatUtil.sendSuccessMessage(player, "No resources available.");
+        return;
+    }
+
+    for (String materialName : resourceSection.getKeys(false)) {
+        Material material = Material.matchMaterial(materialName);
+        if (material == null) {
+            continue;
+        }
+
+        double amount = resourceSection.getDouble(materialName);
+
+        ChatUtil.sendSuccessMessage(player, materialName + ": " + amount);
+    }
+  }
+
   public static HashMap<String, String> getCityCommands() {
     HashMap<String, String> commands = new HashMap<>();
     commands.put("/city list", "Lists all your claimed chunks.");
     commands.put("/city expand", "Expands your city claims by a random additional chunk.");
     commands.put("/city hire", "Hires a new worker if you have available housing.");
+    commands.put("/city resources", "Sends you info about your cities' resources.");
     commands.put("/city info", "Sends you information about your city.");
     commands.put("/city help", "The command you're looking at right now.");
     return commands;
