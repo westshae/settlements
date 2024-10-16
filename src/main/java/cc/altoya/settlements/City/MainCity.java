@@ -27,6 +27,8 @@ public class MainCity implements CommandExecutor {
                 return CommandList.handle((Player) sender, args);
             case "expand":
                 return CommandExpand.handle((Player) sender, args);
+            case "info":
+                return CommandInfo.handle((Player) sender, args);
             case "help":
                 return CommandHelp.handle((Player) sender, args);
         }

@@ -6,7 +6,9 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import java.io.File;
 import java.io.IOException;
@@ -102,38 +104,60 @@ public class CityUtil {
         "cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + GeneralUtil.getKeyFromChunk(chunk)
             + ".level",
         1);
-        cityConfig.set(
-          "cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + GeneralUtil.getKeyFromChunk(chunk)
-              + ".material",
-          material.toString());
-  
+    cityConfig.set(
+        "cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + GeneralUtil.getKeyFromChunk(chunk)
+            + ".material",
+        material.toString());
+
     CityUtil.saveCityConfig(cityConfig);
+  }
+
+  public static void sendCityInfo(Player player) {
+    String playerName = PlainTextComponentSerializer.plainText().serialize(player.displayName());
+    ChatUtil.sendSuccessMessage(player, playerName + "'s City.");
+    int housingCount = CityUtil.getCityHousing(player);
+    ChatUtil.sendSuccessMessage(player, "Housing: " + housingCount);
+    ChatUtil.sendSuccessMessage(player, "See claims via /city list");
+  }
+
+  public static int getCityHousing(Player player) {
+    FileConfiguration cityConfig = CityUtil.getCityConfig();
+    return cityConfig.getInt("cities." + GeneralUtil.getKeyFromPlayer(player) + ".housing");
+  }
+
+  public static void editCityHousing(Player player, int amount) {
+    FileConfiguration cityConfig = CityUtil.getCityConfig();
+    Integer housingCount = cityConfig.getInt("cities." + GeneralUtil.getKeyFromPlayer(player) + ".housing");
+    cityConfig.set("cities." + GeneralUtil.getKeyFromPlayer(player) + ".housing", housingCount + amount);
+    saveCityConfig(cityConfig);
   }
 
   public static void upgradeStructureInCity(Player player, String blueprintName, Chunk chunk) {
     FileConfiguration cityConfig = CityUtil.getCityConfig();
-    Integer currentLevel = cityConfig.getInt("cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + GeneralUtil.getKeyFromChunk(chunk)
+    Integer currentLevel = cityConfig
+        .getInt("cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + GeneralUtil.getKeyFromChunk(chunk)
             + ".level");
     cityConfig.set(
         "cities." + GeneralUtil.getKeyFromPlayer(player) + ".structures." + GeneralUtil.getKeyFromChunk(chunk)
             + ".level",
-            currentLevel + 1);
+        currentLevel + 1);
     CityUtil.saveCityConfig(cityConfig);
   }
 
-  public static void addResourceToCity(Player player, Material material, int amount){
+  public static void addResourceToCity(Player player, Material material, int amount) {
     FileConfiguration cityConfig = CityUtil.getCityConfig();
-    Integer resourceCount = cityConfig.getInt("cities." + GeneralUtil.getKeyFromPlayer(player) + ".resources." + material.toString());
+    Integer resourceCount = cityConfig
+        .getInt("cities." + GeneralUtil.getKeyFromPlayer(player) + ".resources." + material.toString());
     cityConfig.set(
         "cities." + GeneralUtil.getKeyFromPlayer(player) + ".resources." + material.toString(), resourceCount + amount);
     saveCityConfig(cityConfig);
   }
 
-
   public static HashMap<String, String> getCityCommands() {
     HashMap<String, String> commands = new HashMap<>();
     commands.put("/city list", "Lists all your claimed chunks.");
     commands.put("/city expand", "Expands your city claims by a random additional chunk.");
+    commands.put("/city info", "Sends you information about your city.");
     commands.put("/city help", "The command you're looking at right now.");
     return commands;
   }

@@ -131,6 +131,15 @@ public class BlueprintUtil {
         }
         return config.getInt("blueprints." + blueprintName + ".version");
     }
+    
+    public static Integer getHousing(String blueprintName) {
+        FileConfiguration config = getBlueprintConfig();
+        if (!doesBlueprintExist(blueprintName)) {
+            return null;
+        }
+        return config.getInt("blueprints." + blueprintName + ".housing");
+    }
+
 
     public static void placeBlockWithoutBlueprintData(Location location, Material material, BlockData blockData) {
         Block block = location.getBlock();
@@ -182,18 +191,11 @@ public class BlueprintUtil {
         BlueprintUtil.saveBlueprintConfig(config);
     }
 
-    public static void setBlueprintHousing(String blueprintName, int amount) {
-        FileConfiguration config = BlueprintUtil.getBlueprintConfig();
-
-        config.set("blueprints." + blueprintName + ".housing", amount);
-        BlueprintUtil.saveBlueprintConfig(config);
-    }
-
-    public static void create(String blueprintName, Material material) {
+    public static void create(String blueprintName, Material material, int housingCount) {
         FileConfiguration config = BlueprintUtil.getBlueprintConfig();
 
         config.set("blueprints." + blueprintName + ".version", 1);
-        config.set("blueprints." + blueprintName + ".housing", 0);
+        config.set("blueprints." + blueprintName + ".housing", housingCount);
         config.set("blueprints." + blueprintName + ".material", material.toString());
 
         BlueprintUtil.saveBlueprintConfig(config);
@@ -332,7 +334,7 @@ public class BlueprintUtil {
 
     public static HashMap<String, String> getBlueprintCommands() {
         HashMap<String, String> commands = new HashMap<>();
-        commands.put("/blueprint create {blueprintName}", "The first command to create a blueprint.");
+        commands.put("/blueprint create {blueprintName} {housingCount}", "The first command to create a blueprint.");
         commands.put("/blueprint first {blueprintName}",
                 "Sets the blueprint's chunk [0, ~, 0] point based on the block you're looking at.");
         commands.put("/blueprint second {blueprintName}",
@@ -343,7 +345,6 @@ public class BlueprintUtil {
                 "Creates a new blueprint named {original}v{version}, and creates a dupe of the previous blueprint.");
         commands.put("/blueprint delete {blueprintName}", "Deletes the blueprint provided.");
         commands.put("/blueprint list", "Sends you a list of all available blueprints.");
-        commands.put("/blueprint housing {blueprintName} {amount}", "Sets the blueprint's housing count.");
         commands.put("/blueprint cost {blueprintName} {amount}",
                 "Sets the blueprint's resource cost for the item you are holding.");
         commands.put("/blueprint help", "The command you're looking at right now.");

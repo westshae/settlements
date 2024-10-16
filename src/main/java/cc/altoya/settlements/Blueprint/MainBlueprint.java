@@ -35,8 +35,6 @@ public class MainBlueprint implements CommandExecutor {
                 return CommandUpgrade.handle((Player) sender, args);
             case "delete":
                 return CommandDelete.handle((Player) sender, args);
-            case "housing":
-                return CommandHousing.handle((Player) sender, args);
             case "cost":
                 return CommandCost.handle((Player) sender, args);
             case "list":

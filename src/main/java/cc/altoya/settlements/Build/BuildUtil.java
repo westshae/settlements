@@ -259,9 +259,10 @@ public class BuildUtil {
     return BlueprintUtil.turnStringIntoBlock(buildFirstKey);
   }
 
-  public static void deleteData(Chunk chunk) {
+  public static void deleteData(Player player, Chunk chunk) {
     FileConfiguration buildConfig = BuildUtil.getBuildConfig();
-
+    int housingCount = buildConfig.getInt("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".housing");
+    CityUtil.editCityHousing(player, -housingCount);
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk), null);
     saveBuildConfig(buildConfig);
   }
@@ -337,11 +338,13 @@ public class BuildUtil {
     int playerHeight = player.getLocation().getBlockY();
     Chunk chunk = player.getLocation().getChunk();
     Material material = Material.getMaterial(BlueprintUtil.getBlueprintMaterial(blueprintName));
+    int housingCount = BlueprintUtil.getHousing(blueprintName);
 
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".owner",
         GeneralUtil.getKeyFromPlayer(player));
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".blueprintName", blueprintName);
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".version", version);
+    buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".housing", housingCount);
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".material",
         material.toString());
     buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".playerHeight", playerHeight);
@@ -357,6 +360,7 @@ public class BuildUtil {
     BuildUtil.saveBuildConfig(buildConfig);
 
     CityUtil.addStructureToCity(player, blueprintName, chunk, material);
+    CityUtil.editCityHousing(player, housingCount);
   }
 
   public static void generateBuildingFromBlueprint(Player player, String blueprintName) {

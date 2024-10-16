@@ -26,7 +26,7 @@ public class CommandDelete {
         }
 
         BuildUtil.deleteBlocks(player);
-        BuildUtil.deleteData(chunk);
+        BuildUtil.deleteData(player, chunk);
 
         ChatUtil.sendSuccessMessage(player, "Successfully generated structure from blueprint: " + blueprintName);
     }
