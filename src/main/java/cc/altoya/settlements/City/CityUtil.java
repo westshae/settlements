@@ -144,10 +144,10 @@ public class CityUtil {
     CityUtil.saveCityConfig(cityConfig);
   }
 
-  public static void addResourceToCity(Player player, Material material, int amount) {
+  public static void addResourceToCity(Player player, Material material, double amount) {
     FileConfiguration cityConfig = CityUtil.getCityConfig();
-    Integer resourceCount = cityConfig
-        .getInt("cities." + GeneralUtil.getKeyFromPlayer(player) + ".resources." + material.toString());
+    Double resourceCount = cityConfig
+        .getDouble("cities." + GeneralUtil.getKeyFromPlayer(player) + ".resources." + material.toString());
     cityConfig.set(
         "cities." + GeneralUtil.getKeyFromPlayer(player) + ".resources." + material.toString(), resourceCount + amount);
     saveCityConfig(cityConfig);

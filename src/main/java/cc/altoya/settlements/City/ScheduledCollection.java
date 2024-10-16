@@ -55,13 +55,22 @@ public class ScheduledCollection {
           }
         });
 
+        int structureTotalCount = structuresSection.getKeys(false).size();
+
         for (Entry<String, Integer> entry : structureCountMap.entrySet()) {
           Player player = Bukkit.getPlayer(UUID.fromString(cityKey));
+          Integer workerCount = CityUtil.getWorkers(player);
+
+          double workerRatio = (double) workerCount / structureTotalCount;
+          if(workerRatio > 1.5){
+            workerRatio = 1.5;
+          }
+          double resourcesCollected = entry.getValue() * workerRatio;
 
           Material material = Material.getMaterial(entry.getKey());
-          CityUtil.addResourceToCity(player, material, entry.getValue());
+          CityUtil.addResourceToCity(player, material, resourcesCollected);
           ChatUtil.sendSuccessMessage(player,
-              "City structures collected " + entry.getValue() + " " + material.toString());
+              "City structures collected " + resourcesCollected + " " + material.toString());
         }
 
         index++;
