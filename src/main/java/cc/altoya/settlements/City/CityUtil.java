@@ -3,9 +3,11 @@ package cc.altoya.settlements.City;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -144,7 +146,29 @@ public class CityUtil {
     CityUtil.saveCityConfig(cityConfig);
   }
 
-  public static void addResourceToCity(Player player, Material material, double amount) {
+  public static void deductResourcesForBlueprint(Player player, String blueprintName) {
+    ConfigurationSection blueprintCosts = BlueprintUtil.getBlueprintCosts(blueprintName);
+
+    if (blueprintCosts == null) {
+        return;
+    }
+
+    for (String itemMaterialString : blueprintCosts.getKeys(false)) {
+        Material material = Material.matchMaterial(itemMaterialString);
+        if (material == null) {
+            continue;
+        }
+
+        int requiredAmount = blueprintCosts.getInt(itemMaterialString);
+
+        CityUtil.editCityResources(player, material, -requiredAmount);
+    }
+
+    return;
+}
+
+
+  public static void editCityResources(Player player, Material material, double amount) {
     FileConfiguration cityConfig = CityUtil.getCityConfig();
     Double resourceCount = cityConfig
         .getDouble("cities." + GeneralUtil.getKeyFromPlayer(player) + ".resources." + material.toString());
@@ -173,6 +197,14 @@ public class CityUtil {
       cityConfig.set("cities." + GeneralUtil.getKeyFromPlayer(player) + ".workers", workerCount + 1);
       CityUtil.saveCityConfig(cityConfig);
     }
+  }
+
+  public static boolean hasResourcesAvailable(Player player, Material material, double needed){
+    FileConfiguration cityConfig = CityUtil.getCityConfig();
+    Double resourceCount = cityConfig
+        .getDouble("cities." + GeneralUtil.getKeyFromPlayer(player) + ".resources." + material.toString());
+
+    return resourceCount > needed;
   }
 
   public static HashMap<String, String> getCityCommands() {

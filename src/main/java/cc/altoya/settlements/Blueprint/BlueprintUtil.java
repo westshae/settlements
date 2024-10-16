@@ -16,6 +16,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Build.BuildUtil;
+import cc.altoya.settlements.City.CityUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
 
@@ -131,7 +132,7 @@ public class BlueprintUtil {
         }
         return config.getInt("blueprints." + blueprintName + ".version");
     }
-    
+
     public static Integer getHousing(String blueprintName) {
         FileConfiguration config = getBlueprintConfig();
         if (!doesBlueprintExist(blueprintName)) {
@@ -139,7 +140,6 @@ public class BlueprintUtil {
         }
         return config.getInt("blueprints." + blueprintName + ".housing");
     }
-
 
     public static void placeBlockWithoutBlueprintData(Location location, Material material, BlockData blockData) {
         Block block = location.getBlock();
@@ -189,6 +189,30 @@ public class BlueprintUtil {
 
         config.set("blueprints." + blueprintName + ".cost." + itemMaterial, amount);
         BlueprintUtil.saveBlueprintConfig(config);
+    }
+
+    public static boolean canAffordBlueprint(Player player, String blueprintName) {
+        ConfigurationSection blueprintCosts = BlueprintUtil.getBlueprintCosts(blueprintName);
+
+        if (blueprintCosts == null) {
+            return true;
+        }
+
+        for (String itemMaterialString : blueprintCosts.getKeys(false)) {
+            Material material = Material.matchMaterial(itemMaterialString);
+            if (material == null) {
+                continue;
+            }
+
+            int requiredAmount = blueprintCosts.getInt(itemMaterialString);
+
+            if (!CityUtil.hasResourcesAvailable(player, material, requiredAmount)) {
+                return false;
+            }
+        }
+
+        // If all resources are available, the player can afford the blueprint
+        return true;
     }
 
     public static void create(String blueprintName, Material material, int housingCount) {
@@ -273,9 +297,11 @@ public class BlueprintUtil {
         int y2 = secondBlock.getY();
         int z2 = secondBlock.getZ();
 
-        // List<Material> resourceBlockList = ItemUtil.getAllResourceBlocks(firstBlock.getChunk());
+        // List<Material> resourceBlockList =
+        // ItemUtil.getAllResourceBlocks(firstBlock.getChunk());
 
-        //TODO IMPLEMENT A SYSTEM WHERE RESOURCE BLOCKS ARE BASED ON THE STRUCTURE TYPE. 
+        // TODO IMPLEMENT A SYSTEM WHERE RESOURCE BLOCKS ARE BASED ON THE STRUCTURE
+        // TYPE.
 
         List<String> resourceBlocksInChunk = new ArrayList<String>();
 
@@ -291,7 +317,7 @@ public class BlueprintUtil {
                     Location relativeLocation = BlueprintUtil.getRelativeLocation(firstBlock, block);
                     String blockString = BlueprintUtil.turnBlockIntoString(block, relativeLocation);
                     // if (resourceBlockList.contains(block.getType())) {
-                    //     resourceBlocksInChunk.add(blockString);
+                    // resourceBlocksInChunk.add(blockString);
                     // }
                     blockList.add(blockString);
                 }
@@ -330,7 +356,6 @@ public class BlueprintUtil {
         FileConfiguration blueprintConfig = getBlueprintConfig();
         return blueprintConfig.getString("blueprints." + blueprintName + ".material");
     }
-
 
     public static HashMap<String, String> getBlueprintCommands() {
         HashMap<String, String> commands = new HashMap<>();

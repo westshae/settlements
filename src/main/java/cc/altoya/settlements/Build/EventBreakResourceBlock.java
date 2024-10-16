@@ -32,7 +32,7 @@ public class EventBreakResourceBlock implements Listener {
         }.runTaskLater(GeneralUtil.getPlugin(), 100L);
         event.getBlock().setType(Material.AIR);
         event.setCancelled(true);
-        CityUtil.addResourceToCity(event.getPlayer(), material, 1);
+        CityUtil.editCityResources(event.getPlayer(), material, 1);
         ChatUtil.sendSuccessBar(event.getPlayer(), "1 " + material.toString() + " collected.");
         return;
       }

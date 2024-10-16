@@ -42,6 +42,12 @@ public class CommandNew {
       return;
     }
 
+    if(!BlueprintUtil.canAffordBlueprint(player, blueprintName)){
+      ChatUtil.sendErrorMessage(player, "You can't afford this blueprint. Check you have enough.");
+      return;
+    }
+    CityUtil.deductResourcesForBlueprint(player, blueprintName);
+
     BuildUtil.setBuildConfig(player, blueprintName);
 
     BuildUtil.generateBuildingFromBlueprint(player, blueprintName);

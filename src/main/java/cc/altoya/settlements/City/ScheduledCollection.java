@@ -68,7 +68,7 @@ public class ScheduledCollection {
           double resourcesCollected = entry.getValue() * workerRatio;
 
           Material material = Material.getMaterial(entry.getKey());
-          CityUtil.addResourceToCity(player, material, resourcesCollected);
+          CityUtil.editCityResources(player, material, resourcesCollected);
           ChatUtil.sendSuccessMessage(player,
               "City structures collected " + resourcesCollected + " " + material.toString());
         }

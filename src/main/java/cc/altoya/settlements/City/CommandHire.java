@@ -1,5 +1,6 @@
 package cc.altoya.settlements.City;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import cc.altoya.settlements.Util.ChatUtil;
@@ -20,6 +21,13 @@ public class CommandHire {
       ChatUtil.sendErrorMessage(player, "You need more housing to hire more.");
       return;
     }
+
+    if(!CityUtil.hasResourcesAvailable(player, Material.COAL, 25)){
+      ChatUtil.sendErrorMessage(player, "You don't have enough wheat to hire a worker. You need 25 in your city.");
+      return;
+    }
+
+    CityUtil.editCityResources(player, Material.COAL, -25);
 
     CityUtil.hireWorker(player);
     ChatUtil.sendSuccessMessage(player, "Successfully hired new worker.");
