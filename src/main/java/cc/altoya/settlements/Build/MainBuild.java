@@ -33,8 +33,6 @@ public class MainBuild implements CommandExecutor {
                 return CommandPlot.handle((Player) sender, args);
             case "upgrade":
                 return CommandUpgrade.handle((Player) sender, args);
-            case "hire":
-                return CommandHire.handle((Player) sender, args);
             case "info":
                 return CommandInfo.handle((Player) sender, args);
             case "undo":

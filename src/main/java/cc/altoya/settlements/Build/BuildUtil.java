@@ -321,15 +321,6 @@ public class BuildUtil {
     return housing < workerCount;
   }
 
-  public static void hireWorker(Player player, Chunk chunk) {
-    FileConfiguration buildConfig = BuildUtil.getBuildConfig();
-
-    Integer workerCount = buildConfig.getInt("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".workers");
-    buildConfig.set("builds." + GeneralUtil.getKeyFromChunk(chunk) + ".workers", workerCount + 1);
-
-    BuildUtil.saveBuildConfig(buildConfig);
-  }
-
   public static void setBuildConfig(Player player, String blueprintName) {
     Integer version = BlueprintUtil.getVersion(blueprintName);
 
@@ -446,7 +437,6 @@ public class BuildUtil {
         "Shows you where the bottom level of the structure will begin to generate to allow you to terraform.");
     commands.put("/build upgrade", "Upgrades your structure to the next level.");
     commands.put("/build undo", "Undoes building and restores the land to previous.");
-    commands.put("/build hire", "Hires a new worker.");
     commands.put("/build help", "The command you're looking at right now.");
     return commands;
   }

@@ -153,10 +153,33 @@ public class CityUtil {
     saveCityConfig(cityConfig);
   }
 
+  public static Integer getWorkers(Player player){
+    FileConfiguration cityConfig = CityUtil.getCityConfig();
+    return cityConfig.getInt("cities." + GeneralUtil.getKeyFromPlayer(player) + ".workers");
+  }
+
+  public static boolean hasHousingSpace(Player player){
+    Integer workerCount = getWorkers(player);
+    Integer housingCount = getCityHousing(player);
+    return workerCount + 1 <= housingCount;
+  }
+
+  public static void hireWorker(Player player){
+    FileConfiguration cityConfig = CityUtil.getCityConfig();
+
+    Integer workerCount = getWorkers(player);
+    Integer housingCount = getCityHousing(player);
+    if(workerCount + 1 <= housingCount){
+      cityConfig.set("cities." + GeneralUtil.getKeyFromPlayer(player) + ".workers", workerCount + 1);
+      CityUtil.saveCityConfig(cityConfig);
+    }
+  }
+
   public static HashMap<String, String> getCityCommands() {
     HashMap<String, String> commands = new HashMap<>();
     commands.put("/city list", "Lists all your claimed chunks.");
     commands.put("/city expand", "Expands your city claims by a random additional chunk.");
+    commands.put("/city hire", "Hires a new worker if you have available housing.");
     commands.put("/city info", "Sends you information about your city.");
     commands.put("/city help", "The command you're looking at right now.");
     return commands;
