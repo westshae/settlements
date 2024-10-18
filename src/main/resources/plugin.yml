@@ -25,3 +25,7 @@ commands:
     description: Items
     usage: /item {subcommand} {var}
     tab-completer: cc.altoya.settlements.Item.ItemTabCompleter
+  map:
+    description: Maps
+    usage: /map {subcommand} {var}
+    tab-completer: cc.altoya.settlements.Map.MapTabCompleter

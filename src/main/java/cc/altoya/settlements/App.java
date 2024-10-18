@@ -22,6 +22,9 @@ import cc.altoya.settlements.City.EventProtectBlocks;
 import cc.altoya.settlements.City.EventProtectEntities;
 import cc.altoya.settlements.City.MainCity;
 import cc.altoya.settlements.City.ScheduledCollection;
+import cc.altoya.settlements.Map.EventMapUpdates;
+import cc.altoya.settlements.Map.MainMap;
+import cc.altoya.settlements.Map.MapTabCompleter;
 
 
 public class App extends JavaPlugin {
@@ -34,12 +37,14 @@ public class App extends JavaPlugin {
         this.getCommand("alliance").setExecutor(new MainAlliance());
         this.getCommand("build").setExecutor(new MainBuild());
         this.getCommand("blueprint").setExecutor(new MainBlueprint());
+        this.getCommand("map").setExecutor(new MainMap());
 
         //Register tab completers
         this.getCommand("city").setTabCompleter(new CityTabCompleter());
         this.getCommand("alliance").setTabCompleter(new AllianceTabCompleter());
         this.getCommand("build").setTabCompleter(new BuildTabCompleter());
         this.getCommand("blueprint").setTabCompleter(new BlueprintTabCompleter());
+        this.getCommand("map").setTabCompleter(new MapTabCompleter());
 
         //Register eventListeners
         this.getServer().getPluginManager().registerEvents(new EventProtectBlocks(), this);
@@ -50,6 +55,7 @@ public class App extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EventAllianceOnJoin(), this);
         this.getServer().getPluginManager().registerEvents(new EventFoundCity(), this);
         this.getServer().getPluginManager().registerEvents(new EventBreakResourceBlock(), this);
+        this.getServer().getPluginManager().registerEvents(new EventMapUpdates(), this);
 
         //Register runnables
         this.getServer().getScheduler().runTask(this, ScheduledCleanUp.getRunnable());//Run instantly, once.
