@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import cc.altoya.settlements.Alliance.AllianceUtil;
 import cc.altoya.settlements.Blueprint.BlueprintUtil;
 import cc.altoya.settlements.Util.ChatUtil;
 import cc.altoya.settlements.Util.GeneralUtil;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class CityUtil {
 
@@ -47,6 +49,12 @@ public class CityUtil {
   public static List<String> getPlayersChunks(Player player) {
     FileConfiguration config = getCityConfig();
     return config.getStringList("cities." + GeneralUtil.getKeyFromPlayer(player) + ".claims");
+  }
+
+  public static UUID getChunkOwnerUUID(Chunk chunk){
+    FileConfiguration config = getCityConfig();
+    String claim_owner_uuid = config.getString("cities.claimedTiles." + GeneralUtil.getKeyFromChunk(chunk));
+    return UUID.fromString(claim_owner_uuid);
   }
 
   public static void claimChunk(Player player, Chunk chunk) {
@@ -210,6 +218,13 @@ public class CityUtil {
         .getDouble("cities." + GeneralUtil.getKeyFromPlayer(player) + ".resources." + material.toString());
 
     return resourceCount > needed;
+  }
+
+  public static String getChunkAlliance(Chunk chunk){
+    UUID ownerUuid = getChunkOwnerUUID(chunk);
+    Player owner = Bukkit.getServer().getPlayer(ownerUuid);
+    return CityUtil.getPlayerAllianceName(owner);
+    
   }
 
   public static void sendCityResources(Player player){

@@ -10,22 +10,18 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import cc.altoya.settlements.Util.GeneralUtil;
 
-public class EventMapUpdates implements Listener{
+public class EventMapUpdates implements Listener {
   @EventHandler
   public void onPlayerMove(PlayerMoveEvent event) {
     Player player = event.getPlayer();
-
-    // Schedule a task to update the map after the player moves
     new BukkitRunnable() {
       @Override
       public void run() {
-        // Check if the player has a map item in hand
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
-        if (itemInHand.getType() == Material.FILLED_MAP) {
+        if (itemInHand.getType() == Material.FILLED_MAP && MapUtil.isMapCityMap(itemInHand)) {
           MapUtil.updateMap(itemInHand, !event.getFrom().getChunk().equals(event.getTo().getChunk()));
         }
       }
     }.runTask(GeneralUtil.getPlugin());
   }
-
 }
